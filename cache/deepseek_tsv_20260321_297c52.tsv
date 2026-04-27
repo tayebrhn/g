@@ -1,0 +1,11 @@
+user_id	user_name	user_email	user_password	user_regdate	user_ip	user_firstname	user_lastname	user_birthdate	user_birthplace	user_regnumber	user_ssn	user_level	user_verifycode	user_otpkey	user_groups
+	jsmith	john.smith@example.com	password123	2024-01-15 09:23:45	192.168.1.100	John	Smith	1990-03-12	New York, NY	S12345	123-45-6789	1	a1b2c3d4e5f6g7h8	otp_secret_001	Students
+	emily.johnson	emily.johnson@example.com	emily2024	2024-01-20 14:12:33	10.0.0.55	Emily	Johnson	1988-07-24	Los Angeles, CA	S67890	987-65-4321	5	f9e8d7c6b5a4	otp_secret_002	Faculty,Researchers
+	mwilliams	michael.williams@example.com	Admin@123	2024-02-01 11:45:22	172.16.0.200	Michael	Williams	1995-11-03	Chicago, IL	S11223	456-78-9123	10	3e4r5t6y7u8i9o0	otp_secret_003	Administrators
+	sbrown	sarah.brown@example.com	student456	2024-02-10 08:30:17	192.168.0.77	Sarah	Brown	1992-04-18	Houston, TX	S44556	321-54-9876	1	1a2s3d4f5g6h7j8	otp_secret_004	Students
+	dwilson	david.wilson@example.com	staff789	2024-02-15 16:20:44	10.10.10.10	David	Wilson	1985-09-30	Phoenix, AZ	S77889	789-12-3456	2	8k9j0l1z2x3c4v5	otp_secret_005	Staff,Faculty
+	jmartinez	jessica.martinez@example.com	martinez99	2024-02-20 13:45:12	172.31.0.15	Jessica	Martinez	1993-12-05	Philadelphia, PA	S99001	234-56-7890	1	6y7u8i9o0p1a2s3	otp_secret_006	Students
+	randerson	robert.anderson@example.com	Robert2024	2024-03-01 10:15:33	192.168.1.88	Robert	Anderson	1987-06-22	San Antonio, TX	S33445	567-89-1234	3	d4f5g6h7j8k9l0	otp_secret_007	Staff
+	ltaylor	lisa.taylor@example.com	taylor123	2024-03-05 07:55:28	10.0.0.99	Lisa	Taylor	1991-08-14	San Diego, CA	S55667	890-12-3456	1	f1g2h3j4k5l6z7	otp_secret_008	Students
+	tanderson	thomas.anderson@example.com	thomas2024	2024-03-10 19:30:42	172.16.8.250	Thomas	Anderson	1983-02-28	Dallas, TX	S77899	345-67-8901	8	x8c9v0b1n2m3q4	otp_secret_009	Moderators
+	pwhite	patricia.white@example.com	white123	2024-03-12 12:05:19	192.168.2.44	Patricia	White	1994-10-09	San Jose, CA	S11234	678-90-1234	1	w5e6r7t8y9u0i1	otp_secret_010	Students
