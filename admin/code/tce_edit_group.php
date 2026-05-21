@@ -185,7 +185,7 @@ switch ($menu_mode) { // process submitted data
 } //end of switch
 
 // --- Initialize variables
-if ($formstatus && $menu_mode != 'clear') {
+if ($menu_mode != 'clear' && $menu_mode != 'delete' && $menu_mode != 'forcedelete') {
     if (! isset($group_id) || $group_id === 0) {
         $group_id = 0;
         $group_name = '';

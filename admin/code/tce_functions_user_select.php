@@ -563,7 +563,7 @@ function F_user_group_select_sql($where = '')
         }
     }
 
-    return $sql . ' ORDER BY group_name';
+    return $sql . ' ORDER BY group_name ';
 }
 
 /**
