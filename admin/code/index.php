@@ -97,7 +97,7 @@ if (strlen($limits) > 0) {
     echo '<table style="border: 1px solid #808080;margin-left:auto; margin-right:auto;"><tr><th colspan="4" style="text-align:center;">' . $l['w_remaining_tests'] . '</th></tr><tr style="background-color:#CCCCCC;"><th>' . $l['w_limit'] . '</th><th>' . $l['w_max'] . '</th><th>' . $l['w_executed'] . '</th><th>' . $l['w_remaining'] . '</th></tr>' . $limits . '</table><br />' . K_NEWLINE;
 }
 
-echo $l['d_admin_index'];
+// echo $l['d_admin_index'];
 
 require_once('tce_page_footer.php');
 

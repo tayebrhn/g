@@ -75,11 +75,11 @@ $header_backlink = K_PATH_URL . 'admin/code/tce_edit_test.php?test_id=' . $test_
 $pdf->setTCExamBackLink($header_backlink);
 
 // set document information
-$pdf->SetCreator('TCExam ver.' . K_TCEXAM_VERSION . '');
+$pdf->SetCreator('Exam ver.' . K_TCEXAM_VERSION . '');
 $pdf->SetAuthor(PDF_AUTHOR);
 $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_description);
-$pdf->SetKeywords('TCExam, ' . $doc_title);
+$pdf->SetKeywords('Exam, ' . $doc_title);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); //set image scale factor
 
 $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);

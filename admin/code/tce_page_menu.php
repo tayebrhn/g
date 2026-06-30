@@ -216,14 +216,14 @@ $menu['tce_menu_modules.php']['sub'] = [
         'key' => '',
         'enabled' => true,
     ],
-    'tce_edit_sslcerts.php' => [
-        'link' => 'tce_edit_sslcerts.php',
-        'title' => $l['t_sslcerts'],
-        'name' => $l['w_sslcerts'],
-        'level' => K_AUTH_ADMIN_SSLCERT,
-        'key' => '',
-        'enabled' => true,
-    ],
+    // 'tce_edit_sslcerts.php' => [
+    //     'link' => 'tce_edit_sslcerts.php',
+    //     'title' => $l['t_sslcerts'],
+    //     'name' => $l['w_sslcerts'],
+    //     'level' => K_AUTH_ADMIN_SSLCERT,
+    //     'key' => '',
+    //     'enabled' => true,
+    // ],
 ];
 
 $menu['tce_menu_tests.php']['sub'] = [
@@ -243,22 +243,22 @@ $menu['tce_menu_tests.php']['sub'] = [
         'key' => '',
         'enabled' => true,
     ],
-    'tce_import_omr_answers.php' => [
-        'link' => 'tce_import_omr_answers.php',
-        'title' => $l['t_omr_answers_importer'],
-        'name' => $l['w_import_omr_answers'],
-        'level' => K_AUTH_ADMIN_OMR_IMPORT,
-        'key' => '',
-        'enabled' => true,
-    ],
-    'tce_import_omr_bulk.php' => [
-        'link' => 'tce_import_omr_bulk.php',
-        'title' => $l['t_omr_bulk_importer'],
-        'name' => $l['t_omr_bulk_importer'],
-        'level' => K_AUTH_ADMIN_OMR_IMPORT,
-        'key' => '',
-        'enabled' => true,
-    ],
+    // 'tce_import_omr_answers.php' => [
+    //     'link' => 'tce_import_omr_answers.php',
+    //     'title' => $l['t_omr_answers_importer'],
+    //     'name' => $l['w_import_omr_answers'],
+    //     'level' => K_AUTH_ADMIN_OMR_IMPORT,
+    //     'key' => '',
+    //     'enabled' => true,
+    // ],
+    // 'tce_import_omr_bulk.php' => [
+    //     'link' => 'tce_import_omr_bulk.php',
+    //     'title' => $l['t_omr_bulk_importer'],
+    //     'name' => $l['t_omr_bulk_importer'],
+    //     'level' => K_AUTH_ADMIN_OMR_IMPORT,
+    //     'key' => '',
+    //     'enabled' => true,
+    // ],
     'tce_edit_rating.php' => [
         'link' => 'tce_edit_rating.php',
         'title' => $l['t_rating_editor'],

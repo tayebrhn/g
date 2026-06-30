@@ -100,7 +100,7 @@ if (isset($enable_calendar) && $enable_calendar) {
     echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/calendar-setup.js"></script>' . K_NEWLINE;
 }
 
-echo '<!-- TCExam19730104 -->' . K_NEWLINE;
+echo '<!-- Exam19730104 -->' . K_NEWLINE;
 echo '</head>' . K_NEWLINE;
 
 echo '<body>' . K_NEWLINE;

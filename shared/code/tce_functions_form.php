@@ -133,8 +133,19 @@ function F_check_fields_format($formfields)
         if (str_starts_with($key, 'x_')) {
             $fieldname = substr($key, 2);
             $fieldname = preg_replace('/[^a-z0-9_\[\]]/i', '', $fieldname);
-            //if is not empty
-            if ((array_key_exists($fieldname, $formfields) && strlen($formfields[$fieldname]) > 0) && ! preg_match("'" . stripslashes($value) . "'i", $formfields[$fieldname])) {
+            // $pattern = '/' . $value . '/i';
+
+            // echo "<pre>";
+            // echo "Pattern: $pattern\n";
+            // echo "Input: [" . $formfields[$fieldname] . "]\n";
+
+            // $result = preg_match($pattern, $formfields[$fieldname]);
+
+            // var_dump($result);
+            // var_dump(preg_last_error());
+
+            // echo "</pre>";
+            if ((array_key_exists($fieldname, $formfields) && strlen($formfields[$fieldname]) > 0) && ! preg_match('/' . $value . '/i', $formfields[$fieldname])) {
                 //check regular expression
                 if (isset($formfields['xl_' . $fieldname]) && ! empty($formfields['xl_' . $fieldname])) { //check if field has label
                     $fieldname = htmlspecialchars($formfields['xl_' . $fieldname], ENT_NOQUOTES, $l['a_meta_charset']);

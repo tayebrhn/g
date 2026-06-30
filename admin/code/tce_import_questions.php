@@ -97,21 +97,21 @@ echo '<div class="formw">' . K_NEWLINE;
 echo '<fieldset class="noborder">' . K_NEWLINE;
 
 echo '<legend title="' . $l['w_type'] . '">' . $l['w_type'] . '</legend>' . K_NEWLINE;
-echo '<input type="radio" name="type" id="type_xml" value="1" title="TCExam XML Format"';
+echo '<input type="radio" name="type" id="type_xml" value="1" title="Exam XML Format"';
 if ($type == 1) {
     echo ' checked="checked"';
 }
 
 echo ' />';
-echo '<label for="type_xml">TCExam XML</label><br />' . K_NEWLINE;
+echo '<label for="type_xml">XML</label><br />' . K_NEWLINE;
 
-echo '<input type="radio" name="type" id="type_tsv" value="2" title="TCExam TSV Format"' . K_NEWLINE;
+echo '<input type="radio" name="type" id="type_tsv" value="2" title="Exam TSV Format"' . K_NEWLINE;
 if ($type == 2) {
     echo ' checked="checked"';
 }
 
 echo ' />';
-echo '<label for="type_tsv">TCExam TSV</label>' . K_NEWLINE;
+echo '<label for="type_tsv">TSV</label>' . K_NEWLINE;
 
 $custom_import = K_ENABLE_CUSTOM_IMPORT;
 if ($custom_import !== '') {

@@ -112,7 +112,7 @@ switch ($menu_mode) {
             if (! $r = F_db_query($sql, $db)) {
                 F_display_db_error(false);
             } else {
-                $module_id = false;
+                $module_id = 0;
                 F_print_error('MESSAGE', $module_name . ': ' . $l['m_deleted']);
             }
         }

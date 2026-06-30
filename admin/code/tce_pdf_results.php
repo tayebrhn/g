@@ -191,11 +191,11 @@ if ($pubmode) {
 }
 
 // set document information
-$pdf->SetCreator('TCExam ver.' . K_TCEXAM_VERSION . '');
+$pdf->SetCreator('Exam ver.' . K_TCEXAM_VERSION . '');
 $pdf->SetAuthor(PDF_AUTHOR);
 $pdf->SetTitle($doc_title);
 $pdf->SetSubject($doc_description);
-$pdf->SetKeywords('TCExam, ' . $doc_title);
+$pdf->SetKeywords('Exam, ' . $doc_title);
 
 $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
 
