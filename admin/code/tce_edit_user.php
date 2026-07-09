@@ -475,14 +475,16 @@ echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', 
 echo getFormRowTextInput('newpassword', $l['w_password'], $l['h_password'], ' (' . $l['d_password_length'] . ')', '', K_USRREG_PASSWORD_RE, 255, false, false, true);
 echo getFormRowTextInput('newpassword_repeat', $l['w_password'], $l['h_password_repeat'], ' (' . $l['w_repeat'] . ')', '', '', 255, false, false, true);
 echo getFormRowFixedValue('user_regdate', $l['w_regdate'], $l['h_regdate'], '', $user_regdate);
-// echo getFormRowFixedValue('user_ip', $l['w_ip'], $l['h_ip'], '', $user_ip);
 echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_level, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-// echo getFormRowTextInput('user_regnumber', $l['w_regcode'], $l['h_regcode'], '', $user_regnumber, '', 255, false, false, false);
 echo getFormRowTextInput('user_firstname', $l['w_firstname'], $l['h_firstname'], '', $user_firstname, '', 255, false, false, false);
 echo getFormRowTextInput('user_lastname', $l['w_lastname'], $l['h_lastname'], '', $user_lastname, '', 255, false, false, false);
-// echo getFormRowTextInput('user_birthdate', $l['w_birth_date'], $l['h_birth_date'] . ' ' . $l['w_date_format'], '', $user_birthdate, '', 10, true, false, false);
-// echo getFormRowTextInput('user_birthplace', $l['w_birth_place'], $l['h_birth_place'], '', $user_birthplace, '', 255, false, false, false);
-// echo getFormRowTextInput('user_ssn', $l['w_fiscal_code'], $l['h_fiscal_code'], '', $user_ssn, '', 255, false, false, false);
+echo '<div style="display:none;">';
+echo getFormRowFixedValue('user_ip', $l['w_ip'], $l['h_ip'], '', $user_ip);
+echo getFormRowTextInput('user_regnumber', $l['w_regcode'], $l['h_regcode'], '', $user_regnumber, '', 255, false, false, false);
+echo getFormRowTextInput('user_birthdate', $l['w_birth_date'], $l['h_birth_date'] . ' ' . $l['w_date_format'], '', $user_birthdate, '', 10, true, false, false);
+echo getFormRowTextInput('user_birthplace', $l['w_birth_place'], $l['h_birth_place'], '', $user_birthplace, '', 255, false, false, false);
+echo getFormRowTextInput('user_ssn', $l['w_fiscal_code'], $l['h_fiscal_code'], '', $user_ssn, '', 255, false, false, false);
+echo '</div>';
 
 echo '<div class="row">' . K_NEWLINE;
 echo '<span class="label">' . K_NEWLINE;
@@ -514,20 +516,23 @@ echo '</select>' . K_NEWLINE;
 echo '</span>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
 
-// echo getFormRowTextInput('user_otpkey', $l['w_otpkey'], $l['h_otpkey'], '', $user_otpkey, '', 255, false, false, false);
+echo '<div style="display:none;">';
 
-// // display QR-Code for Google authenticator
-// if (! empty($user_otpkey)) {
-//     require_once('../../shared/tcpdf/tcpdf_barcodes_2d.php');
-//     $host = preg_replace('/[h][t][t][p][s]?[:][\/][\/]/', '', K_PATH_HOST);
-//     $qrcode = new TCPDF2DBarcode('otpauth://totp/' . $user_name . '@' . $host . '?secret=' . $user_otpkey, 'QRCODE,H');
-//     echo '<div class="row">' . K_NEWLINE;
-//     echo '<span class="label">' . $l['w_otp_qrcode'] . '</span>' . K_NEWLINE;
-//     echo '<span class="formw" style="margin:30px 0px 30px 0px;">' . K_NEWLINE;
-//     echo $qrcode->getBarcodeHTML(6, 6, 'black');
-//     echo '</span>' . K_NEWLINE;
-//     echo '</div>' . K_NEWLINE;
-// }
+echo getFormRowTextInput('user_otpkey', $l['w_otpkey'], $l['h_otpkey'], '', $user_otpkey, '', 255, false, false, false);
+
+// display QR-Code for Google authenticator
+if (! empty($user_otpkey)) {
+    require_once('../../shared/tcpdf/tcpdf_barcodes_2d.php');
+    $host = preg_replace('/[h][t][t][p][s]?[:][\/][\/]/', '', K_PATH_HOST);
+    $qrcode = new TCPDF2DBarcode('otpauth://totp/' . $user_name . '@' . $host . '?secret=' . $user_otpkey, 'QRCODE,H');
+    echo '<div class="row">' . K_NEWLINE;
+    echo '<span class="label">' . $l['w_otp_qrcode'] . '</span>' . K_NEWLINE;
+    echo '<span class="formw" style="margin:30px 0px 30px 0px;">' . K_NEWLINE;
+    echo $qrcode->getBarcodeHTML(6, 6, 'black');
+    echo '</span>' . K_NEWLINE;
+    echo '</div>' . K_NEWLINE;
+} 
+echo '</div>';
 
 echo '<div class="row">' . K_NEWLINE;
 // show buttons by case

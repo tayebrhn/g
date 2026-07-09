@@ -1511,19 +1511,6 @@ echo getFormRowTextInput(
     false,
     false,
 );
-// ip authorized
-// echo getFormRowTextInput(
-//     "test_ip_range",
-//     $l["w_ip_range"],
-//     $l["h_ip_range"],
-//     "",
-//     $test_ip_range,
-//     '^([0-9a-fA-F,\:\.\*-]*)$',
-//     255,
-//     false,
-//     false,
-//     false,
-// );
 
 echo '<div class="row">' . K_NEWLINE;
 echo '<span class="label">' . K_NEWLINE;
@@ -1563,43 +1550,61 @@ echo "</select>" . K_NEWLINE;
 echo "</span>" . K_NEWLINE;
 echo "</div>" . K_NEWLINE;
 
-// ssl certificate field
-// echo '<div class="row">' . K_NEWLINE;
-// echo '<span class="label">' . K_NEWLINE;
-// echo '<label for="sslcerts">' . $l["w_sslcerts"] . "</label>" . K_NEWLINE;
-// echo "</span>" . K_NEWLINE;
-// echo '<span class="formw">' . K_NEWLINE;
-// echo '<select name="sslcerts[]" id="sslcerts" size="5" multiple="multiple">' .
-//     K_NEWLINE;
-// $sql = "SELECT * FROM " . K_TABLE_SSLCERTS . " ORDER BY ssl_name";
-// if ($r = F_db_query($sql, $db)) {
-//     while ($m = F_db_fetch_array($r)) {
-//         echo '<option value="' . $m["ssl_id"] . '"';
-//         if (
-//             isset($test_id) &&
-//             $test_id > 0 &&
-//             F_isTestOnSSLCerts($test_id, $m["ssl_id"])
-//         ) {
-//             echo ' selected="selected"';
-//         }
+echo '<div style="display:none;">';
 
-//         echo ">" .
-//             htmlspecialchars(
-//                 $m["ssl_name"] . " (" . substr($m["ssl_end_date"], 0, 10) . ")",
-//                 ENT_NOQUOTES,
-//                 $l["a_meta_charset"],
-//             ) .
-//             "</option>" .
-//             K_NEWLINE;
-//     }
-// } else {
-//     echo "</select></span></div>" . K_NEWLINE;
-//     F_display_db_error();
-// }
+//---IP Authorized---
+echo getFormRowTextInput(
+    "test_ip_range",
+    $l["w_ip_range"],
+    $l["h_ip_range"],
+    "",
+    $test_ip_range,
+    '^([0-9a-fA-F,\:\.\*-]*)$',
+    255,
+    false,
+    false,
+    false,
+);
 
-// echo "</select>" . K_NEWLINE;
-// echo "</span>" . K_NEWLINE;
-// echo "</div>" . K_NEWLINE;
+//---SSL Certificate---
+echo '<div class="row">' . K_NEWLINE;
+echo '<span class="label">' . K_NEWLINE;
+echo '<label for="sslcerts">' . $l["w_sslcerts"] . "</label>" . K_NEWLINE;
+echo "</span>" . K_NEWLINE;
+echo '<span class="formw">' . K_NEWLINE;
+echo '<select name="sslcerts[]" id="sslcerts" size="5" multiple="multiple">' .
+    K_NEWLINE;
+$sql = "SELECT * FROM " . K_TABLE_SSLCERTS . " ORDER BY ssl_name";
+if ($r = F_db_query($sql, $db)) {
+    while ($m = F_db_fetch_array($r)) {
+        echo '<option value="' . $m["ssl_id"] . '"';
+        if (
+            isset($test_id) &&
+            $test_id > 0 &&
+            F_isTestOnSSLCerts($test_id, $m["ssl_id"])
+        ) {
+            echo ' selected="selected"';
+        }
+
+        echo ">" .
+            htmlspecialchars(
+                $m["ssl_name"] . " (" . substr($m["ssl_end_date"], 0, 10) . ")",
+                ENT_NOQUOTES,
+                $l["a_meta_charset"],
+            ) .
+            "</option>" .
+            K_NEWLINE;
+    }
+} else {
+    echo "</select></span></div>" . K_NEWLINE;
+    F_display_db_error();
+}
+
+echo "</select>" . K_NEWLINE;
+echo "</span>" . K_NEWLINE;
+echo "</div>" . K_NEWLINE;
+
+echo '</div>';
 
 echo getFormRowTextInput(
     "test_score_right",

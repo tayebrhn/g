@@ -307,6 +307,7 @@ if (isset($subject_id) && $subject_id > 0) {
     $pdflink .= '?module_id=' . $subject_module_id;
     $pdflink .= '&amp;subject_id=' . $subject_id;
     $pdflink .= '&amp;hide_answers=' . (int) $hide_answers; // hide answers option
+    echo '<div style="display:none;">';
     echo '<a href="' . $pdflink . '&amp;expmode=1" class="xmlbutton" title="' . $l['h_pdf'] . '">PDF</a>';
     echo '<a href="' . $pdflink . '&amp;expmode=2" class="xmlbutton" title="' . $l['h_pdf'] . '">PDF ' . $l['w_module'] . '</a>';
     echo '<a href="' . $pdflink . '&amp;expmode=3" class="xmlbutton" title="' . $l['h_pdf'] . '">PDF ' . $l['w_all'] . '</a>';
@@ -319,6 +320,7 @@ if (isset($subject_id) && $subject_id > 0) {
     echo ' <a href="' . $xmllink . '&amp;expmode=1&amp;format=JSON" class="xmlbutton" title="JSON">JSON</a>';
     echo '<a href="' . $xmllink . '&amp;expmode=2&amp;format=JSON" class="xmlbutton" title="JSON">JSON ' . $l['w_module'] . '</a>';
     echo '<a href="' . $xmllink . '&amp;expmode=3&amp;format=JSON" class="xmlbutton" title="JSON">JSON ' . $l['w_all'] . '</a>';
+    echo '</div>';
     $tsvlink = 'tce_tsv_questions.php';
     $tsvlink .= '?module_id=' . $subject_module_id;
     $tsvlink .= '&amp;subject_id=' . $subject_id;

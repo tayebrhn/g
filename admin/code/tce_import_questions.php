@@ -96,16 +96,16 @@ echo '<span class="label">&nbsp;</span>' . K_NEWLINE;
 echo '<div class="formw">' . K_NEWLINE;
 echo '<fieldset class="noborder">' . K_NEWLINE;
 
-echo '<legend title="' . $l['w_type'] . '">' . $l['w_type'] . '</legend>' . K_NEWLINE;
-echo '<input type="radio" name="type" id="type_xml" value="1" title="Exam XML Format"';
-if ($type == 1) {
-    echo ' checked="checked"';
-}
+// echo '<legend title="' . $l['w_type'] . '">' . $l['w_type'] . '</legend>' . K_NEWLINE;
+// echo '<input type="radio" name="type" id="type_xml" value="1" title="Exam XML Format"';
+// if ($type == 1) {
+//     echo ' checked="checked"';
+// }
 
-echo ' />';
-echo '<label for="type_xml">XML</label><br />' . K_NEWLINE;
+// echo ' />';
+// echo '<label for="type_xml">XML</label><br />' . K_NEWLINE;
 
-echo '<input type="radio" name="type" id="type_tsv" value="2" title="Exam TSV Format"' . K_NEWLINE;
+echo '<input type="radio" name="type" id="type_tsv" checked value="2" title="Exam TSV Format"' . K_NEWLINE;
 if ($type == 2) {
     echo ' checked="checked"';
 }

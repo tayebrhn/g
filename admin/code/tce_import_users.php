@@ -93,12 +93,12 @@ switch ($menu_mode) {
 <div class="row">
 <div class="formw">
 <fieldset class="noborder">
-<legend title="<?php echo $l['h_file_type']; ?>"><?php echo $l['w_type']; ?></legend>
+<!-- <legend title="<?php echo $l['h_file_type']; ?>"><?php echo $l['w_type']; ?></legend> -->
 
-<input type="radio" name="file_type" id="file_type_xml" value="1" checked="checked" title="<?php echo $l['h_file_type_xml']; ?>" />
-<label for="file_type_xml">XML</label>
+<!-- <input type="radio" name="file_type" id="file_type_xml" value="1" checked="checked" title="<?php echo $l['h_file_type_xml']; ?>" />
+<label for="file_type_xml">XML</label> -->
 <br />
-<input type="radio" name="file_type" id="file_type_tsv" value="2" title="<?php echo $l['h_file_type_tsv']; ?>" />
+<input type="radio" name="file_type" id="file_type_tsv" checked value="2" title="<?php echo $l['h_file_type_tsv']; ?>" />
 <label for="file_type_tsv">TSV</label>
 </fieldset>
 </div>

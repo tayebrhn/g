@@ -49,14 +49,14 @@ $menu = [
         'key' => 'r',
         'enabled' => ($_SESSION['session_user_level'] > K_AUTH_PUBLIC_TEST_RESULTS),
     ],
-    'tce_page_user.php' => [
-        'link' => 'tce_page_user.php',
-        'title' => $l['w_user'],
-        'name' => $l['w_user'],
-        'level' => K_AUTH_PAGE_USER,
-        'key' => 'u',
-        'enabled' => ($_SESSION['session_user_level'] > 0),
-    ],
+    // 'tce_page_user.php' => [
+    //     'link' => 'tce_page_user.php',
+    //     'title' => $l['w_user'],
+    //     'name' => $l['w_user'],
+    //     'level' => K_AUTH_PAGE_USER,
+    //     'key' => 'u',
+    //     'enabled' => ($_SESSION['session_user_level'] > 0),
+    // ],
     'admin' => [
         'link' => '../../admin/code/index.php',
         'title' => $l['h_admin_link'],
@@ -83,24 +83,24 @@ $menu = [
     ],
 ];
 
-$menu['tce_page_user.php']['sub'] = [
-    'tce_user_change_email.php' => [
-        'link' => 'tce_user_change_email.php',
-        'title' => $l['t_user_change_email'],
-        'name' => $l['w_change_email'],
-        'level' => K_AUTH_USER_CHANGE_EMAIL,
-        'key' => '',
-        'enabled' => true,
-    ],
-    'tce_user_change_password.php' => [
-        'link' => 'tce_user_change_password.php',
-        'title' => $l['t_user_change_password'],
-        'name' => $l['w_change_password'],
-        'level' => K_AUTH_USER_CHANGE_PASSWORD,
-        'key' => '',
-        'enabled' => true,
-    ],
-];
+// $menu['tce_page_user.php']['sub'] = [
+//     'tce_user_change_email.php' => [
+//         'link' => 'tce_user_change_email.php',
+//         'title' => $l['t_user_change_email'],
+//         'name' => $l['w_change_email'],
+//         'level' => K_AUTH_USER_CHANGE_EMAIL,
+//         'key' => '',
+//         'enabled' => true,
+//     ],
+//     'tce_user_change_password.php' => [
+//         'link' => 'tce_user_change_password.php',
+//         'title' => $l['t_user_change_password'],
+//         'name' => $l['w_change_password'],
+//         'level' => K_AUTH_USER_CHANGE_PASSWORD,
+//         'key' => '',
+//         'enabled' => true,
+//     ],
+// ];
 
 echo '<a name="menusection" id="menusection"></a>' . K_NEWLINE;
 
