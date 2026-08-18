@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = 1;
+$pagelevel = K_AUTH_ADMIN_TESTS;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['w_tests'];

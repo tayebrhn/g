@@ -6,10 +6,10 @@ IMPORTANT:
 Starting from 14.0.0 version the encryption algorithm for
 passwords has changed and all passwords have to be reset.
 
-The default password for admin is 1234 and the correspondent
-encoding is on install/dbdata.sql
-Please create a new admin user (level 10) and delete the
-"admin" one as soon as possible.
+Before upgrading, ensure that you have a current administrator
+account (level 10). Do not rely on or deploy default credentials;
+use a unique, securely managed password for every administrator
+account.
 
 
 This is the general upgrade process for TCExam.
