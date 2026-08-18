@@ -970,3 +970,111 @@ span.accesskey {
   color: #006000 !important;
   text-align: right !important;
 }
+
+/* Modern default theme refinements ---------------------------------------
+   Existing markup and controls remain unchanged; this layer improves visual
+   hierarchy, focus visibility, and responsiveness for administration pages. */
+
+html { background: #eef3f0; }
+body { background: #eef3f0; color: #20312a; font-family: Arial, FreeSans, sans-serif; line-height: 1.5; }
+a, a:visited { color: #176a45; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.14em; }
+a:hover { color: #0b4d2f; }
+a:focus, input:focus, select:focus, textarea:focus { outline: 3px solid #f4b942; outline-offset: 2px; }
+div.header { background: #176a45; box-shadow: 0 2px 8px rgba(20, 55, 37, 0.22); height: 48px; }
+div.header div.left, div.header div.right, div.header div.right input { background-color: transparent; }
+div.header div.left { margin: 11px 14px; }
+div.header div.right { margin: 10px 16px 0 0; }
+div.scrollmenu { background: #125638; box-shadow: 0 2px 5px rgba(20, 55, 37, 0.14); font-size: 82%; min-height: 32px; }
+div.scrollmenu ul { width: 100%; }
+div.scrollmenu ul li { height: 32px; line-height: 32px; }
+ul.menu li a, ul.menu li a:visited { border: 0; color: #ffffff; padding: 0 12px; }
+ul.menu li a:hover, ul.menu li a:focus { background: #0d432b; color: #ffffff; }
+ul.menu li:hover > ul, ul.menu *:focus + ul, ul.menu ul li:hover > ul, ul.menu ul *:focus + ul, ul.menu li > ul, ul.menu ul li { background-color: #125638; }
+ul.menu li:hover > ul, ul.menu *:focus + ul { top: 32px; }
+div.body { box-sizing: border-box; margin: 0 auto; max-width: 1280px; padding: 20px; width: 100%; }
+div.content { margin: 0; max-width: 100%; padding: 0; width: 100%; }
+h1, h2 { color: #163d2a; letter-spacing: -0.015em; margin: 0 0 16px; padding: 0; width: auto; }
+h1 { font-size: 1.6em; }
+h2 { font-size: 1.25em; }
+div.tceformbox, div.tcecontentbox, div.contentbox, div.preview { background: #ffffff; border: 1px solid #cbd9d1; border-radius: 6px; box-shadow: 0 2px 8px rgba(31, 58, 43, 0.08); padding: 18px; }
+div.pagehelp { background: #e8f3ec; border: 1px solid #b9d8c5; border-radius: 5px; color: #244a35; line-height: 1.5; margin-top: 16px; padding: 12px 14px; }
+div.message, div.warning, div.error, div.confirmbox { border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 5px; box-sizing: border-box; margin: 0 0 14px; padding: 10px 12px; }
+div.message { background: #e3f0fb; color: #16496e; }
+div.warning, div.confirmbox { background: #e6f5e9; color: #1d592c; }
+div.error { background: #fde8e7; color: #8a201c; }
+input, select, textarea { border: 1px solid #9fb7a9; border-radius: 4px; box-sizing: border-box; color: #20312a; font-family: inherit; padding: 6px 8px; }
+input[type="checkbox"], input[type="radio"] { padding: 0; }
+input[type="submit"], input[type="button"], input[type="reset"] { background: #176a45; border-color: #176a45; color: #ffffff; cursor: pointer; font-weight: bold; padding: 7px 13px; }
+input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover { background: #0d4f31; border-color: #0d4f31; }
+textarea { line-height: 1.45; min-height: 5em; }
+div.row { padding: 5px 1px; }
+table.userselect, table.filemanager { border-collapse: separate; border-color: #cbd9d1; border-radius: 5px; border-spacing: 0; overflow: hidden; width: 100%; }
+table.userselect td, table.userselect th, table.filemanager td, table.filemanager th { border-color: #d7e3dc; padding: 9px 10px; }
+table.userselect th, table.filemanager th { background: #edf5ef; color: #244a35; }
+table.userselect tr:nth-child(even) td, table.filemanager tr:nth-child(even) td { background: #f8fbf9; }
+div.userbar { background: #163d2a; box-shadow: 0 -1px 4px rgba(31, 58, 43, 0.12); box-sizing: border-box; margin: 20px 0 0; padding: 9px 20px; }
+div.userbar a.logoutbutton:link, div.userbar a.logoutbutton:visited, div.userbar a.loginbutton:link, div.userbar a.loginbutton:visited { border: 0; border-radius: 4px; display: inline-block; font-weight: bold; padding: 4px 10px; }
+@media screen and (max-width: 700px) { div.header { height: auto; min-height: 48px; } div.header div.right { clear: both; float: none; margin: 0; padding: 0 14px 10px; width: auto; } div.header div.right input { width: 100%; } div.scrollmenu ul li { line-height: 30px; } div.scrollmenu { overflow-x: auto; } div.scrollmenu ul { min-width: max-content; } div.body { padding: 14px; } div.row div.formw, div.row span.label, div.row span.formw, div.row span.value { float: none; text-align: left; width: 100%; } div.row span.label { display: block; margin-bottom: 4px; } table.userselect, table.filemanager { display: block; overflow-x: auto; } div.userbar { text-align: center; white-space: normal; } }
+
+/* Section landing pages: users, modules, and tests. */
+ul.admin-section-menu {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.admin-section-menu li {
+  margin: 0;
+}
+
+ul.admin-section-menu li a,
+ul.admin-section-menu li span.active {
+  background: #ffffff;
+  border: 1px solid #cbd9d1;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(31, 58, 43, 0.07);
+  box-sizing: border-box;
+  color: #176a45;
+  display: block;
+  font-size: 1.05em;
+  font-weight: bold;
+  min-height: 76px;
+  padding: 23px 46px 18px 18px;
+  position: relative;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+ul.admin-section-menu li a:after {
+  color: #4e8066;
+  content: "\2192";
+  font-size: 1.35em;
+  font-weight: normal;
+  position: absolute;
+  right: 18px;
+  top: 20px;
+}
+
+ul.admin-section-menu li a:hover,
+ul.admin-section-menu li a:focus {
+  background: #f1f8f3;
+  border-color: #74ad89;
+  box-shadow: 0 5px 12px rgba(31, 58, 43, 0.13);
+  color: #0d4f31;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+ul.admin-section-menu li span.active {
+  background: #e8f3ec;
+  color: #244a35;
+}
+
+@media screen and (max-width: 700px) {
+  ul.admin-section-menu {
+    grid-template-columns: 1fr;
+  }
+}
