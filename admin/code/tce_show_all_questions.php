@@ -422,9 +422,9 @@ function F_show_select_questions($wherequery, $subject_module_id, $subject_id, $
             $questlist .= ' />';
             // display question description
             if (F_getBoolean($m['question_enabled'])) {
-                $questlist .= '<acronym class="onbox" title="' . $l['w_enabled'] . '">+</acronym>';
+                $questlist .= '<acronym class="okbox" title="' . $l['w_enabled'] . '">&#10003;</acronym>';
             } else {
-                $questlist .= '<acronym class="offbox" title="' . $l['w_disabled'] . '">-</acronym>';
+                $questlist .= '<acronym class="offbox" title="' . $l['w_disabled'] . '">&#8856;</acronym>';
             }
 
             switch ($m['question_type']) {
@@ -496,9 +496,9 @@ function F_show_select_questions($wherequery, $subject_module_id, $subject_id, $
                     while ($ma = F_db_fetch_array($ra)) {
                         $answlist .= '<li>';
                         if (F_getBoolean($ma['answer_enabled'])) {
-                            $answlist .= '<acronym class="onbox" title="' . $l['w_enabled'] . '">+</acronym>';
+                            $answlist .= '<acronym class="okbox" title="' . $l['w_enabled'] . '">&#10003;</acronym>';
                         } else {
-                            $answlist .= '<acronym class="offbox" title="' . $l['w_disabled'] . '">-</acronym>';
+                            $answlist .= '<acronym class="offbox" title="' . $l['w_disabled'] . '">&#8856;</acronym>';
                         }
 
                         if ($m['question_type'] != 4) {

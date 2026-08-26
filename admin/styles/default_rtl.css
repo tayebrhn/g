@@ -1026,3 +1026,6 @@ ul.admin-section-menu li a:after { color: #4e8066; content: "\2190"; font-size: 
 ul.admin-section-menu li a:hover, ul.admin-section-menu li a:focus { background: #f1f8f3; border-color: #74ad89; box-shadow: 0 5px 12px rgba(31, 58, 43, 0.13); color: #0d4f31; text-decoration: none; transform: translateY(-2px); }
 ul.admin-section-menu li span.active { background: #e8f3ec; color: #244a35; }
 @media screen and (max-width: 700px) { ul.admin-section-menu { grid-template-columns: 1fr; } }
+
+/* State-marker badges: uniform single-glyph state boxes (review correct/wrong/key markers, required-field markers). Colours from the acronym.* rules above; CSS only. */
+acronym.onbox, acronym.offbox, acronym.okbox, acronym.nobox, acronym.requiredonbox, acronym.requiredoffbox { border-radius: 3px; display: inline-block; min-width: 1.5em; text-align: center; }

@@ -85,7 +85,8 @@ echo '<meta name="description" content="[TCExam] ' . htmlspecialchars($thispage_
 echo '<meta name="author" content="nick"/>' . K_NEWLINE;
 echo '<meta name="reply-to" content="' . htmlspecialchars($thispage_reply, ENT_COMPAT, $l['a_meta_charset']) . '" />' . K_NEWLINE;
 echo '<meta name="keywords" content="' . htmlspecialchars($thispage_keywords, ENT_COMPAT, $l['a_meta_charset']) . '" />' . K_NEWLINE;
-echo '<link rel="stylesheet" href="' . $thispage_style . '" type="text/css" />' . K_NEWLINE;
+$thispage_style_file = __DIR__ . '/../styles/' . basename($thispage_style);
+echo '<link rel="stylesheet" href="' . $thispage_style . (is_file($thispage_style_file) ? '?v=' . filemtime($thispage_style_file) : '') . '" type="text/css" />' . K_NEWLINE;
 echo '<link rel="shortcut icon" href="' . $thispage_icon . '" />' . K_NEWLINE;
 // calendar
 if (isset($enable_calendar) && $enable_calendar) {

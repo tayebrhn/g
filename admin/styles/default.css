@@ -1078,3 +1078,18 @@ ul.admin-section-menu li span.active {
     grid-template-columns: 1fr;
   }
 }
+
+/* State-marker badges: make the single-glyph state boxes (answer review
+   correct/wrong/key markers, required-field markers) render as uniform
+   badges. Colours come from the acronym.* rules above; CSS only. */
+acronym.onbox,
+acronym.offbox,
+acronym.okbox,
+acronym.nobox,
+acronym.requiredonbox,
+acronym.requiredoffbox {
+  border-radius: 3px;
+  display: inline-block;
+  min-width: 1.5em;
+  text-align: center;
+}

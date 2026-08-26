@@ -1214,3 +1214,21 @@ ol.testlist li {
   margin: 0 0 12px;
   padding: 12px 14px;
 }
+
+/* --- State-marker badges ----------------------------------------------- */
+/* Make the single-glyph state boxes render as uniform badges: question
+   displayed/answered in the navigator, required-field markers, and the
+   answer-review correct/wrong/key markers. Colours come from the existing
+   acronym.onbox/offbox/okbox/nobox rules above; these props are cosmetic
+   only and change no behaviour. */
+acronym.onbox,
+acronym.offbox,
+acronym.okbox,
+acronym.nobox,
+acronym.requiredonbox,
+acronym.requiredoffbox {
+  border-radius: 3px;
+  display: inline-block;
+  min-width: 1.5em;
+  text-align: center;
+}

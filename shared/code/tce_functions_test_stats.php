@@ -1040,16 +1040,16 @@ function F_printUserTestStat($testuser_id)
                             }
                         } elseif ($ma['logansw_selected'] > 0) {
                             if (F_getBoolean($ma['answer_isright'])) {
-                                $ret .= '<acronym title="' . $l['h_answer_right'] . '" class="okbox">x</acronym>';
+                                $ret .= '<acronym title="' . $l['h_answer_right'] . '" class="okbox">&#10003;</acronym>';
                             } else {
-                                $ret .= '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">x</acronym>';
+                                $ret .= '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">&#10007;</acronym>';
                             }
                         } elseif ($m['question_type'] == 1) {
                             // MCSA
                             $ret .= '<acronym title="-" class="offbox">&nbsp;</acronym>';
                         } elseif ($ma['logansw_selected'] == 0) {
                             if (F_getBoolean($ma['answer_isright'])) {
-                                $ret .= '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">&nbsp;</acronym>';
+                                $ret .= '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">&#10007;</acronym>';
                             } else {
                                 $ret .= '<acronym title="' . $l['h_answer_right'] . '" class="okbox">&nbsp;</acronym>';
                             }
@@ -1061,7 +1061,7 @@ function F_printUserTestStat($testuser_id)
                         if ($m['question_type'] == 4) {
                             $ret .= '<acronym title="' . $l['w_position'] . '" class="onbox">' . $ma['answer_position'] . '</acronym>';
                         } elseif (F_getBoolean($ma['answer_isright'])) {
-                            $ret .= '<acronym title="' . $l['w_answers_right'] . '" class="onbox">&reg;</acronym>';
+                            $ret .= '<acronym title="' . $l['w_answers_right'] . '" class="onbox">&#9733;</acronym>';
                         } else {
                             $ret .= '<acronym title="' . $l['w_answers_wrong'] . '" class="offbox">&nbsp;</acronym>';
                         }
