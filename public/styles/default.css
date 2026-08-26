@@ -1333,3 +1333,169 @@ div.userbar a.loginbutton:visited {
     white-space: normal;
   }
 }
+
+/* ========================================================================
+   Interactive screen refinements: exam-taking, results/review, and public
+   auth forms. CSS only, appended layer: every original class, id and JS
+   hook is preserved, so behaviour is unchanged. Rows that adapt to their
+   controls use :has() purely as progressive enhancement (engines without
+   :has() simply keep the base spacing). Directional spacing uses logical
+   properties so the RTL stylesheet stays correct.
+   ======================================================================== */
+
+/* --- Exam question container ------------------------------------------- */
+div.tcecontentbox {
+  line-height: 1.55;
+}
+
+/* separator between the question text and its answer list */
+div.tcecontentbox hr {
+  border: 0;
+  border-top: 1px solid #d7e3dc;
+  margin: 12px 0;
+}
+
+/* --- Exam answer options ----------------------------------------------- */
+/* Answer rows that contain a <label> are the interactive options shown
+   while taking a test; the results/review list has no <label>, so it is
+   left untouched by these rules. */
+ol.answer {
+  list-style-position: inside;
+  padding-inline-start: 4px;
+}
+
+ol.answer li:has(label) {
+  border: 1px solid #d7e3dc;
+  border-radius: 5px;
+  margin: 7px 0;
+  padding: 9px 12px;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+ol.answer li:has(label):hover {
+  background: #f1f8f3;
+  border-color: #74ad89;
+}
+
+/* highlight only genuine selections: single-answer radios (name="answpos")
+   and multi-answer checkboxes. MCMA radio rows keep a radio checked by
+   default, so they are intentionally excluded. */
+ol.answer li:has(input[type="radio"][name="answpos"]:checked),
+ol.answer li:has(input[type="checkbox"]:checked) {
+  background: #eaf2ff;
+  border-color: #4a78b0;
+  box-shadow: inset 0 0 0 1px #4a78b0;
+}
+
+ol.answer li:has(label) label {
+  cursor: pointer;
+}
+
+ol.answer li input[type="radio"],
+ol.answer li input[type="checkbox"] {
+  accent-color: #176a45;
+  margin-inline-end: 5px;
+  vertical-align: middle;
+}
+
+/* inline answers stay on one line but gain horizontal breathing room */
+ol.answer_inline {
+  list-style: none;
+}
+
+ol.answer_inline li {
+  margin-block: 4px;
+  margin-inline-end: 16px;
+}
+
+/* free-text answer box */
+textarea.answertext {
+  box-sizing: border-box;
+  min-height: 7em;
+  width: 100%;
+}
+
+/* --- Exam navigator (previous / confirm / next + question list) -------- */
+div.navlink {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+ol.qlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ol.qlist li {
+  border: 1px solid #e1eae4;
+  border-radius: 4px;
+  margin: 4px 0;
+  padding: 5px 8px;
+}
+
+ol.qlist li:hover {
+  background: #f4f9f6;
+}
+
+ol.qlist li.selected {
+  background: #e8f3ec;
+  border-color: #176a45;
+}
+
+/* --- Results & answer review ------------------------------------------- */
+ol.question > li {
+  background: #ffffff;
+  border: 1px solid #cbd9d1;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(31, 58, 43, 0.06);
+  margin: 0 0 14px;
+  padding: 14px 16px;
+}
+
+ol.question ol.answer {
+  list-style-position: inside;
+}
+
+ol.question ol.answer li {
+  line-height: 1.6;
+  padding: 3px 0;
+}
+
+/* supervisor / teacher comment on a reviewed answer */
+ul.answer li.comment {
+  background: #fff8e6;
+  border: 1px solid #f0dca0;
+  border-radius: 5px;
+  color: #6a4a00;
+  font-style: italic;
+  padding: 8px 10px;
+}
+
+/* --- Public auth / registration forms ---------------------------------- */
+/* Constrain and centre the login and registration cards on wide screens.
+   :has() targets the specific card; where it is unsupported the card keeps
+   its previous full-width layout. */
+div.tceformbox:has(#form_login) {
+  margin: 16px auto;
+  max-width: 560px;
+}
+
+div.tceformbox:has(#form_usereditor) {
+  margin: 16px auto;
+  max-width: 780px;
+}
+
+/* --- Public test list (landing page) ----------------------------------- */
+ol.testlist li {
+  background: #ffffff;
+  border: 1px solid #cbd9d1;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(31, 58, 43, 0.06);
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 12px 14px;
+}

@@ -24,3 +24,4 @@ target
 vendor
 phpstan.neon
 cache/
+.qwen
