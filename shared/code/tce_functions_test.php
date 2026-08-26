@@ -2085,10 +2085,10 @@ function F_questionsMenu($testdata, $testuser_id, $testlog_id = 0, $disable = fa
             $str .= '<acronym';
             if (! empty($m['testlog_display_time'])) {
                 $str .= ' class="onbox"';
-                $str .= ' title="' . $l['h_question_displayed'] . '">+';
+                $str .= ' title="' . $l['h_question_displayed'] . '">&#9679;';
             } else {
                 $str .= ' class="offbox"';
-                $str .= ' title="' . $l['h_question_not_displayed'] . '">-';
+                $str .= ' title="' . $l['h_question_not_displayed'] . '">&#9675;';
             }
 
             $str .= '</acronym>';
@@ -2099,7 +2099,7 @@ function F_questionsMenu($testdata, $testuser_id, $testlog_id = 0, $disable = fa
             $str .= '<acronym';
             if (! empty($m['testlog_change_time'])) {
                 $str .= ' class="onbox"';
-                $str .= ' title="' . $l['h_question_answered'] . '">+';
+                $str .= ' title="' . $l['h_question_answered'] . '">&#10003;';
             } else {
                 $str .= ' class="offbox"';
                 $str .= ' title="' . $l['h_question_not_answered'] . '">-';

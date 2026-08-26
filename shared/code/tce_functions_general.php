@@ -328,7 +328,7 @@ function showRequiredField($mode = 1)
     global $l;
     $str = '';
     if ($mode == 2) {
-        return ' <acronym class="requiredonbox" title="' . $l['w_required'] . '">+</acronym>';
+        return ' <acronym class="requiredonbox" title="' . $l['w_required'] . '">*</acronym>';
     }
 
     return ' <acronym class="requiredoffbox" title="' . $l['w_not_required'] . '">-</acronym>';
