@@ -91,15 +91,19 @@ echo '<link rel="shortcut icon" href="' . $thispage_icon . '" />' . K_NEWLINE;
 echo '<link rel="stylesheet" href="' . K_PATH_SHARED_JSCRIPTS . 'slimselect/slimselect.min.css" type="text/css" />' . K_NEWLINE;
 // calendar
 if (isset($enable_calendar) && $enable_calendar) {
-    echo '<style type="text/css">@import url(' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/calendar-blue.css);</style>' . K_NEWLINE;
-    echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/calendar.js"></script>' . K_NEWLINE;
-    if (F_file_exists('' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/lang/calendar-' . $l['a_meta_language'] . '.js')) {
-        echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/lang/calendar-' . $l['a_meta_language'] . '.js"></script>' . K_NEWLINE;
-    } else {
-        echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/lang/calendar-en.js"></script>' . K_NEWLINE;
+    echo '<link rel="stylesheet" href="' . K_PATH_SHARED_JSCRIPTS . 'flatpickr/flatpickr.min.css" type="text/css" />' . K_NEWLINE;
+    echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'flatpickr/flatpickr.min.js"></script>' . K_NEWLINE;
+    // TCExam language codes that differ from the flatpickr locale file names
+    $flatpickr_locales = ['jp' => 'ja', 'CN' => 'zh', 'br' => 'pt', 'el' => 'gr'];
+    $l10n = $l['a_meta_language'];
+    if (isset($flatpickr_locales[$l10n])) {
+        $l10n = $flatpickr_locales[$l10n];
     }
 
-    echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/calendar-setup.js"></script>' . K_NEWLINE;
+    if ($l10n != 'en' && F_file_exists(K_PATH_SHARED_JSCRIPTS . 'flatpickr/l10n/' . $l10n . '.js')) {
+        echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'flatpickr/l10n/' . $l10n . '.js"></script>' . K_NEWLINE;
+        echo '<script type="text/javascript">if (typeof flatpickr != "undefined" && typeof flatpickr.l10ns != "undefined" && flatpickr.l10ns["' . $l10n . '"]) { flatpickr.localize(flatpickr.l10ns["' . $l10n . '"]); }</script>' . K_NEWLINE;
+    }
 }
 
 echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'slimselect/slimselect.min.js"></script>' . K_NEWLINE;

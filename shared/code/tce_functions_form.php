@@ -259,16 +259,16 @@ function getFormRowTextInput($field_name, $name, $description = '', $tip = '', $
     $str = ''; // string to return
     $button = '';
     if ($date) {
-        $button = '<button name="' . $field_name . '_date_trigger" id="' . $field_name . '_date_trigger" title="' . $l['w_calendar'] . '">...</button>';
-        $jsdate = 'Calendar.setup({inputField: "' . $field_name . '", ifFormat: "%Y-%m-%d", button: "' . $field_name . '_date_trigger"});' . K_NEWLINE;
+        $button = '<button type="button" name="' . $field_name . '_date_trigger" id="' . $field_name . '_date_trigger" title="' . $l['w_calendar'] . '">...</button>';
+        $jsdate = '(function () {if (typeof flatpickr == "undefined") {return;}var fp = flatpickr("#' . $field_name . '", {dateFormat: "Y-m-d", allowInput: true, disableMobile: true, clickOpens: false});document.getElementById("' . $field_name . '_date_trigger").addEventListener("click", function (e) {e.preventDefault(); fp.open();});})();' . K_NEWLINE;
         $format = '^([0-9]{4})([\-])([0-9]{2})([\-])([0-9]{2})$';
         $maxlen = 10;
         if (strlen($tip) == 0) {
             $tip = $l['w_date_format'];
         }
     } elseif ($datetime) {
-        $button = '<button name="' . $field_name . '_date_trigger" id="' . $field_name . '_date_trigger" title="' . $l['w_calendar'] . '">...</button>';
-        $jsdate = 'Calendar.setup({inputField: "' . $field_name . '", ifFormat: "%Y-%m-%d %H:%M:%S", showsTime: "true", button: "' . $field_name . '_date_trigger"});' . K_NEWLINE;
+        $button = '<button type="button" name="' . $field_name . '_date_trigger" id="' . $field_name . '_date_trigger" title="' . $l['w_calendar'] . '">...</button>';
+        $jsdate = '(function () {if (typeof flatpickr == "undefined") {return;}var fp = flatpickr("#' . $field_name . '", {dateFormat: "Y-m-d H:i:S", enableTime: true, enableSeconds: true, time_24hr: true, allowInput: true, disableMobile: true, clickOpens: false});document.getElementById("' . $field_name . '_date_trigger").addEventListener("click", function (e) {e.preventDefault(); fp.open();});})();' . K_NEWLINE;
         $format = '^([0-9]{4})([\-])([0-9]{2})([\-])([0-9]{2})([ ])([0-9]{2})([\:])([0-9]{2})([\:])([0-9]{2})$';
         $maxlen = 19;
         if (strlen($tip) == 0) {
