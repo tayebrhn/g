@@ -1004,7 +1004,7 @@ div.message, div.warning, div.error, div.confirmbox { border: 1px solid rgba(0, 
 div.message { background: #e3f0fb; color: #16496e; }
 div.warning, div.confirmbox { background: #eaf6ec; color: #1d592c; }
 div.error { background: #fde8e7; color: #8a201c; }
-input, select, textarea { border: 1px solid #a8cdb0; border-radius: 4px; box-sizing: border-box; color: #1f3524; font-family: inherit; padding: 6px 8px; }
+input, select, textarea { background: #fdf3e7; border: 1px solid #a8cdb0; border-radius: 4px; box-sizing: border-box; color: #1f3524; font-family: inherit; padding: 6px 8px; }
 input[type="checkbox"], input[type="radio"] { padding: 0; }
 /* Buttons: primary form actions */
 input[type="submit"], input[type="button"], input[type="reset"] { background: #69bf70; border-color: #69bf70; color: #133d1e; cursor: pointer; font-weight: bold; padding: 7px 13px; transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease; }
@@ -1057,6 +1057,8 @@ acronym.onbox, acronym.offbox, acronym.okbox, acronym.nobox, acronym.requiredonb
 /* Vendor component accents: SlimSelect + Flatpickr follow the brand palette.
    Higher specificity than the vendor stylesheets (which load after this file). */
 html:root { --ss-primary-color: #69bf70; }
+
+/* SlimSelect closed box matches the tinted native inputs */html .ss-main { background-color: #fdf3e7; }
 
 .flatpickr-calendar .flatpickr-day.selected,
 .flatpickr-calendar .flatpickr-day.startRange,
