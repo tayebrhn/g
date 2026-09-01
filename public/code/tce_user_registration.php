@@ -356,6 +356,14 @@ echo '</div>' . K_NEWLINE;
 echo '<div class="pagehelp">' . $l['hp_user_registration'] . '</div>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
 
+echo '<script type="text/javascript">' . K_NEWLINE;
+echo "//<![CDATA[" . K_NEWLINE;
+echo 'document.addEventListener("DOMContentLoaded", function() {' . K_NEWLINE;
+echo ' if (document.getElementById("user_groups")) { new SlimSelect({ select: "#user_groups", placeholder: "' . $l["w_groups"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
+echo '});' . K_NEWLINE;
+echo "//]]>" . K_NEWLINE;
+echo "</script>" . K_NEWLINE;
+
 require_once('../code/tce_page_footer.php');
 
 //============================================================+

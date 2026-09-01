@@ -88,6 +88,7 @@ echo '<meta name="keywords" content="' . htmlspecialchars($thispage_keywords, EN
 $thispage_style_file = __DIR__ . '/../styles/' . basename($thispage_style);
 echo '<link rel="stylesheet" href="' . $thispage_style . (is_file($thispage_style_file) ? '?v=' . filemtime($thispage_style_file) : '') . '" type="text/css" />' . K_NEWLINE;
 echo '<link rel="shortcut icon" href="' . $thispage_icon . '" />' . K_NEWLINE;
+echo '<link rel="stylesheet" href="' . K_PATH_SHARED_JSCRIPTS . 'slimselect/slimselect.min.css" type="text/css" />' . K_NEWLINE;
 // calendar
 if (isset($enable_calendar) && $enable_calendar) {
     echo '<style type="text/css">@import url(' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/calendar-blue.css);</style>' . K_NEWLINE;
@@ -101,6 +102,7 @@ if (isset($enable_calendar) && $enable_calendar) {
     echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'jscalendar/calendar-setup.js"></script>' . K_NEWLINE;
 }
 
+echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'slimselect/slimselect.min.js"></script>' . K_NEWLINE;
 echo '<!-- TCExam19730104 -->' . K_NEWLINE;
 echo '</head>' . K_NEWLINE;
 

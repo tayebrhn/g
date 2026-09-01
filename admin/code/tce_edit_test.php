@@ -133,6 +133,15 @@ if (isset($_REQUEST["user_groups"])) {
     $user_groups = [];
 }
 
+if (isset($_REQUEST["sslcerts"])) {
+    $sslcerts = $_REQUEST["sslcerts"];
+    if (!is_array($sslcerts)) {
+        $sslcerts = [$sslcerts];
+    }
+} else {
+    $sslcerts = [];
+}
+
 if (
     !isset($_REQUEST["test_score_right"]) ||
     empty($_REQUEST["test_score_right"])
@@ -2356,6 +2365,17 @@ echo ' if (document.getElementById(\'test_random_answers_order\').checked==false
     K_NEWLINE;
 echo "}" . K_NEWLINE;
 echo "JF_check_random_boxes();" . K_NEWLINE;
+echo "//]]>" . K_NEWLINE;
+echo "</script>" . K_NEWLINE;
+
+// initialize SlimSelect on multiselect elements
+echo '<script type="text/javascript">' . K_NEWLINE;
+echo "//<![CDATA[" . K_NEWLINE;
+echo 'document.addEventListener("DOMContentLoaded", function() {' . K_NEWLINE;
+echo ' if (document.getElementById("user_groups")) { new SlimSelect({ select: "#user_groups", placeholder: "' . $l["w_groups"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
+echo ' if (document.getElementById("sslcerts")) { new SlimSelect({ select: "#sslcerts", placeholder: "' . $l["w_sslcerts"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
+echo ' if (document.getElementById("subject_id")) { new SlimSelect({ select: "#subject_id", placeholder: "' . $l["w_subjects"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
+echo '});' . K_NEWLINE;
 echo "//]]>" . K_NEWLINE;
 echo "</script>" . K_NEWLINE;
 
