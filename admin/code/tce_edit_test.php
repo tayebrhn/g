@@ -48,14 +48,14 @@ $_REQUEST["ff_required"] =
     "test_name,test_description,test_ip_range,test_duration_time,test_score_right";
 $_REQUEST["ff_required_labels"] = htmlspecialchars(
     $l["w_name"] .
-        "," .
-        $l["w_description"] .
-        "," .
-        $l["w_ip_range"] .
-        "," .
-        $l["w_test_time"] .
-        "," .
-        $l["w_score_right"],
+    "," .
+    $l["w_description"] .
+    "," .
+    $l["w_ip_range"] .
+    "," .
+    $l["w_test_time"] .
+    "," .
+    $l["w_score_right"],
     ENT_COMPAT,
     $l["a_meta_charset"],
 );
@@ -81,8 +81,8 @@ if (
 
 $subject_id =
     !isset($_REQUEST["subject_id"]) || empty($_REQUEST["subject_id"])
-        ? []
-        : $_REQUEST["subject_id"];
+    ? []
+    : $_REQUEST["subject_id"];
 
 if (!isset($_REQUEST["tsubset_type"]) || empty($_REQUEST["tsubset_type"])) {
     $tsubset_type = 0;
@@ -356,8 +356,8 @@ switch ($menu_mode) {
 			test_end_time=' .
             F_empty_to_null(
                 "" .
-                    ((int) substr($test_end_time, 0, 1) - 1) .
-                    substr($test_end_time, 1),
+                ((int) substr($test_end_time, 0, 1) - 1) .
+                substr($test_end_time, 1),
             ) .
             '
 			WHERE test_id=' .
@@ -380,8 +380,8 @@ switch ($menu_mode) {
 			test_end_time=' .
             F_empty_to_null(
                 "" .
-                    ((int) substr($test_end_time, 0, 1) + 1) .
-                    substr($test_end_time, 1),
+                ((int) substr($test_end_time, 0, 1) + 1) .
+                substr($test_end_time, 1),
             ) .
             '
 			WHERE test_id=' .
@@ -669,19 +669,19 @@ switch ($menu_mode) {
         // ask confirmation
         F_print_error("WARNING", $l["m_delete_confirm_test"]); ?>
         <div class="confirmbox">
-        <form action="<?php echo $_SERVER[
-            "SCRIPT_NAME"
-        ]; ?>" method="post" enctype="multipart/form-data" id="form_delete">
-        <div>
-        <input type="hidden" name="test_id" id="test_id" value="<?php echo $test_id; ?>" />
-        <input type="hidden" name="test_name" id="test_name" value="<?php echo $test_name; ?>" />
-        <?php
-        F_submit_button("forcedelete", $l["w_delete"], $l["h_delete"]);
-        F_submit_button("cancel", $l["w_cancel"], $l["h_cancel"]);
-        echo F_getCSRFTokenField() . K_NEWLINE;
-        ?>
-        </div>
-        </form>
+            <form action="<?php echo $_SERVER[
+                "SCRIPT_NAME"
+            ]; ?>" method="post" enctype="multipart/form-data" id="form_delete">
+                <div>
+                    <input type="hidden" name="test_id" id="test_id" value="<?php echo $test_id; ?>" />
+                    <input type="hidden" name="test_name" id="test_name" value="<?php echo $test_name; ?>" />
+                    <?php
+                    F_submit_button("forcedelete", $l["w_delete"], $l["h_delete"]);
+                    F_submit_button("cancel", $l["w_cancel"], $l["h_cancel"]);
+                    echo F_getCSRFTokenField() . K_NEWLINE;
+                    ?>
+                </div>
+            </form>
         </div>
         <?php break;
 
@@ -716,10 +716,10 @@ switch ($menu_mode) {
             F_print_error(
                 "WARNING",
                 $l["m_form_missing_fields"] .
-                    ": " .
-                    $l["w_confirm"] .
-                    " &rarr; " .
-                    $l["w_update"],
+                ": " .
+                $l["w_confirm"] .
+                " &rarr; " .
+                $l["w_update"],
             );
             $formstatus = false;
 
@@ -1236,7 +1236,7 @@ switch ($menu_mode) {
         $test_answers_order_mode = 0;
         $test_comment_enabled = true;
         $test_menu_enabled = true;
-        $test_noanswer_enabled = true;
+        $test_noanswer_enabled = false;
         $test_mcma_radio = true;
         $test_repeatable = 0;
         $test_mcma_partial_score = true;
@@ -1278,7 +1278,7 @@ if ($formstatus && $menu_mode != "clear") {
         $test_answers_order_mode = 0;
         $test_comment_enabled = true;
         $test_menu_enabled = true;
-        $test_noanswer_enabled = true;
+        $test_noanswer_enabled = false;
         $test_mcma_radio = true;
         $test_repeatable = 0;
         $test_mcma_partial_score = true;
@@ -1367,7 +1367,7 @@ if ($formstatus && $menu_mode != "clear") {
                 $test_answers_order_mode = 0;
                 $test_comment_enabled = true;
                 $test_menu_enabled = true;
-                $test_noanswer_enabled = true;
+                $test_noanswer_enabled = false;
                 $test_mcma_radio = true;
                 $test_repeatable = 0;
                 $test_mcma_partial_score = true;
@@ -1613,7 +1613,18 @@ echo "</select>" . K_NEWLINE;
 echo "</span>" . K_NEWLINE;
 echo "</div>" . K_NEWLINE;
 
+echo getFormRowCheckBox(
+    "test_noanswer_enabled",
+    $l["w_enable_noanswer"],
+    "",
+    "",
+    1,
+    $test_noanswer_enabled,
+    false,
+);
+
 echo '</div>';
+//--- end of intentionaly hidden fields ---
 
 echo getFormRowTextInput(
     "test_score_right",
@@ -1800,15 +1811,6 @@ echo getFormRowCheckBox(
     "",
     1,
     $test_mcma_partial_score,
-    false,
-);
-echo getFormRowCheckBox(
-    "test_noanswer_enabled",
-    $l["w_enable_noanswer"],
-    "",
-    "",
-    1,
-    $test_noanswer_enabled,
     false,
 );
 echo getFormRowCheckBox(
