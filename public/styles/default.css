@@ -217,17 +217,16 @@ div.header {
 /* header logo ------------ */
 div.header div.left {
   background-color: #37833d;
-  /* background-image: url(../../images/logo_tcexam_118x25.png); */
-
-  background-position: top;
+  background-image: url(../../images/logo_tcexam.png);
+  background-position: center;
   background-repeat: no-repeat;
   border: 0px none;
   float: left;
-  height: 25px;
+  height: 32px;
   margin: 4px 0px 0px 4px;
   padding: 0px 0px 0px 0px;
   text-align: left;
-  width: 118px;
+  width: 32px;
 }
 
 /* header banner ------------ */
@@ -786,7 +785,6 @@ ul.menu li a {
 }
 
 ul.menu li a:visited {
-  color: #ffffff;
   display: block;
   text-decoration: none;
 }
@@ -1025,7 +1023,7 @@ body {
 
 a,
 a:visited {
-  color: #2d6e3c;
+  color: #69bf70;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.14em;
@@ -1044,7 +1042,7 @@ textarea:focus {
 }
 
 div.header {
-  background: #2d6e3c;
+  background: #69bf70;
   box-shadow: 0 2px 8px rgba(45, 110, 60, 0.22);
   height: 48px;
 }
@@ -1056,7 +1054,17 @@ div.header div.right input {
 }
 
 div.header div.left {
-  margin: 11px 14px;
+  margin: 8px 14px;
+}
+
+div.header div.headertitle {
+  color: #ffffff;
+  float: left;
+  font-size: 120%;
+  font-weight: bold;
+  line-height: 48px;
+  margin-left: 12px;
+  white-space: nowrap;
 }
 
 div.header div.right {
@@ -1064,7 +1072,7 @@ div.header div.right {
 }
 
 div.scrollmenu {
-  background: #2d6e3c;
+  background: #69bf70;
   box-shadow: 0 2px 5px rgba(45, 110, 60, 0.14);
   font-size: 82%;
   min-height: 32px;
@@ -1082,7 +1090,7 @@ div.scrollmenu ul li {
 ul.menu li a,
 ul.menu li a:visited {
   border: 0;
-  color: #ffffff;
+  /* color: #14836b; */
   padding: 0 12px;
 }
 
@@ -1098,7 +1106,7 @@ ul.menu ul li:hover > ul,
 ul.menu ul *:focus + ul,
 ul.menu li > ul,
 ul.menu ul li {
-  background-color: #2d6e3c;
+  background-color: #69bf70;
 }
 
 ul.menu li:hover > ul,
@@ -1123,7 +1131,7 @@ div.container {
 
 h1,
 h2 {
-  color: #2d6e3c;
+  color: #69bf70;
   letter-spacing: -0.015em;
   margin: 0 0 16px;
   padding: 0;
@@ -1211,7 +1219,10 @@ input[type="reset"] {
   cursor: pointer;
   font-weight: bold;
   padding: 7px 13px;
-  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 input[type="submit"]:hover,
@@ -1251,7 +1262,7 @@ a.xmlbutton:visited {
   background: #ffffff;
   border: 1px solid #a8cdb0;
   border-radius: 4px;
-  color: #2d6e3c;
+  color: #69bf70;
   cursor: pointer;
   display: inline-block;
   font-family: inherit;
@@ -1259,7 +1270,10 @@ a.xmlbutton:visited {
   line-height: 1.4;
   padding: 5px 10px;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
 button:hover,
@@ -1292,7 +1306,9 @@ a.buttongreen:visited {
   font-weight: bold;
   padding: 5px 10px;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 a.buttongreen:hover {
@@ -1311,7 +1327,9 @@ a.buttonblue:visited {
   font-weight: bold;
   padding: 5px 10px;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 a.buttonblue:hover {
@@ -1330,7 +1348,9 @@ a.buttonred:visited {
   font-weight: bold;
   padding: 5px 10px;
   text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 a.buttonred:hover {
@@ -1378,7 +1398,7 @@ table.userselect tr:nth-child(even) td {
 }
 
 div.userbar {
-  background: #2d6e3c;
+  background: #69bf70;
   box-shadow: 0 -1px 4px rgba(45, 110, 60, 0.12);
   box-sizing: border-box;
   margin: 20px 0 0;
@@ -1501,7 +1521,9 @@ ol.answer li:has(label) {
   border-radius: 5px;
   margin: 7px 0;
   padding: 9px 12px;
-  transition: background-color 0.12s ease, border-color 0.12s ease;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease;
 }
 
 ol.answer li:has(label):hover {
@@ -1525,7 +1547,7 @@ ol.answer li:has(label) label {
 
 ol.answer li input[type="radio"],
 ol.answer li input[type="checkbox"] {
-  accent-color: #2d6e3c;
+  accent-color: #69bf70;
   margin-inline-end: 5px;
   vertical-align: middle;
 }
@@ -1575,7 +1597,7 @@ ol.qlist li:hover {
 
 ol.qlist li.selected {
   background: #eaf6ec;
-  border-color: #2d6e3c;
+  border-color: #69bf70;
 }
 
 /* --- Results & answer review ------------------------------------------- */
@@ -1652,9 +1674,14 @@ acronym.requiredoffbox {
 
 /* Vendor component accents: SlimSelect + Flatpickr follow the brand palette.
    Higher specificity than the vendor stylesheets (which load after this file). */
-html:root { --ss-primary-color: #69bf70; }
+html:root {
+  --ss-primary-color: #69bf70;
+}
 
-/* SlimSelect closed box matches the tinted native inputs */html .ss-main { background-color: #fdf3e7; }
+/* SlimSelect closed box matches the tinted native inputs */
+html .ss-main {
+  background-color: #fdf3e7;
+}
 
 .flatpickr-calendar .flatpickr-day.selected,
 .flatpickr-calendar .flatpickr-day.startRange,
@@ -1693,19 +1720,24 @@ html:root { --ss-primary-color: #69bf70; }
 .flatpickr-calendar .flatpickr-day.inRange {
   background: #eaf6ec;
   border-color: #eaf6ec;
-  box-shadow: -5px 0 0 #eaf6ec, 5px 0 0 #eaf6ec;
+  box-shadow:
+    -5px 0 0 #eaf6ec,
+    5px 0 0 #eaf6ec;
 }
 
-.flatpickr-calendar .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)) {
+.flatpickr-calendar
+  .flatpickr-day.selected.startRange
+  + .endRange:not(:nth-child(7n + 1)) {
   box-shadow: -10px 0 0 #69bf70;
 }
 
 .flatpickr-calendar .flatpickr-day.week.selected {
-  box-shadow: -5px 0 0 #69bf70, 5px 0 0 #69bf70;
+  box-shadow:
+    -5px 0 0 #69bf70,
+    5px 0 0 #69bf70;
 }
 
 .flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover svg,
 .flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg {
   fill: #ec9233;
 }
-

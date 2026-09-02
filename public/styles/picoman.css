@@ -196,7 +196,7 @@ h1 {
 }
 
 div.left {
-  /* background-image: url(../../images/logo_tcexam_118x25.png); */
+  /* background-image: url(../../images/logo_tcexam.png); */
   background-repeat: no-repeat;
   background-position: var(--form-element-spacing-horizontal) bottom;
   height: 3rem;
