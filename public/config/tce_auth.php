@@ -77,6 +77,35 @@ define('K_AUTH_USER_CHANGE_PASSWORD', 1);
  */
 define('K_ADMIN_LINK', 5);
 
+// -- AUTHORIZATION TIERS ------------------------------------------------------
+// Define the same tiers as the administration area (admin/config/tce_auth.php)
+// so that both areas agree; see shared/code/tce_auth_tiers.php for the ladder.
+
+/**
+ * Read-only access to the content of the authorized groups.
+ */
+define('K_AUTH_VIEW_CONTENT', 2);
+
+/**
+ * Authoring of modules, subjects, questions, answers, multimedia files and question import.
+ */
+define('K_AUTH_EDIT_CONTENT', 3);
+
+/**
+ * Administration of users and groups.
+ */
+define('K_AUTH_MANAGE_IDENTITY', 6);
+
+/**
+ * Minimum level to see the data of every group (not just the user's own groups).
+ */
+define('K_AUTH_GLOBAL_VIEW', 9);
+
+/**
+ * Minimum level to run backups.
+ */
+define('K_AUTH_SITE_ADMIN', 9);
+
 /**
  * Minimum page level for which a valid client SSL certificate is required.
  * Use false or a level above 10 to disable the control.
