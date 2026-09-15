@@ -40,7 +40,7 @@ function F_select_modules_sql($andwhere = '')
     global $l;
     require_once('../config/tce_config.php');
     $sql = 'SELECT * FROM ' . K_TABLE_MODULES . '';
-    if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+    if (F_has_global_view()) {
         if (! empty($andwhere)) {
             $sql .= ' WHERE ' . $andwhere;
         }
@@ -79,7 +79,7 @@ function F_select_module_subjects_sql($andwhere = '')
     require_once('../config/tce_config.php');
     $sql = 'SELECT * FROM ' . K_TABLE_MODULES . ',' . K_TABLE_SUBJECTS . '';
     $sql .= ' WHERE module_id=subject_module_id';
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_has_global_view()) {
         $authorized_users = F_getAuthorizedUsers($_SESSION['session_user_id']);
         $sql .= ' AND (module_user_id IN (' . $authorized_users . ') OR subject_user_id IN (' . $authorized_users . '))';
     }
@@ -102,7 +102,7 @@ function F_select_tests_sql()
     global $l;
     require_once('../config/tce_config.php');
     $sql = 'SELECT * FROM ' . K_TABLE_TESTS . '';
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_has_global_view()) {
         $sql .= ' WHERE test_user_id IN (' . F_getAuthorizedUsers($_SESSION['session_user_id']) . ')';
     }
 
@@ -126,7 +126,7 @@ function F_select_executed_tests_sql()
 			FROM ' . K_TABLE_TEST_USER . '
 			WHERE testuser_status>0
 		)';
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_has_global_view()) {
         $sql .= ' AND test_user_id IN (' . F_getAuthorizedUsers($_SESSION['session_user_id']) . ')';
     }
 

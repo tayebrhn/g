@@ -7,10 +7,18 @@
 
 /**
  * Verify the number of permitted links on each admin landing page for the
- * representative anonymous, operator, and administrator access levels.
+ * representative access levels.
  *
  * This test uses the real menu definitions and authorization helper but does
  * not connect to the database or require a user account.
+ *
+ * Tier mapping (see shared/code/tce_auth_tiers.php and admin/config/tce_auth.php):
+ *   2  view content (modules/subjects/questions/answers editors, read-only)
+ *   3  edit content (adds question import and file manager)
+ *   5  examiner    (adds question list, and the whole tests section)
+ *   6  manage identity (the whole users section)
+ *   9  global view + backup
+ *  10  administrator
  */
 
 declare(strict_types=1);
@@ -37,7 +45,12 @@ $sections = [
 
 $expected = [
     0 => ['users' => 0, 'modules' => 0, 'tests' => 0],
-    5 => ['users' => 0, 'modules' => 6, 'tests' => 5],
+    1 => ['users' => 0, 'modules' => 0, 'tests' => 0],
+    2 => ['users' => 0, 'modules' => 4, 'tests' => 0],
+    3 => ['users' => 0, 'modules' => 6, 'tests' => 0],
+    5 => ['users' => 0, 'modules' => 7, 'tests' => 5],
+    6 => ['users' => 5, 'modules' => 7, 'tests' => 5],
+    9 => ['users' => 5, 'modules' => 7, 'tests' => 5],
     10 => ['users' => 5, 'modules' => 7, 'tests' => 5],
 ];
 

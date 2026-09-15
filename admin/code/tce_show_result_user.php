@@ -71,9 +71,10 @@ if (isset($_REQUEST['testuser_id'])) {
 
 if (isset($_REQUEST['user_id'])) {
     $user_id = (int) $_REQUEST['user_id'];
-    //if (!F_isAuthorizedEditorForUser($user_id)) {
-    //	F_print_error('ERROR', $l['m_authorization_denied'], true);
-    //}
+    if (! F_isAuthorizedResultUser($test_id, $user_id)) {
+        F_print_error('ERROR', $l['m_authorization_denied'], true);
+    }
+
     $filter .= '&amp;user_id=' . $user_id;
 } else {
     $user_id = 0;

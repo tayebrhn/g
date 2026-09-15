@@ -1,6 +1,12 @@
 16.6.1 (2026-03-004)
 	- Update TCPDF.
 	- Sanitize XML fields.
+	- User levels 2-9 now map to distinct responsibilities: 2 read-only viewer,
+	  3 content author, 5 examiner (unchanged), 6 identity administrator,
+	  9 global visibility and backup. See shared/code/tce_auth_tiers.php and
+	  the UPGRADE.TXT migration notes before assigning those levels.
+	- Non-administrators can only see the results and the online users they are
+	  authorized to access.
 
 16.6.0 (2026-03-01)
 	- Update Session handlers (requires PHP 7+).

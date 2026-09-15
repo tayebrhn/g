@@ -102,7 +102,7 @@ function F_show_select_test($order_field, $orderdir, $firstrow, $rowsperpage, $a
     }
 
     $wherequery .= ' (test_id>0)';
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_has_global_view()) {
         $wherequery .= ' AND test_user_id IN (' . F_getAuthorizedUsers($_SESSION['session_user_id']) . ')';
     }
 
@@ -271,7 +271,7 @@ function F_show_select_test_popup($order_field, $orderdir, $firstrow, $rowsperpa
     }
 
     $wherequery .= ' (test_id>0)';
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_has_global_view()) {
         $wherequery .= ' AND test_user_id IN (' . F_getAuthorizedUsers($_SESSION['session_user_id']) . ')';
     }
 

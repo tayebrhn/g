@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_MODULES;
+$pagelevel = K_AUTH_VIEW_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['w_modules'];

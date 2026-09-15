@@ -479,7 +479,7 @@ function F_getAuthorizedDirs()
 {
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_authorization.php');
-    if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+    if (F_has_global_view()) {
         return '[^/]*';
     }
 

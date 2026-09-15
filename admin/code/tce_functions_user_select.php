@@ -112,7 +112,7 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
     }
 
     $wherequery .= ' (user_id>1)';
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_has_global_view()) {
         // filter for level
         $wherequery .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
         // filter for groups
@@ -214,24 +214,24 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
             echo '<br />' . K_NEWLINE;
             echo '<strong style="margin:5px">' . $l['m_with_selected'] . '</strong>' . K_NEWLINE;
             echo '<ul style="margin:0">';
-            if ($_SESSION['session_user_level'] >= K_AUTH_DELETE_USERS) {
+            if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
                 // delete user
                 echo '<li>';
                 F_submit_button('delete', $l['w_delete'], $l['h_delete'], 'onclick="return confirm(\'' . $l['m_delete_confirm'] . '\')"');
                 echo '</li>' . K_NEWLINE;
             }
 
-            if ($_SESSION['session_user_level'] >= K_AUTH_ADMIN_GROUPS) {
+            if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
                 echo '<li>';
                 // add/delete group
                 echo F_user_group_select('new_group_id');
                 F_submit_button('addgroup', $l['w_add'], $l['w_add']);
-                if ($_SESSION['session_user_level'] >= K_AUTH_DELETE_GROUPS) {
+                if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
                     F_submit_button('delgroup', $l['w_delete'], $l['h_delete'], 'onclick="return confirm(\'' . $l['m_delete_confirm'] . '\')"');
                 }
 
                 echo '</li>' . K_NEWLINE;
-                if ($_SESSION['session_user_level'] >= K_AUTH_MOVE_GROUPS) {
+                if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
                     // move group
                     echo '<li>';
                     $arr = $l['a_meta_dir'] == 'rtl' ? '&larr;' : '&rarr;';
@@ -354,7 +354,7 @@ function F_show_select_user_popup($order_field, $orderdir, $firstrow, $rowsperpa
     }
 
     $wherequery .= ' (user_id>1)';
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_has_global_view()) {
         // filter for level
         $wherequery .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
         // filter for groups
@@ -516,8 +516,8 @@ function F_isAuthorizedEditorForGroup($group_id)
 {
     global $l, $db;
     require_once('../config/tce_config.php');
-    if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR || empty($group_id)) {
-        // user is an administrator (belongs to all groups) or empty group
+    if (F_has_global_view() || empty($group_id)) {
+        // user has global visibility (belongs to all groups) or empty group
         return true;
     }
 
@@ -534,8 +534,42 @@ function F_isAuthorizedEditorForUser($user_id)
 {
     global $l, $db;
     require_once('../config/tce_config.php');
-    // user is an administrator or empty user
-    return $_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR || empty($user_id);
+    $user_id = (int) $user_id;
+    if (empty($user_id)) {
+        // new user
+        return true;
+    }
+
+    if (F_has_global_view()) {
+        // user has global visibility
+        return true;
+    }
+
+    if ($user_id == $_SESSION['session_user_id']) {
+        // current user
+        return true;
+    }
+
+    // the target user must have a lower level
+    $sql = 'SELECT user_level FROM ' . K_TABLE_USERS . ' WHERE user_id=' . $user_id . ' LIMIT 1';
+    if (! $r = F_db_query($sql, $db)) {
+        F_display_db_error();
+    }
+
+    if (! $m = F_db_fetch_array($r)) {
+        return false;
+    }
+
+    if ($m['user_level'] >= $_SESSION['session_user_level']) {
+        return false;
+    }
+
+    // the target user must belong to one of the groups of the current user
+    return F_count_rows(K_TABLE_USERGROUP . ' AS ta, ' . K_TABLE_USERGROUP . ' AS tb
+		WHERE ta.usrgrp_group_id=tb.usrgrp_group_id
+			AND ta.usrgrp_user_id=' . $user_id . '
+			AND tb.usrgrp_user_id=' . (int) $_SESSION['session_user_id'] . '
+			LIMIT 1') > 0;
 }
 
 /**
@@ -548,8 +582,8 @@ function F_user_group_select_sql($where = '')
 {
     global $l, $db;
     require_once('../config/tce_config.php');
-    if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
-        // administrator access to all groups
+    if (F_has_global_view()) {
+        // global access to all groups
         $sql = 'SELECT * FROM ' . K_TABLE_GROUPS . '';
         if ($where !== '') {
             $sql .= ' WHERE ' . $where;

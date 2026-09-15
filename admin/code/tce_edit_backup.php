@@ -35,7 +35,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_BACKUP;
+$pagelevel = K_AUTH_SITE_ADMIN;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_backup_editor'];

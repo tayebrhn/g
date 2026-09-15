@@ -66,7 +66,42 @@ This is the general upgrade process for TCExam.
  
 10.	Check if TCExam is working fine.  
  
-11.	Backup and delete the old TCExam installation 
+11.	Backup and delete the old TCExam installation
 	(tcexam.old).
+
+------------------------------------------------------------
+AUTHORIZATION TIERS (user levels 2-9)
+------------------------------------------------------------
+
+The user levels 2 to 9 now map to distinct responsibilities instead of
+behaving like levels 1 and 5. The tier values are defined in the
+"AUTHORIZATION TIERS" block of admin/config/tce_auth.php, with fallback
+defaults in shared/code/tce_auth_tiers.php. admin/config/tce_auth.php and
+public/config/tce_auth.php are now version-controlled (the other files under
+the config folders remain ignored because they hold deployment-specific
+settings and credentials): merge them with the values of your previous
+installation when upgrading. Defaults:
+
+	K_AUTH_VIEW_CONTENT      2	read-only access to the authorized groups content
+	K_AUTH_EDIT_CONTENT      3	author modules, subjects, questions, answers, media, import
+	K_AUTH_OPERATOR          5	examiner: tests, results, rating, OMR, SSL, online users
+	K_AUTH_MANAGE_IDENTITY   6	administer users and groups
+	K_AUTH_GLOBAL_VIEW       9	see the data of every group
+	K_AUTH_SITE_ADMIN        9	run backups
+	K_AUTH_ADMINISTRATOR    10	system administration
+
+WARNING: audit the accounts that currently hold levels 2 to 9 BEFORE upgrading.
+Until now levels 2-4 behaved exactly like level 1 and levels 6-9 exactly like
+level 5 (operator). After the upgrade those accounts acquire the rights listed
+above. To preserve the previous behaviour, reset them and re-assign the new
+roles explicitly:
+
+	UPDATE tce_users SET user_level=5 WHERE user_level BETWEEN 6 AND 9;
+	UPDATE tce_users SET user_level=1 WHERE user_level BETWEEN 2 AND 4;
+
+The authorization checks were also tightened: a non-administrator can now see
+the results only of the users who executed a test the user is authorized to
+see, the online-users list is restricted to the users the current user may
+manage, and the user/group selection boxes no longer list out-of-scope entries.
 
 ------------------------------------------------------------

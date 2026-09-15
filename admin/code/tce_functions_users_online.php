@@ -112,6 +112,11 @@ function F_list_online_users($wherequery, $order_field, $orderdir, $firstrow, $r
     if ($r = F_db_query($sql, $db)) {
         while ($m = F_db_fetch_array($r)) {
             $this_session = F_session_string_to_array($m['cpsession_data']);
+            if (! F_isAuthorizedEditorForUser($this_session['session_user_id'])) {
+                // the user is not visible to the current user
+                continue;
+            }
+
             echo '<tr>';
             echo '<td align="left">';
             $user_str = '';
@@ -125,11 +130,7 @@ function F_list_online_users($wherequery, $order_field, $orderdir, $firstrow, $r
 
             $user_str .= ' (' . urldecode($this_session['session_user_name']) . ')';
             $user_str = unhtmlentities(strip_tags($user_str));
-            if (F_isAuthorizedEditorForUser($this_session['session_user_id'])) {
-                echo '<a href="tce_edit_user.php?user_id=' . $this_session['session_user_id'] . '">' . $user_str . '</a>';
-            } else {
-                echo $user_str;
-            }
+            echo '<a href="tce_edit_user.php?user_id=' . $this_session['session_user_id'] . '">' . $user_str . '</a>';
 
             echo '</td>';
             echo '<td>' . $this_session['session_user_level'] . '</td>';

@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_QUESTIONS;
+$pagelevel = K_AUTH_VIEW_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_questions_editor'];
@@ -161,6 +161,11 @@ if ($question_id > 0) {
     } else {
         F_display_db_error();
     }
+}
+
+if (F_is_readonly_content()) {
+    // read-only access: disable any modification
+    $menu_mode = '';
 }
 
 switch ($menu_mode) {
@@ -855,18 +860,20 @@ echo getFormRowCheckBox('question_enabled', $l['w_enabled'], $l['h_enabled'], ''
 echo '<div class="row">' . K_NEWLINE;
 
 // show buttons by case
-if (isset($question_id) && $question_id > 0) {
+if (! F_is_readonly_content() && isset($question_id) && $question_id > 0) {
     echo '<span style="background-color:#999999;">';
     echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
     F_submit_button('update', $l['w_update'], $l['h_update']);
     echo '</span>';
     F_submit_button('add', $l['w_add'], $l['h_add']);
     F_submit_button('delete', $l['w_delete'], $l['h_delete']);
-} else {
+} elseif (! F_is_readonly_content()) {
     F_submit_button('add', $l['w_add'], $l['h_add']);
 }
 
-F_submit_button('clear', $l['w_clear'], $l['h_clear']);
+if (! F_is_readonly_content()) {
+    F_submit_button('clear', $l['w_clear'], $l['h_clear']);
+}
 
 echo '</div>' . K_NEWLINE;
 

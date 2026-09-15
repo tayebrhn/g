@@ -71,6 +71,10 @@ if (isset($_REQUEST['test_id']) && $_REQUEST['test_id'] > 0) {
 
 if (isset($_REQUEST['user_id'])) {
     $user_id = (int) $_REQUEST['user_id'];
+    if (! F_isAuthorizedResultUser($test_id, $user_id)) {
+        F_print_error('ERROR', $l['m_authorization_denied'], true);
+    }
+
     $filter .= '&amp;user_id=' . $user_id;
 } else {
     $user_id = 0;
@@ -276,7 +280,10 @@ echo '<span class="formw">' . K_NEWLINE;
 echo '<select name="group_id" id="group_id" size="0">' . K_NEWLINE;
 $sql = 'SELECT * FROM ' . K_TABLE_GROUPS . '';
 if ($test_id > 0) {
-    $sql .= ' WHERE group_id IN (' . $test_group_ids . ')';
+    $sql .= ' WHERE group_id IN (' . (empty($test_group_ids) ? '0' : $test_group_ids) . ')';
+} elseif (! F_has_global_view()) {
+    // non-administrators can only filter by their own groups
+    $sql .= ' WHERE group_id IN (SELECT usrgrp_group_id FROM ' . K_TABLE_USERGROUP . ' WHERE usrgrp_user_id=' . (int) $_SESSION['session_user_id'] . ')';
 }
 
 $sql .= ' ORDER BY group_name';
@@ -320,6 +327,16 @@ if ($test_id > 0) {
     $sql .= ', ' . K_TABLE_USERGROUP . ' WHERE usrgrp_user_id=user_id AND usrgrp_group_id=' . $group_id . ' AND user_id>1';
 } else {
     $sql .= ' WHERE user_id>1';
+    if (! F_has_global_view()) {
+        // filter for level
+        $sql .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
+        // filter for groups
+        $sql .= ' AND user_id IN (SELECT tb.usrgrp_user_id
+			FROM ' . K_TABLE_USERGROUP . ' AS ta, ' . K_TABLE_USERGROUP . ' AS tb
+			WHERE ta.usrgrp_group_id=tb.usrgrp_group_id
+				AND ta.usrgrp_user_id=' . (int) $_SESSION['session_user_id'] . '
+				AND tb.usrgrp_user_id=user_id)';
+    }
 }
 
 $sql .= ' GROUP BY user_id, user_lastname, user_firstname, user_name ORDER BY user_lastname, user_firstname, user_name';

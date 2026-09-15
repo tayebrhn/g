@@ -182,6 +182,86 @@ function F_logout_page()
 }
 
 /**
+ * Returns true if the current user is authorized to view the test results of the specified user.
+ * A non-administrator can only access the results of a user who has executed a test that the
+ * current user is authorized to see.
+ * @author Nicola Asuni
+ * @since 2026-09-15
+ * @param $test_id (int) test ID (0 = any authorized test)
+ * @param $user_id (int) ID of the user whose results are requested (0 = any user)
+ * @return boolean true if the user is authorized, false otherwise
+ */
+function F_isAuthorizedResultUser($test_id, $user_id)
+{
+    global $l,$db;
+    require_once('../config/tce_config.php');
+    $test_id = (int) $test_id;
+    $user_id = (int) $user_id;
+    if (empty($user_id)) {
+        return true;
+    }
+
+    if (F_has_global_view() || $user_id == $_SESSION['session_user_id']) {
+        return true;
+    }
+
+    $sql = 'SELECT tu.testuser_test_id
+		FROM ' . K_TABLE_TEST_USER . ' AS tu, ' . K_TABLE_TESTS . ' AS t
+		WHERE tu.testuser_user_id=' . $user_id . '
+			AND t.test_id=tu.testuser_test_id';
+    if ($test_id > 0) {
+        $sql .= ' AND t.test_id=' . $test_id;
+    }
+
+    $sql .= ' AND t.test_user_id IN (' . F_getAuthorizedUsers($_SESSION['session_user_id']) . ')';
+    if (! $r = F_db_query($sql, $db)) {
+        F_display_db_error();
+    }
+
+    return (bool) F_db_fetch_array($r);
+}
+
+/**
+ * Returns true if the current user may only view, and not modify, the content of the authorized groups.
+ * @return boolean true if the user has read-only access to content, false otherwise
+ * @author Nicola Asuni
+ * @since 2026-09-15
+ */
+function F_is_readonly_content()
+{
+    return $_SESSION['session_user_level'] < K_AUTH_EDIT_CONTENT;
+}
+
+/**
+ * Returns true if the current user can see the data of every group, not just the groups the user belongs to.
+ * @return boolean true if the user has global visibility, false otherwise
+ * @author Nicola Asuni
+ * @since 2026-09-15
+ */
+function F_has_global_view()
+{
+    return $_SESSION['session_user_level'] >= K_AUTH_GLOBAL_VIEW;
+}
+
+/**
+ * Returns a comma separated string of ID of the users whose records are visible to the current user:
+ * the user itself plus the users sharing at least one group.
+ * Callers must skip this filter when F_has_global_view() is true.
+ * @author Nicola Asuni
+ * @since 2026-09-15
+ * @param $user_id (int) user ID (0 = current user)
+ * @return string
+ */
+function F_visible_user_ids($user_id = 0)
+{
+    if ($user_id == 0) {
+        $user_id = $_SESSION['session_user_id'];
+    }
+
+    return F_getAuthorizedUsers($user_id);
+}
+
+/**
  * Returns true if the current user is authorized to update and delete the selected database record.
  * @author Nicola Asuni
  * @since 2006-03-11
@@ -200,8 +280,8 @@ function F_isAuthorizedUser($table, $field_id_name, $value_id, $field_user_id)
     $value_id = (int) $value_id;
     $field_user_id = F_escape_sql($db, $field_user_id);
     $user_id = (int) $_SESSION['session_user_id'];
-    // check for administrator
-    if (defined('K_AUTH_ADMINISTRATOR') && $_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+    // check for global visibility
+    if (F_has_global_view()) {
         return true;
     }
 

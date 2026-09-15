@@ -31,7 +31,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_USERS;
+$pagelevel = K_AUTH_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/config/tce_user_registration.php');
 
@@ -86,7 +86,7 @@ $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_name'], ENT_COMPAT, $l[
 switch ($menu_mode) { // process submitted data
     case 'delete':{
          // ask confirmation
-        if ($_SESSION['session_user_level'] < K_AUTH_DELETE_USERS || $user_id == $_SESSION['session_user_id'] || $user_id == 1) {
+        if ($_SESSION['session_user_level'] < K_AUTH_MANAGE_IDENTITY || $user_id == $_SESSION['session_user_id'] || $user_id == 1) {
             F_print_error('ERROR', $l['m_authorization_denied']);
             break;
         }
@@ -112,7 +112,7 @@ switch ($menu_mode) { // process submitted data
 
     case 'forcedelete':{
          // Delete specified user
-        if ($_SESSION['session_user_level'] < K_AUTH_DELETE_USERS || $user_id == $_SESSION['session_user_id'] || $user_id == 1) {
+        if ($_SESSION['session_user_level'] < K_AUTH_MANAGE_IDENTITY || $user_id == $_SESSION['session_user_id'] || $user_id == 1) {
             F_print_error('ERROR', $l['m_authorization_denied']);
             break;
         }
@@ -438,7 +438,7 @@ if ($user_id == 0) {
 
 echo '>+</option>' . K_NEWLINE;
 $sql = 'SELECT user_id, user_lastname, user_firstname, user_name FROM ' . K_TABLE_USERS . ' WHERE (user_id>1)';
-if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+if (! F_has_global_view()) {
     // filter for level
     $sql .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
     // filter for groups
@@ -553,7 +553,7 @@ if (isset($user_id) && $user_id > 0) {
         echo '</span>';
     }
 
-    if ($user_id > 1 && $_SESSION['session_user_level'] >= K_AUTH_DELETE_USERS && $user_id != $_SESSION['session_user_id']) {
+    if ($user_id > 1 && $_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY && $user_id != $_SESSION['session_user_id']) {
         // your account and anonymous user can't be deleted
         F_submit_button('delete', $l['w_delete'], $l['h_delete']);
     }

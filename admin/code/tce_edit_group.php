@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_GROUPS;
+$pagelevel = K_AUTH_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_group_editor'];
@@ -66,7 +66,7 @@ $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_name'], ENT_COMPAT, $l[
 switch ($menu_mode) { // process submitted data
     case 'delete':{
          // ask confirmation
-        if ($_SESSION['session_user_level'] < K_AUTH_DELETE_GROUPS) {
+        if ($_SESSION['session_user_level'] < K_AUTH_MANAGE_IDENTITY) {
             F_print_error('ERROR', $l['m_authorization_denied']);
             break;
         }
@@ -88,7 +88,7 @@ switch ($menu_mode) { // process submitted data
 
     case 'forcedelete':{
          // Delete specified user
-        if ($_SESSION['session_user_level'] < K_AUTH_DELETE_GROUPS) {
+        if ($_SESSION['session_user_level'] < K_AUTH_MANAGE_IDENTITY) {
             F_print_error('ERROR', $l['m_authorization_denied']);
             break;
         }
@@ -259,7 +259,7 @@ if (isset($group_id) && $group_id > 0) {
     F_submit_button('update', $l['w_update'], $l['h_update']);
     echo '</span>';
     F_submit_button('add', $l['w_add'], $l['h_add']);
-    if ($_SESSION['session_user_level'] >= K_AUTH_DELETE_GROUPS) {
+    if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
         // your account and anonymous user can't be deleted
         F_submit_button('delete', $l['w_delete'], $l['h_delete']);
     }

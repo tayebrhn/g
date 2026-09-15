@@ -13,11 +13,13 @@
 .phpunit.cache
 .phpunit.result.cache
 .vscode
-admin/config/
+admin/config/*
+!admin/config/tce_auth.php
 composer.lock
 ecs.php
 phpunit.xml
-public/config/
+public/config/*
+!public/config/tce_auth.php
 rector.php
 shared/config/
 target

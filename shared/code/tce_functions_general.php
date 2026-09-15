@@ -28,6 +28,8 @@
  * @since 2001-09-08
  */
 
+require_once __DIR__ . '/tce_auth_tiers.php';
+
 /**
  * Count rows of the given table.
  * @param $dbtable (string) database table name

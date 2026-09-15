@@ -33,7 +33,7 @@
 
 // check user's authorization
 require_once('../config/tce_config.php');
-$pagelevel = K_AUTH_EXPORT_USERS;
+$pagelevel = K_AUTH_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
 $output_format = isset($_REQUEST['format']) ? strtoupper($_REQUEST['format']) : 'XML';
@@ -104,7 +104,7 @@ function F_xml_export_users()
 
     // select users
     $sqla = 'SELECT * FROM ' . K_TABLE_USERS . ' WHERE (user_id>1)';
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_has_global_view()) {
         // filter for level
         $sqla .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
         // filter for groups

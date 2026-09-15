@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_IMPORT_USERS;
+$pagelevel = K_AUTH_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_user_importer'];

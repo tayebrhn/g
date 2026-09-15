@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_FILEMANAGER;
+$pagelevel = K_AUTH_EDIT_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
