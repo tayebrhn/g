@@ -22,6 +22,7 @@ chdir(__DIR__ . '/../admin/code');
 define('K_NEWLINE', PHP_EOL);
 
 $_SESSION = ['session_user_level' => 0];
+$l = [];
 
 require_once('../config/tce_auth.php');
 require_once('../../shared/code/tce_functions_general.php');
@@ -73,6 +74,13 @@ for ($level = 0; $level <= K_AUTH_ADMINISTRATOR; ++$level) {
 
     if (F_has_global_view() !== ($level >= K_AUTH_GLOBAL_VIEW)) {
         $failures[] = 'F_has_global_view() inconsistent at level ' . $level . '.';
+    }
+}
+
+// Every level must have a label for the user editor dropdown.
+for ($level = 0; $level <= K_AUTH_ADMINISTRATOR; ++$level) {
+    if (F_getUserLevelLabel($level) === '') {
+        $failures[] = 'Missing user level label for level ' . $level . '.';
     }
 }
 

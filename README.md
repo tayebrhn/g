@@ -10,6 +10,8 @@
 	* Check also the documentation on http://www.tcexam.org
 * Source Documentation:
 	http://www.tcexam.org
+* User Levels and Permissions:
+	PERMISSIONS.md
 * Support - Help:
 	Please use support Issues at https://github.com/tecnickcom/tcexam
 * Software License:

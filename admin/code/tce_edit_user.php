@@ -484,7 +484,14 @@ echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', 
 echo getFormRowTextInput('newpassword', $l['w_password'], $l['h_password'], ' (' . $l['d_password_length'] . ')', '', K_USRREG_PASSWORD_RE, 255, false, false, true);
 echo getFormRowTextInput('newpassword_repeat', $l['w_password'], $l['h_password_repeat'], ' (' . $l['w_repeat'] . ')', '', '', 255, false, false, true);
 echo getFormRowFixedValue('user_regdate', $l['w_regdate'], $l['h_regdate'], '', $user_regdate);
-echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_level, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+// map each level to a "number - role name" label
+$user_level_items = [];
+foreach (range(0, K_AUTH_ADMINISTRATOR) as $level_item) {
+    $level_label = F_getUserLevelLabel($level_item);
+    $user_level_items[$level_item] = ($level_label === '') ? (string) $level_item : $level_item . ' - ' . htmlspecialchars($level_label, ENT_NOQUOTES, $l['a_meta_charset']);
+}
+
+echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_level, $user_level_items);
 echo getFormRowTextInput('user_firstname', $l['w_firstname'], $l['h_firstname'], '', $user_firstname, '', 255, false, false, false);
 echo getFormRowTextInput('user_lastname', $l['w_lastname'], $l['h_lastname'], '', $user_lastname, '', 255, false, false, false);
 echo '<div style="display:none;">';

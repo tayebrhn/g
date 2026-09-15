@@ -87,6 +87,48 @@ if (!defined('K_AUTH_SITE_ADMIN')) {
     define('K_AUTH_SITE_ADMIN', defined('K_AUTH_BACKUP') ? K_AUTH_BACKUP : 10);
 }
 
+/**
+ * Returns the human readable name of the specified user level, for use in labels and tables.
+ *
+ * The name is taken from the language resources when defined (see the "w_level_*" keys) and
+ * otherwise falls back to the built-in English name, so the label is always available even
+ * when the language resources have not been updated. Levels without an assigned
+ * responsibility are named "unused". Unknown levels return an empty string.
+ *
+ * @param $level (int) user level
+ * @return string level name (empty if the level is unknown)
+ * @author Nicola Asuni
+ * @since 2026-09-15
+ */
+function F_getUserLevelLabel($level)
+{
+    global $l;
+    $level = (int) $level;
+    $labels = [
+        0 => ['w_level_anonymous', 'anonymous'],
+        1 => ['w_level_registered', 'registered user'],
+        2 => ['w_level_viewer', 'viewer (read-only)'],
+        3 => ['w_level_author', 'content author'],
+        4 => ['w_level_unused', 'unused'],
+        5 => ['w_level_examiner', 'examiner'],
+        6 => ['w_level_identity', 'identity administrator'],
+        7 => ['w_level_unused', 'unused'],
+        8 => ['w_level_unused', 'unused'],
+        9 => ['w_level_siteadmin', 'site administrator'],
+        10 => ['w_level_admin', 'administrator'],
+    ];
+    if (! isset($labels[$level])) {
+        return '';
+    }
+
+    [$key, $default] = $labels[$level];
+    if (isset($l[$key]) && $l[$key] !== '') {
+        return $l[$key];
+    }
+
+    return $default;
+}
+
 //============================================================+
 // END OF FILE
 //============================================================+
