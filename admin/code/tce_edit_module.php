@@ -325,7 +325,7 @@ echo '<span class="formw">' . K_NEWLINE;
 $userids = [];
 if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
     echo '<select name="module_user_id" id="module_user_id" size="0" title="' . $l['h_module_owner'] . '" onchange="">' . K_NEWLINE;
-    $sql = 'SELECT user_id, user_lastname, user_firstname, user_name FROM ' . K_TABLE_USERS . ' WHERE (user_level>5) ORDER BY user_lastname, user_firstname, user_name';
+    $sql = 'SELECT user_id, user_lastname, user_firstname, user_name FROM ' . K_TABLE_USERS . ' WHERE (user_level>=' . K_AUTH_ADMINISTRATOR . ') ORDER BY user_lastname, user_firstname, user_name';
     if ($r = F_db_query($sql, $db)) {
         while ($m = F_db_fetch_array($r)) {
             $userids[] = $m['user_id'];

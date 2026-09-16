@@ -77,10 +77,15 @@ for ($level = 0; $level <= K_AUTH_ADMINISTRATOR; ++$level) {
     }
 }
 
-// Every level must have a label for the user editor dropdown.
+// Every level must have a label, both plain and prefixed with the level number.
 for ($level = 0; $level <= K_AUTH_ADMINISTRATOR; ++$level) {
-    if (F_getUserLevelLabel($level) === '') {
+    $name = F_getUserLevelLabel($level);
+    if ($name === '') {
         $failures[] = 'Missing user level label for level ' . $level . '.';
+    }
+
+    if (F_getUserLevelLabel($level, true) !== $level . ' - ' . $name) {
+        $failures[] = 'Numbered user level label is inconsistent for level ' . $level . '.';
     }
 }
 

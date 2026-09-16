@@ -49,13 +49,18 @@ separate flag rather than a level.
 The user editor (`tce_edit_user.php`) renders the level dropdown as
 `<number> - <role name>` — for example `3 - content author` — and names the
 unassigned levels `unused`, so an administrator cannot mistake them for a real
-duty. The submitted value remains the plain number.
+duty. The submitted value remains the plain number. The same label is used in
+the user list and its popup (`tce_functions_user_select.php`) and in the
+online-users table (`tce_functions_users_online.php`); the exports stay numeric.
 
-`F_getUserLevelLabel($level)` (in `shared/code/tce_auth_tiers.php`) returns the
-name. It uses the `w_level_*` language keys when they are defined and otherwise
+`F_getUserLevelLabel($level, $with_number)` (in `shared/code/tce_auth_tiers.php`)
+returns the name, prefixing it with the level number when `$with_number` is
+true. It uses the `w_level_*` language keys when they are defined and otherwise
 falls back to the built-in English names, so the label is always available even
-in installations whose language resources predate the tiers. The name is
-HTML-escaped at the point of rendering.
+in installations whose language resources predate the tiers. Levels without an
+assigned responsibility are named `unused`, and an unknown level falls back to
+its number so the result is never empty. The label is HTML-escaped at the point
+of rendering.
 
 | Level | Language key | Built-in name |
 | --- | --- | --- |

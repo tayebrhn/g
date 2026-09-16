@@ -171,7 +171,7 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_lastname'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_firstname'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 // echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_regnumber'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
-                echo '<td>&nbsp;' . $m['user_level'] . '</td>' . K_NEWLINE;
+                echo '<td>&nbsp;' . htmlspecialchars(F_getUserLevelLabel($m['user_level'], true), ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td>&nbsp;' . htmlspecialchars($m['user_regdate'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 // comma separated list of user's groups
                 $grp = '';
@@ -409,7 +409,7 @@ function F_show_select_user_popup($order_field, $orderdir, $firstrow, $rowsperpa
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_firstname'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_email'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 // echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_regnumber'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
-                echo '<td>&nbsp;' . $m['user_level'] . '</td>' . K_NEWLINE;
+                echo '<td>&nbsp;' . htmlspecialchars(F_getUserLevelLabel($m['user_level'], true), ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td>&nbsp;' . htmlspecialchars($m['user_regdate'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 /*
                 // comma separated list of user's groups

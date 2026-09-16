@@ -93,14 +93,16 @@ if (!defined('K_AUTH_SITE_ADMIN')) {
  * The name is taken from the language resources when defined (see the "w_level_*" keys) and
  * otherwise falls back to the built-in English name, so the label is always available even
  * when the language resources have not been updated. Levels without an assigned
- * responsibility are named "unused". Unknown levels return an empty string.
+ * responsibility are named "unused". Unknown levels fall back to the level number, so the
+ * result is never empty.
  *
  * @param $level (int) user level
- * @return string level name (empty if the level is unknown)
+ * @param $with_number (boolean) when true the label is prefixed with the level number, e.g. "3 - content author"
+ * @return string level label
  * @author Nicola Asuni
  * @since 2026-09-15
  */
-function F_getUserLevelLabel($level)
+function F_getUserLevelLabel($level, $with_number = false)
 {
     global $l;
     $level = (int) $level;
@@ -118,15 +120,12 @@ function F_getUserLevelLabel($level)
         10 => ['w_level_admin', 'administrator'],
     ];
     if (! isset($labels[$level])) {
-        return '';
+        return (string) $level;
     }
 
     [$key, $default] = $labels[$level];
-    if (isset($l[$key]) && $l[$key] !== '') {
-        return $l[$key];
-    }
-
-    return $default;
+    $name = (isset($l[$key]) && $l[$key] !== '') ? $l[$key] : $default;
+    return $with_number ? ($level . ' - ' . $name) : $name;
 }
 
 //============================================================+

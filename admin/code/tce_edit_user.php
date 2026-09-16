@@ -487,8 +487,7 @@ echo getFormRowFixedValue('user_regdate', $l['w_regdate'], $l['h_regdate'], '', 
 // map each level to a "number - role name" label
 $user_level_items = [];
 foreach (range(0, K_AUTH_ADMINISTRATOR) as $level_item) {
-    $level_label = F_getUserLevelLabel($level_item);
-    $user_level_items[$level_item] = ($level_label === '') ? (string) $level_item : $level_item . ' - ' . htmlspecialchars($level_label, ENT_NOQUOTES, $l['a_meta_charset']);
+    $user_level_items[$level_item] = htmlspecialchars(F_getUserLevelLabel($level_item, true), ENT_NOQUOTES, $l['a_meta_charset']);
 }
 
 echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_level, $user_level_items);
