@@ -1,0 +1,64 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "plugin": [
+        "opencode-deepseek-thinking-fix"
+    ],
+    "provider": {
+        "nvidia-ty": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "NVIDIA NIM ty",
+            "options": {
+                "baseURL": "https://integrate.api.nvidia.com/v1",
+                "apiKey": "{env:NVIDIA_API_KEY_GLM}"
+            },
+            "models": {
+                "z-ai/glm-5.3": {}
+            }
+        },
+        "claude_ty": {
+            "npm": "@ai-sdk/anthropic",
+            "options": {
+                "baseURL": "https://agentrouter.org",
+                "apiKey": "{env:AGENT_ROUTER_API_KEY}",
+            },
+            "models": {
+                "claude-opus-4-8": {},
+                "claude-opus-5": {}
+            }
+        },
+        "openai_ty": {
+            "npm": "@ai-sdk/openai",
+            "options": {
+                "baseURL": "https://agentrouter.org/v1",
+                "apiKey": "{env:AGENT_ROUTER_API_KEY}",
+            },
+            "models": {
+                "gpt-5.6-sol": {},
+                "gpt-6-astra": {}
+            }
+        },
+        "deepseek_ty": {
+            "npm": "@ai-sdk/openai",
+            "options": {
+                "baseURL": "https://agentrouter.org/v1",
+                "apiKey": "{env:AGENT_ROUTER_API_KEY}",
+            },
+            "models": {
+                "deepseek-v4-flash": {},
+            }
+        }
+    },
+    "mcp": {
+        "serena": {
+            "type": "local",
+            "command": [
+                "uvx",
+                "--from",
+                "git+https://github.com/oraios/serena",
+                "serena",
+                "start-mcp-server"
+            ],
+            "enabled": true
+        }
+    }
+}
