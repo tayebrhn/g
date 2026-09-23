@@ -459,6 +459,9 @@ if (isset($_REQUEST['sel'])) {
         echo '<a href="tce_xml_results.php?menu_mode=startlongprocess' . $filter . '" class="xmlbutton" title="' . $l['h_xml_export'] . '">XML</a> ';
         echo '<a href="tce_xml_results.php?format=JSON&amp;menu_mode=startlongprocess' . $filter . '" class="xmlbutton" title="JSON">JSON</a> ';
         echo '<a href="tce_tsv_result_allusers.php?' . $filter . '&amp;order_field=' . urlencode($order_field) . '&amp;orderdir=' . $orderdir . '" class="xmlbutton" title="' . $l['h_tsv_export'] . '">TSV</a> ';
+        if (K_ENABLE_CSV_CONVERSION) {
+            echo '<a href="tce_tsv_result_allusers.php?' . $filter . '&amp;order_field=' . urlencode($order_field) . '&amp;orderdir=' . $orderdir . '&amp;format=csv" class="xmlbutton" title="' . $l['h_tsv_export'] . '">CSV</a> ';
+        }
         echo '<a href="tce_pdf_results.php?mode=1' . $filter . '" class="xmlbutton" title="' . $l['h_pdf'] . '">' . $l['w_pdf'] . '</a> ';
         echo '<a href="tce_pdf_results.php?mode=4' . $filter . '" class="xmlbutton" title="' . $l['h_pdf_all'] . '">' . $l['w_pdf_all'] . '</a> ';
         if (K_DISPLAY_PDFTEXT_BUTTON) {

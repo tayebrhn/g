@@ -327,6 +327,11 @@ if (isset($subject_id) && $subject_id > 0) {
     echo ' <a href="' . $tsvlink . '&amp;expmode=1" class="xmlbutton" title="' . $l['h_tsv_export'] . '">TSV</a>';
     echo '<a href="' . $tsvlink . '&amp;expmode=2" class="xmlbutton" title="' . $l['h_tsv_export'] . '">TSV ' . $l['w_module'] . '</a>';
     echo '<a href="' . $tsvlink . '&amp;expmode=3" class="xmlbutton" title="' . $l['h_tsv_export'] . '">TSV ' . $l['w_all'] . '</a>';
+    if (K_ENABLE_CSV_CONVERSION) {
+        echo ' <a href="' . $tsvlink . '&amp;expmode=1&amp;format=csv" class="xmlbutton" title="' . $l['h_tsv_export'] . '">CSV</a>';
+        echo '<a href="' . $tsvlink . '&amp;expmode=2&amp;format=csv" class="xmlbutton" title="' . $l['h_tsv_export'] . '">CSV ' . $l['w_module'] . '</a>';
+        echo '<a href="' . $tsvlink . '&amp;expmode=3&amp;format=csv" class="xmlbutton" title="' . $l['h_tsv_export'] . '">CSV ' . $l['w_all'] . '</a>';
+    }
 }
 
 echo '&nbsp;' . K_NEWLINE;

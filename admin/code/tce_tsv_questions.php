@@ -47,21 +47,25 @@ $expmode = (int) $_REQUEST['expmode'];
 $module_id = (int) $_REQUEST['module_id'];
 $subject_id = (int) $_REQUEST['subject_id'];
 
+// check if CSV format is requested
+$csv_mode = K_ENABLE_CSV_CONVERSION && isset($_REQUEST['format']) && $_REQUEST['format'] === 'csv';
+$ext = $csv_mode ? 'csv' : 'tsv';
+
 // check user's authorization for module
 if (! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $module_id, 'module_user_id')) {
     exit;
 }
 
-// set TSV file name
-$tsv_filename = match ($expmode) {
-    1 => 'tcexam_subject_' . $subject_id . '_' . date('YmdHi') . '.tsv',
-    2 => 'tcexam_module_' . $module_id . '_' . date('YmdHi') . '.tsv',
-    3 => 'tcexam_all_modules_' . date('YmdHi') . '.tsv',
-    default => 'tcexam_export_' . date('YmdHi') . '.tsv',
+// set file name
+$filename = match ($expmode) {
+    1 => 'tcexam_subject_' . $subject_id . '_' . date('YmdHi') . '.' . $ext,
+    2 => 'tcexam_module_' . $module_id . '_' . date('YmdHi') . '.' . $ext,
+    3 => 'tcexam_all_modules_' . date('YmdHi') . '.' . $ext,
+    default => 'tcexam_export_' . date('YmdHi') . '.' . $ext,
 };
 
-// send TSV headers
-header('Content-Description: TSV File Transfer');
+// send headers
+header('Content-Description: ' . strtoupper($ext) . ' File Transfer');
 header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
 header('Pragma: public');
 header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -70,12 +74,20 @@ header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 header('Content-Type: application/force-download');
 header('Content-Type: application/octet-stream', false);
 header('Content-Type: application/download', false);
-header('Content-Type: text/tab-separated-values', false);
+if ($csv_mode) {
+    header('Content-Type: text/csv', false);
+} else {
+    header('Content-Type: text/tab-separated-values', false);
+}
 // use the Content-Disposition header to supply a recommended filename
-header('Content-Disposition: attachment; filename=' . $tsv_filename . ';');
+header('Content-Disposition: attachment; filename=' . $filename . ';');
 header('Content-Transfer-Encoding: binary');
 
-echo F_tsv_export_questions($module_id, $subject_id, $expmode);
+$data = F_tsv_export_questions($module_id, $subject_id, $expmode);
+if ($csv_mode) {
+    $data = F_tsv_to_csv($data);
+}
+echo $data;
 
 
 /**

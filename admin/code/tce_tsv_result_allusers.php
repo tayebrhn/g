@@ -82,6 +82,10 @@ if (! isset($_REQUEST['orderdir']) || empty($_REQUEST['orderdir'])) {
 
 $display_mode = isset($_REQUEST['display_mode']) ? max(0, min(5, (int) $_REQUEST['display_mode'])) : 0;
 
+// check if CSV format is requested
+$csv_mode = K_ENABLE_CSV_CONVERSION && isset($_REQUEST['format']) && $_REQUEST['format'] === 'csv';
+$ext = $csv_mode ? 'csv' : 'tsv';
+
 // send headers
 header('Content-Description: TXT File Transfer');
 header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
@@ -92,9 +96,13 @@ header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 header('Content-Type: application/force-download');
 header('Content-Type: application/octet-stream', false);
 header('Content-Type: application/download', false);
-header('Content-Type: text/tab-separated-values', false);
+if ($csv_mode) {
+    header('Content-Type: text/csv', false);
+} else {
+    header('Content-Type: text/tab-separated-values', false);
+}
 // use the Content-Disposition header to supply a recommended filename
-header('Content-Disposition: attachment; filename=tcexam_test_results_' . $test_id . '_' . date('YmdHis') . '.tsv;');
+header('Content-Disposition: attachment; filename=tcexam_test_results_' . $test_id . '_' . date('YmdHis') . '.' . $ext . ';');
 header('Content-Transfer-Encoding: binary');
 
 
@@ -103,7 +111,7 @@ $data = F_getAllUsersTestStat($test_id, $group_id, $user_id, $startdate, $enddat
 $table = F_printTestResultStat($data, 1, $order_field, '', false, $display_mode);
 $table .= F_printTestStat($test_id, $group_id, $user_id, $startdate, $enddate, 0, $data, $display_mode);
 // convert HTML table to TSV
-echo F_html_to_TSV($table);
+$output = F_html_to_TSV($table);
 
 if ($user_id == 0) {
     $users = [];
@@ -112,20 +120,25 @@ if ($user_id == 0) {
     }
 
     if (count($users) > 1) {
-        echo K_NEWLINE . K_NEWLINE . K_NEWLINE . '<<< DETAILS >>>' . K_NEWLINE;
+        $output .= K_NEWLINE . K_NEWLINE . K_NEWLINE . '<<< DETAILS >>>' . K_NEWLINE;
         // display detailed stats for each user
         foreach ($users as $uid) {
-            echo K_NEWLINE . K_NEWLINE . '### USER' . K_TAB . $uid . K_NEWLINE . K_NEWLINE;
-            
+            $output .= K_NEWLINE . K_NEWLINE . '### USER' . K_TAB . $uid . K_NEWLINE . K_NEWLINE;
+
             $usrdata = F_getAllUsersTestStat($test_id, $group_id, $uid, $startdate, $enddate, $full_order_field);
             // format data as HTML table
             $table = F_printTestResultStat($usrdata, 1, $order_field, '', false, $display_mode);
             $table .= F_printTestStat($test_id, $group_id, $uid, $startdate, $enddate, 0, $usrdata, $display_mode);
             // convert HTML table to TSV
-            echo F_html_to_TSV($table);
+            $output .= F_html_to_TSV($table);
         }
     }
 }
+
+if ($csv_mode) {
+    $output = F_tsv_to_csv($output);
+}
+echo $output;
 
 //============================================================+
 // END OF FILE

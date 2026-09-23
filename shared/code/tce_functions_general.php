@@ -288,7 +288,7 @@ function F_xml_to_text($str)
  */
 function F_text_to_tsv($str)
 {
-    if (empty($str)) {
+    if ($str === '' || $str === null) {
         return '';
     }
 
@@ -308,7 +308,7 @@ function F_text_to_tsv($str)
  */
 function F_tsv_to_text($str)
 {
-    if (empty($str)) {
+    if ($str === '' || $str === null) {
         return '';
     }
 
@@ -318,6 +318,116 @@ function F_tsv_to_text($str)
         '\r' => "\r",
     ];
     return strtr($str, $replaceTable);
+}
+
+/**
+ * Convert a TSV string to CSV (RFC 4180).
+ * @param $tsv (string) tab-separated input
+ * @return string comma-separated output
+ */
+function F_tsv_to_csv($tsv)
+{
+    if ($tsv === '' || $tsv === null) {
+        return '';
+    }
+
+    $lines = explode("\n", $tsv);
+    $csv_lines = [];
+    foreach ($lines as $line) {
+        $line = rtrim($line, "\r");
+        if ($line === '') {
+            $csv_lines[] = '';
+            continue;
+        }
+        $had_trailing_tab = substr($line, -1) === "\t";
+        $fields = explode("\t", $line);
+        $csv_fields = [];
+        foreach ($fields as $idx => $field) {
+            // unescape TSV special chars before CSV encoding
+            $field = F_tsv_to_text($field);
+            // quote empty trailing fields to preserve them in round-trip
+            if ($field === '' && $had_trailing_tab && $idx === count($fields) - 1) {
+                $field = '"';
+            } elseif (strpbrk($field, ',"' . "\n") !== false) {
+                // RFC 4180: quote fields containing comma, double-quote, or newline
+                $field = '"' . str_replace('"', '""', $field) . '"';
+            }
+            $csv_fields[] = $field;
+        }
+        $csv_lines[] = implode(',', $csv_fields);
+    }
+    return implode("\n", $csv_lines);
+}
+
+/**
+ * Convert a CSV string to TSV.
+ * @param $csv (string) comma-separated input (RFC 4180)
+ * @return string tab-separated output
+ */
+function F_csv_to_tsv($csv)
+{
+    if ($csv === '' || $csv === null) {
+        return '';
+    }
+
+    $lines = explode("\n", $csv);
+    $tsv_lines = [];
+    foreach ($lines as $line) {
+        $line = rtrim($line, "\r");
+        if ($line === '') {
+            $tsv_lines[] = '';
+            continue;
+        }
+        // detect trailing quoted-empty field (produced by F_tsv_to_csv for trailing tabs)
+        $has_trailing_empty = preg_match('/,""$/', $line);
+        $fields = [];
+        // parse RFC 4180 CSV (handles quoted fields with commas/quotes/newlines)
+        $len = strlen($line);
+        $i = 0;
+        while ($i < $len) {
+            if ($line[$i] === '"') {
+                // quoted field
+                ++$i;
+                $val = '';
+                while ($i < $len) {
+                    if ($line[$i] === '"') {
+                        if ($i + 1 < $len && $line[$i + 1] === '"') {
+                            $val .= '"';
+                            $i += 2;
+                        } else {
+                            ++$i;
+                            break;
+                        }
+                    } else {
+                        $val .= $line[$i];
+                        ++$i;
+                    }
+                }
+                $fields[] = F_text_to_tsv($val);
+                // skip separator
+                if ($i < $len && $line[$i] === ',') {
+                    ++$i;
+                }
+            } else {
+                // unquoted field
+                $pos = strpos($line, ',', $i);
+                if ($pos === false) {
+                    $fields[] = F_text_to_tsv(substr($line, $i));
+                    break;
+                } else {
+                    $fields[] = F_text_to_tsv(substr($line, $i, $pos - $i));
+                    $i = $pos + 1;
+                }
+            }
+        }
+        $tsv = implode("\t", $fields);
+        // restore trailing tab if the original had a trailing empty field
+        if ($has_trailing_empty) {
+            $tsv .= "\t";
+        }
+        $tsv_lines[] = $tsv;
+    }
+    return implode("\n", $tsv_lines);
 }
 
 /**

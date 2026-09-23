@@ -67,6 +67,16 @@ if ((isset($menu_mode) && $menu_mode == 'upload') && $_FILES['userfile']['name']
                 $qimp = new CustomQuestionImporter(K_PATH_CACHE . $uploadedfile);
                 break;
             }
+            case 4: {
+                // CSV format: convert to TSV, then use the TSV importer
+                $csv_content = file_get_contents(K_PATH_CACHE . $uploadedfile);
+                $tsv_content = F_csv_to_tsv($csv_content);
+                $tsv_file = K_PATH_CACHE . $uploadedfile . '.tsv';
+                file_put_contents($tsv_file, $tsv_content);
+                $qimp = F_TSVQuestionImporter($tsv_file);
+                @unlink($tsv_file);
+                break;
+            }
         }
 
         if ($qimp) {
@@ -86,7 +96,7 @@ echo '<label for="userfile">' . $l['w_upload_file'] . '</label>' . K_NEWLINE;
 echo '</span>' . K_NEWLINE;
 echo '<span class="formw">' . K_NEWLINE;
 echo '<input type="hidden" name="MAX_FILE_SIZE" value="' . K_MAX_UPLOAD_SIZE . '" />' . K_NEWLINE;
-echo '<input type="file" name="userfile" id="userfile" size="20" title="' . $l['h_upload_file'] . '" />' . K_NEWLINE;
+echo '<input type="file" name="userfile" id="userfile" size="20" title="' . $l['h_upload_file'] . '" accept=".tsv,.tab,.csv,.xml" />' . K_NEWLINE;
 echo '</span>' . K_NEWLINE;
 echo '&nbsp;' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
@@ -105,13 +115,23 @@ echo '<fieldset class="noborder">' . K_NEWLINE;
 // echo ' />';
 // echo '<label for="type_xml">XML</label><br />' . K_NEWLINE;
 
-echo '<input type="radio" name="type" id="type_tsv" checked value="2" title="Exam TSV Format"' . K_NEWLINE;
+echo '<input type="radio" name="type" id="type_tsv" checked value="2" title="TSV format"' . K_NEWLINE;
 if ($type == 2) {
     echo ' checked="checked"';
 }
 
 echo ' />';
 echo '<label for="type_tsv">TSV</label>' . K_NEWLINE;
+
+if (K_ENABLE_CSV_CONVERSION) {
+    echo '<input type="radio" name="type" id="type_csv" value="4" title="CSV format"' . K_NEWLINE;
+    if ($type == 4) {
+        echo ' checked="checked"';
+    }
+
+    echo ' />';
+    echo '<label for="type_csv">CSV</label>' . K_NEWLINE;
+}
 
 $custom_import = K_ENABLE_CUSTOM_IMPORT;
 if ($custom_import !== '') {

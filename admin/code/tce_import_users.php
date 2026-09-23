@@ -59,6 +59,18 @@ switch ($menu_mode) {
 
                         break;
                     }
+                    case 4: {
+                        // CSV format: convert to TSV, then use the TSV importer
+                        $csv_content = file_get_contents(K_PATH_CACHE . $uploadedfile);
+                        $tsv_content = F_csv_to_tsv($csv_content);
+                        $tsv_file = K_PATH_CACHE . $uploadedfile . '.tsv';
+                        file_put_contents($tsv_file, $tsv_content);
+                        if (F_import_tsv_users($tsv_file)) {
+                            F_print_error('MESSAGE', $l['m_importing_complete']);
+                        }
+                        @unlink($tsv_file);
+                        break;
+                    }
                 }
             }
         }
@@ -85,7 +97,7 @@ switch ($menu_mode) {
 </span>
 <span class="formw">
 <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo K_MAX_UPLOAD_SIZE ?>" />
-<input type="file" name="userfile" id="userfile" size="20" title="<?php echo $l['h_upload_file']; ?>" />
+<input type="file" name="userfile" id="userfile" size="20" title="<?php echo $l['h_upload_file']; ?>" accept=".tsv,.tab,.csv,.xml" />
 </span>
 &nbsp;
 </div>
@@ -100,6 +112,10 @@ switch ($menu_mode) {
 <br />
 <input type="radio" name="file_type" id="file_type_tsv" checked value="2" title="<?php echo $l['h_file_type_tsv']; ?>" />
 <label for="file_type_tsv">TSV</label>
+<?php if (K_ENABLE_CSV_CONVERSION) { ?>
+<input type="radio" name="file_type" id="file_type_csv" value="4" title="CSV format" />
+<label for="file_type_csv">CSV</label>
+<?php } ?>
 </fieldset>
 </div>
 </div>

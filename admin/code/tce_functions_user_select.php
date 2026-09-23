@@ -276,6 +276,9 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
             // echo '<a href="tce_xml_users.php" class="xmlbutton" title="' . $l['h_xml_export'] . '">XML</a> ';
             // echo '<a href="tce_xml_users.php?format=JSON" class="xmlbutton" title="JSON">JSON</a> ';
             echo '<a href="tce_tsv_users.php" class="xmlbutton" title="' . $l['h_tsv_export'] . '">TSV</a>';
+            if (K_ENABLE_CSV_CONVERSION) {
+                echo ' <a href="tce_tsv_users.php?format=csv" class="xmlbutton" title="' . $l['h_tsv_export'] . '">CSV</a>';
+            }
             echo '</div>' . K_NEWLINE;
 
             echo '<div class="pagehelp">' . $l['hp_select_users'] . '</div>' . K_NEWLINE;

@@ -1,0 +1,644 @@
+M=MODULE,module_enabled,module_name
+S=SUBJECT,subject_enabled,subject_name,subject_description
+Q=QUESTION,question_enabled,question_description,question_explanation,question_type,question_difficulty,question_position,question_timer,question_fullscreen,question_inline_answers,question_auto_next
+A=ANSWER,answer_enabled,answer_description,answer_explanation,answer_isright,answer_position,answer_keyboard_key
+
+M,1,Sample Test Exam A - Arithmetic
+S,1,A1 - Addition,Single-choice addition questions (sample test data).
+Q,1,What is 11 plus 1?,11 + 1 = 12.,S,1,1,0,0,0,0
+A,1,12,,1,1,"
+A,1,13,,0,2,"
+A,1,11,,0,3,"
+A,1,14,,0,4,"
+Q,1,What is 12 plus 2?,12 + 2 = 14.,S,1,2,0,0,0,0
+A,1,15,,0,1,"
+A,1,14,,1,2,"
+A,1,13,,0,3,"
+A,1,16,,0,4,"
+Q,1,What is 13 plus 3?,13 + 3 = 16.,S,1,3,0,0,0,0
+A,1,17,,0,1,"
+A,1,15,,0,2,"
+A,1,16,,1,3,"
+A,1,18,,0,4,"
+Q,1,What is 14 plus 4?,14 + 4 = 18.,S,1,4,0,0,0,0
+A,1,19,,0,1,"
+A,1,17,,0,2,"
+A,1,20,,0,3,"
+A,1,18,,1,4,"
+Q,1,What is 15 plus 5?,15 + 5 = 20.,S,1,5,0,0,0,0
+A,1,20,,1,1,"
+A,1,21,,0,2,"
+A,1,19,,0,3,"
+A,1,22,,0,4,"
+Q,1,What is 16 plus 6?,16 + 6 = 22.,S,1,6,0,0,0,0
+A,1,23,,0,1,"
+A,1,22,,1,2,"
+A,1,21,,0,3,"
+A,1,24,,0,4,"
+Q,1,What is 17 plus 7?,17 + 7 = 24.,S,1,7,0,0,0,0
+A,1,25,,0,1,"
+A,1,23,,0,2,"
+A,1,24,,1,3,"
+A,1,26,,0,4,"
+Q,1,What is 18 plus 8?,18 + 8 = 26.,S,1,8,0,0,0,0
+A,1,27,,0,1,"
+A,1,25,,0,2,"
+A,1,28,,0,3,"
+A,1,26,,1,4,"
+Q,1,What is 19 plus 9?,19 + 9 = 28.,S,1,9,0,0,0,0
+A,1,28,,1,1,"
+A,1,29,,0,2,"
+A,1,27,,0,3,"
+A,1,30,,0,4,"
+Q,1,What is 20 plus 10?,20 + 10 = 30.,S,1,10,0,0,0,0
+A,1,31,,0,1,"
+A,1,30,,1,2,"
+A,1,29,,0,3,"
+A,1,32,,0,4,"
+Q,1,What is 21 plus 11?,21 + 11 = 32.,S,1,11,0,0,0,0
+A,1,33,,0,1,"
+A,1,31,,0,2,"
+A,1,32,,1,3,"
+A,1,34,,0,4,"
+Q,1,What is 22 plus 12?,22 + 12 = 34.,S,1,12,0,0,0,0
+A,1,35,,0,1,"
+A,1,33,,0,2,"
+A,1,36,,0,3,"
+A,1,34,,1,4,"
+Q,1,What is 23 plus 13?,23 + 13 = 36.,S,1,13,0,0,0,0
+A,1,36,,1,1,"
+A,1,37,,0,2,"
+A,1,35,,0,3,"
+A,1,38,,0,4,"
+Q,1,What is 24 plus 14?,24 + 14 = 38.,S,1,14,0,0,0,0
+A,1,39,,0,1,"
+A,1,38,,1,2,"
+A,1,37,,0,3,"
+A,1,40,,0,4,"
+Q,1,What is 25 plus 15?,25 + 15 = 40.,S,1,15,0,0,0,0
+A,1,41,,0,1,"
+A,1,39,,0,2,"
+A,1,40,,1,3,"
+A,1,42,,0,4,"
+Q,1,What is 26 plus 16?,26 + 16 = 42.,S,1,16,0,0,0,0
+A,1,43,,0,1,"
+A,1,41,,0,2,"
+A,1,44,,0,3,"
+A,1,42,,1,4,"
+Q,1,What is 27 plus 17?,27 + 17 = 44.,S,1,17,0,0,0,0
+A,1,44,,1,1,"
+A,1,45,,0,2,"
+A,1,43,,0,3,"
+A,1,46,,0,4,"
+Q,1,What is 28 plus 18?,28 + 18 = 46.,S,1,18,0,0,0,0
+A,1,47,,0,1,"
+A,1,46,,1,2,"
+A,1,45,,0,3,"
+A,1,48,,0,4,"
+Q,1,What is 29 plus 19?,29 + 19 = 48.,S,1,19,0,0,0,0
+A,1,49,,0,1,"
+A,1,47,,0,2,"
+A,1,48,,1,3,"
+A,1,50,,0,4,"
+Q,1,What is 30 plus 20?,30 + 20 = 50.,S,1,20,0,0,0,0
+A,1,51,,0,1,"
+A,1,49,,0,2,"
+A,1,52,,0,3,"
+A,1,50,,1,4,"
+Q,1,What is 31 plus 21?,31 + 21 = 52.,S,1,21,0,0,0,0
+A,1,52,,1,1,"
+A,1,53,,0,2,"
+A,1,51,,0,3,"
+A,1,54,,0,4,"
+S,1,A2 - Multiplication,Single-choice multiplication questions (sample test data).
+Q,1,What is 2 multiplied by 3?,2 multiplied by 3 equals 6.,S,1,1,0,0,0,0
+A,1,6,,1,1,"
+A,1,7,,0,2,"
+A,1,5,,0,3,"
+A,1,8,,0,4,"
+Q,1,What is 3 multiplied by 4?,3 multiplied by 4 equals 12.,S,1,2,0,0,0,0
+A,1,13,,0,1,"
+A,1,12,,1,2,"
+A,1,11,,0,3,"
+A,1,14,,0,4,"
+Q,1,What is 4 multiplied by 5?,4 multiplied by 5 equals 20.,S,1,3,0,0,0,0
+A,1,21,,0,1,"
+A,1,19,,0,2,"
+A,1,20,,1,3,"
+A,1,22,,0,4,"
+Q,1,What is 5 multiplied by 6?,5 multiplied by 6 equals 30.,S,1,4,0,0,0,0
+A,1,31,,0,1,"
+A,1,29,,0,2,"
+A,1,32,,0,3,"
+A,1,30,,1,4,"
+Q,1,What is 6 multiplied by 7?,6 multiplied by 7 equals 42.,S,1,5,0,0,0,0
+A,1,42,,1,1,"
+A,1,43,,0,2,"
+A,1,41,,0,3,"
+A,1,44,,0,4,"
+Q,1,What is 7 multiplied by 8?,7 multiplied by 8 equals 56.,S,1,6,0,0,0,0
+A,1,57,,0,1,"
+A,1,56,,1,2,"
+A,1,55,,0,3,"
+A,1,58,,0,4,"
+Q,1,What is 8 multiplied by 9?,8 multiplied by 9 equals 72.,S,1,7,0,0,0,0
+A,1,73,,0,1,"
+A,1,71,,0,2,"
+A,1,72,,1,3,"
+A,1,74,,0,4,"
+Q,1,What is 9 multiplied by 10?,9 multiplied by 10 equals 90.,S,1,8,0,0,0,0
+A,1,91,,0,1,"
+A,1,89,,0,2,"
+A,1,92,,0,3,"
+A,1,90,,1,4,"
+Q,1,What is 10 multiplied by 11?,10 multiplied by 11 equals 110.,S,1,9,0,0,0,0
+A,1,110,,1,1,"
+A,1,111,,0,2,"
+A,1,109,,0,3,"
+A,1,112,,0,4,"
+Q,1,What is 11 multiplied by 12?,11 multiplied by 12 equals 132.,S,1,10,0,0,0,0
+A,1,133,,0,1,"
+A,1,132,,1,2,"
+A,1,131,,0,3,"
+A,1,134,,0,4,"
+Q,1,What is 12 multiplied by 13?,12 multiplied by 13 equals 156.,S,1,11,0,0,0,0
+A,1,157,,0,1,"
+A,1,155,,0,2,"
+A,1,156,,1,3,"
+A,1,158,,0,4,"
+Q,1,What is 13 multiplied by 14?,13 multiplied by 14 equals 182.,S,1,12,0,0,0,0
+A,1,183,,0,1,"
+A,1,181,,0,2,"
+A,1,184,,0,3,"
+A,1,182,,1,4,"
+Q,1,What is 14 multiplied by 15?,14 multiplied by 15 equals 210.,S,1,13,0,0,0,0
+A,1,210,,1,1,"
+A,1,211,,0,2,"
+A,1,209,,0,3,"
+A,1,212,,0,4,"
+Q,1,What is 15 multiplied by 16?,15 multiplied by 16 equals 240.,S,1,14,0,0,0,0
+A,1,241,,0,1,"
+A,1,240,,1,2,"
+A,1,239,,0,3,"
+A,1,242,,0,4,"
+Q,1,What is 16 multiplied by 17?,16 multiplied by 17 equals 272.,S,1,15,0,0,0,0
+A,1,273,,0,1,"
+A,1,271,,0,2,"
+A,1,272,,1,3,"
+A,1,274,,0,4,"
+Q,1,What is 17 multiplied by 18?,17 multiplied by 18 equals 306.,S,1,16,0,0,0,0
+A,1,307,,0,1,"
+A,1,305,,0,2,"
+A,1,308,,0,3,"
+A,1,306,,1,4,"
+Q,1,What is 18 multiplied by 19?,18 multiplied by 19 equals 342.,S,1,17,0,0,0,0
+A,1,342,,1,1,"
+A,1,343,,0,2,"
+A,1,341,,0,3,"
+A,1,344,,0,4,"
+Q,1,What is 19 multiplied by 20?,19 multiplied by 20 equals 380.,S,1,18,0,0,0,0
+A,1,381,,0,1,"
+A,1,380,,1,2,"
+A,1,379,,0,3,"
+A,1,382,,0,4,"
+Q,1,What is 20 multiplied by 21?,20 multiplied by 21 equals 420.,S,1,19,0,0,0,0
+A,1,421,,0,1,"
+A,1,419,,0,2,"
+A,1,420,,1,3,"
+A,1,422,,0,4,"
+Q,1,What is 21 multiplied by 22?,21 multiplied by 22 equals 462.,S,1,20,0,0,0,0
+A,1,463,,0,1,"
+A,1,461,,0,2,"
+A,1,464,,0,3,"
+A,1,462,,1,4,"
+Q,1,What is 22 multiplied by 23?,22 multiplied by 23 equals 506.,S,1,21,0,0,0,0
+A,1,506,,1,1,"
+A,1,507,,0,2,"
+A,1,505,,0,3,"
+A,1,508,,0,4,"
+M,1,Sample Test Exam B - Computing
+S,1,B1 - Powers of Two,Single-choice powers-of-two questions (sample test data).
+Q,1,What is 2 to the power of 1?,2^1 = 2.,S,1,1,0,0,0,0
+A,1,2,,1,1,"
+A,1,3,,0,2,"
+A,1,1,,0,3,"
+A,1,4,,0,4,"
+Q,1,What is 2 to the power of 2?,2^2 = 4.,S,1,2,0,0,0,0
+A,1,5,,0,1,"
+A,1,4,,1,2,"
+A,1,3,,0,3,"
+A,1,6,,0,4,"
+Q,1,What is 2 to the power of 3?,2^3 = 8.,S,1,3,0,0,0,0
+A,1,9,,0,1,"
+A,1,7,,0,2,"
+A,1,8,,1,3,"
+A,1,10,,0,4,"
+Q,1,What is 2 to the power of 4?,2^4 = 16.,S,1,4,0,0,0,0
+A,1,17,,0,1,"
+A,1,15,,0,2,"
+A,1,18,,0,3,"
+A,1,16,,1,4,"
+Q,1,What is 2 to the power of 5?,2^5 = 32.,S,1,5,0,0,0,0
+A,1,32,,1,1,"
+A,1,33,,0,2,"
+A,1,31,,0,3,"
+A,1,34,,0,4,"
+Q,1,What is 2 to the power of 6?,2^6 = 64.,S,1,6,0,0,0,0
+A,1,65,,0,1,"
+A,1,64,,1,2,"
+A,1,63,,0,3,"
+A,1,66,,0,4,"
+Q,1,What is 2 to the power of 7?,2^7 = 128.,S,1,7,0,0,0,0
+A,1,129,,0,1,"
+A,1,127,,0,2,"
+A,1,128,,1,3,"
+A,1,130,,0,4,"
+Q,1,What is 2 to the power of 8?,2^8 = 256.,S,1,8,0,0,0,0
+A,1,257,,0,1,"
+A,1,255,,0,2,"
+A,1,258,,0,3,"
+A,1,256,,1,4,"
+Q,1,What is 2 to the power of 9?,2^9 = 512.,S,1,9,0,0,0,0
+A,1,512,,1,1,"
+A,1,513,,0,2,"
+A,1,511,,0,3,"
+A,1,514,,0,4,"
+Q,1,What is 2 to the power of 10?,2^10 = 1024.,S,1,10,0,0,0,0
+A,1,1025,,0,1,"
+A,1,1024,,1,2,"
+A,1,1023,,0,3,"
+A,1,1026,,0,4,"
+Q,1,What is 2 to the power of 11?,2^11 = 2048.,S,1,11,0,0,0,0
+A,1,2049,,0,1,"
+A,1,2047,,0,2,"
+A,1,2048,,1,3,"
+A,1,2050,,0,4,"
+Q,1,What is 2 to the power of 12?,2^12 = 4096.,S,1,12,0,0,0,0
+A,1,4097,,0,1,"
+A,1,4095,,0,2,"
+A,1,4098,,0,3,"
+A,1,4096,,1,4,"
+Q,1,What is 2 to the power of 13?,2^13 = 8192.,S,1,13,0,0,0,0
+A,1,8192,,1,1,"
+A,1,8193,,0,2,"
+A,1,8191,,0,3,"
+A,1,8194,,0,4,"
+Q,1,What is 2 to the power of 14?,2^14 = 16384.,S,1,14,0,0,0,0
+A,1,16385,,0,1,"
+A,1,16384,,1,2,"
+A,1,16383,,0,3,"
+A,1,16386,,0,4,"
+Q,1,What is 2 to the power of 15?,2^15 = 32768.,S,1,15,0,0,0,0
+A,1,32769,,0,1,"
+A,1,32767,,0,2,"
+A,1,32768,,1,3,"
+A,1,32770,,0,4,"
+Q,1,What is 2 to the power of 16?,2^16 = 65536.,S,1,16,0,0,0,0
+A,1,65537,,0,1,"
+A,1,65535,,0,2,"
+A,1,65538,,0,3,"
+A,1,65536,,1,4,"
+Q,1,What is 2 to the power of 17?,2^17 = 131072.,S,1,17,0,0,0,0
+A,1,131072,,1,1,"
+A,1,131073,,0,2,"
+A,1,131071,,0,3,"
+A,1,131074,,0,4,"
+Q,1,What is 2 to the power of 18?,2^18 = 262144.,S,1,18,0,0,0,0
+A,1,262145,,0,1,"
+A,1,262144,,1,2,"
+A,1,262143,,0,3,"
+A,1,262146,,0,4,"
+Q,1,What is 2 to the power of 19?,2^19 = 524288.,S,1,19,0,0,0,0
+A,1,524289,,0,1,"
+A,1,524287,,0,2,"
+A,1,524288,,1,3,"
+A,1,524290,,0,4,"
+Q,1,What is 2 to the power of 20?,2^20 = 1048576.,S,1,20,0,0,0,0
+A,1,1048577,,0,1,"
+A,1,1048575,,0,2,"
+A,1,1048578,,0,3,"
+A,1,1048576,,1,4,"
+Q,1,What is 2 to the power of 21?,2^21 = 2097152.,S,1,21,0,0,0,0
+A,1,2097152,,1,1,"
+A,1,2097153,,0,2,"
+A,1,2097151,,0,3,"
+A,1,2097154,,0,4,"
+S,1,B2 - Binary Numbers,Single-choice binary conversion questions (sample test data).
+Q,1,What is the decimal number 5 written in binary (base 2)?,5 in binary is 101.,S,1,1,0,0,0,0
+A,1,101,,1,1,"
+A,1,110,,0,2,"
+A,1,100,,0,3,"
+A,1,111,,0,4,"
+Q,1,What is the decimal number 6 written in binary (base 2)?,6 in binary is 110.,S,1,2,0,0,0,0
+A,1,111,,0,1,"
+A,1,110,,1,2,"
+A,1,101,,0,3,"
+A,1,1000,,0,4,"
+Q,1,What is the decimal number 7 written in binary (base 2)?,7 in binary is 111.,S,1,3,0,0,0,0
+A,1,1000,,0,1,"
+A,1,110,,0,2,"
+A,1,111,,1,3,"
+A,1,1001,,0,4,"
+Q,1,What is the decimal number 8 written in binary (base 2)?,8 in binary is 1000.,S,1,4,0,0,0,0
+A,1,1001,,0,1,"
+A,1,111,,0,2,"
+A,1,1010,,0,3,"
+A,1,1000,,1,4,"
+Q,1,What is the decimal number 9 written in binary (base 2)?,9 in binary is 1001.,S,1,5,0,0,0,0
+A,1,1001,,1,1,"
+A,1,1010,,0,2,"
+A,1,1000,,0,3,"
+A,1,1011,,0,4,"
+Q,1,What is the decimal number 10 written in binary (base 2)?,10 in binary is 1010.,S,1,6,0,0,0,0
+A,1,1011,,0,1,"
+A,1,1010,,1,2,"
+A,1,1001,,0,3,"
+A,1,1100,,0,4,"
+Q,1,What is the decimal number 11 written in binary (base 2)?,11 in binary is 1011.,S,1,7,0,0,0,0
+A,1,1100,,0,1,"
+A,1,1010,,0,2,"
+A,1,1011,,1,3,"
+A,1,1101,,0,4,"
+Q,1,What is the decimal number 12 written in binary (base 2)?,12 in binary is 1100.,S,1,8,0,0,0,0
+A,1,1101,,0,1,"
+A,1,1011,,0,2,"
+A,1,1110,,0,3,"
+A,1,1100,,1,4,"
+Q,1,What is the decimal number 13 written in binary (base 2)?,13 in binary is 1101.,S,1,9,0,0,0,0
+A,1,1101,,1,1,"
+A,1,1110,,0,2,"
+A,1,1100,,0,3,"
+A,1,1111,,0,4,"
+Q,1,What is the decimal number 14 written in binary (base 2)?,14 in binary is 1110.,S,1,10,0,0,0,0
+A,1,1111,,0,1,"
+A,1,1110,,1,2,"
+A,1,1101,,0,3,"
+A,1,10000,,0,4,"
+Q,1,What is the decimal number 15 written in binary (base 2)?,15 in binary is 1111.,S,1,11,0,0,0,0
+A,1,10000,,0,1,"
+A,1,1110,,0,2,"
+A,1,1111,,1,3,"
+A,1,10001,,0,4,"
+Q,1,What is the decimal number 16 written in binary (base 2)?,16 in binary is 10000.,S,1,12,0,0,0,0
+A,1,10001,,0,1,"
+A,1,1111,,0,2,"
+A,1,10010,,0,3,"
+A,1,10000,,1,4,"
+Q,1,What is the decimal number 17 written in binary (base 2)?,17 in binary is 10001.,S,1,13,0,0,0,0
+A,1,10001,,1,1,"
+A,1,10010,,0,2,"
+A,1,10000,,0,3,"
+A,1,10011,,0,4,"
+Q,1,What is the decimal number 18 written in binary (base 2)?,18 in binary is 10010.,S,1,14,0,0,0,0
+A,1,10011,,0,1,"
+A,1,10010,,1,2,"
+A,1,10001,,0,3,"
+A,1,10100,,0,4,"
+Q,1,What is the decimal number 19 written in binary (base 2)?,19 in binary is 10011.,S,1,15,0,0,0,0
+A,1,10100,,0,1,"
+A,1,10010,,0,2,"
+A,1,10011,,1,3,"
+A,1,10101,,0,4,"
+Q,1,What is the decimal number 20 written in binary (base 2)?,20 in binary is 10100.,S,1,16,0,0,0,0
+A,1,10101,,0,1,"
+A,1,10011,,0,2,"
+A,1,10110,,0,3,"
+A,1,10100,,1,4,"
+Q,1,What is the decimal number 21 written in binary (base 2)?,21 in binary is 10101.,S,1,17,0,0,0,0
+A,1,10101,,1,1,"
+A,1,10110,,0,2,"
+A,1,10100,,0,3,"
+A,1,10111,,0,4,"
+Q,1,What is the decimal number 22 written in binary (base 2)?,22 in binary is 10110.,S,1,18,0,0,0,0
+A,1,10111,,0,1,"
+A,1,10110,,1,2,"
+A,1,10101,,0,3,"
+A,1,11000,,0,4,"
+Q,1,What is the decimal number 23 written in binary (base 2)?,23 in binary is 10111.,S,1,19,0,0,0,0
+A,1,11000,,0,1,"
+A,1,10110,,0,2,"
+A,1,10111,,1,3,"
+A,1,11001,,0,4,"
+Q,1,What is the decimal number 24 written in binary (base 2)?,24 in binary is 11000.,S,1,20,0,0,0,0
+A,1,11001,,0,1,"
+A,1,10111,,0,2,"
+A,1,11010,,0,3,"
+A,1,11000,,1,4,"
+Q,1,What is the decimal number 25 written in binary (base 2)?,25 in binary is 11001.,S,1,21,0,0,0,0
+A,1,11001,,1,1,"
+A,1,11010,,0,2,"
+A,1,11000,,0,3,"
+A,1,11011,,0,4,"
+M,1,Sample Test Exam C - Units and Conversions
+S,1,C1 - Metric Length,Single-choice metric length conversion questions (sample test data).
+Q,1,How many metres are there in 2 kilometres?,2 km = 2000 m.,S,1,1,0,0,0,0
+A,1,2000,,1,1,"
+A,1,2001,,0,2,"
+A,1,1999,,0,3,"
+A,1,2002,,0,4,"
+Q,1,How many metres are there in 3 kilometres?,3 km = 3000 m.,S,1,2,0,0,0,0
+A,1,3001,,0,1,"
+A,1,3000,,1,2,"
+A,1,2999,,0,3,"
+A,1,3002,,0,4,"
+Q,1,How many metres are there in 4 kilometres?,4 km = 4000 m.,S,1,3,0,0,0,0
+A,1,4001,,0,1,"
+A,1,3999,,0,2,"
+A,1,4000,,1,3,"
+A,1,4002,,0,4,"
+Q,1,How many metres are there in 5 kilometres?,5 km = 5000 m.,S,1,4,0,0,0,0
+A,1,5001,,0,1,"
+A,1,4999,,0,2,"
+A,1,5002,,0,3,"
+A,1,5000,,1,4,"
+Q,1,How many metres are there in 6 kilometres?,6 km = 6000 m.,S,1,5,0,0,0,0
+A,1,6000,,1,1,"
+A,1,6001,,0,2,"
+A,1,5999,,0,3,"
+A,1,6002,,0,4,"
+Q,1,How many metres are there in 7 kilometres?,7 km = 7000 m.,S,1,6,0,0,0,0
+A,1,7001,,0,1,"
+A,1,7000,,1,2,"
+A,1,6999,,0,3,"
+A,1,7002,,0,4,"
+Q,1,How many metres are there in 8 kilometres?,8 km = 8000 m.,S,1,7,0,0,0,0
+A,1,8001,,0,1,"
+A,1,7999,,0,2,"
+A,1,8000,,1,3,"
+A,1,8002,,0,4,"
+Q,1,How many metres are there in 9 kilometres?,9 km = 9000 m.,S,1,8,0,0,0,0
+A,1,9001,,0,1,"
+A,1,8999,,0,2,"
+A,1,9002,,0,3,"
+A,1,9000,,1,4,"
+Q,1,How many metres are there in 10 kilometres?,10 km = 10000 m.,S,1,9,0,0,0,0
+A,1,10000,,1,1,"
+A,1,10001,,0,2,"
+A,1,9999,,0,3,"
+A,1,10002,,0,4,"
+Q,1,How many metres are there in 11 kilometres?,11 km = 11000 m.,S,1,10,0,0,0,0
+A,1,11001,,0,1,"
+A,1,11000,,1,2,"
+A,1,10999,,0,3,"
+A,1,11002,,0,4,"
+Q,1,How many metres are there in 12 kilometres?,12 km = 12000 m.,S,1,11,0,0,0,0
+A,1,12001,,0,1,"
+A,1,11999,,0,2,"
+A,1,12000,,1,3,"
+A,1,12002,,0,4,"
+Q,1,How many metres are there in 13 kilometres?,13 km = 13000 m.,S,1,12,0,0,0,0
+A,1,13001,,0,1,"
+A,1,12999,,0,2,"
+A,1,13002,,0,3,"
+A,1,13000,,1,4,"
+Q,1,How many metres are there in 14 kilometres?,14 km = 14000 m.,S,1,13,0,0,0,0
+A,1,14000,,1,1,"
+A,1,14001,,0,2,"
+A,1,13999,,0,3,"
+A,1,14002,,0,4,"
+Q,1,How many metres are there in 15 kilometres?,15 km = 15000 m.,S,1,14,0,0,0,0
+A,1,15001,,0,1,"
+A,1,15000,,1,2,"
+A,1,14999,,0,3,"
+A,1,15002,,0,4,"
+Q,1,How many metres are there in 16 kilometres?,16 km = 16000 m.,S,1,15,0,0,0,0
+A,1,16001,,0,1,"
+A,1,15999,,0,2,"
+A,1,16000,,1,3,"
+A,1,16002,,0,4,"
+Q,1,How many metres are there in 17 kilometres?,17 km = 17000 m.,S,1,16,0,0,0,0
+A,1,17001,,0,1,"
+A,1,16999,,0,2,"
+A,1,17002,,0,3,"
+A,1,17000,,1,4,"
+Q,1,How many metres are there in 18 kilometres?,18 km = 18000 m.,S,1,17,0,0,0,0
+A,1,18000,,1,1,"
+A,1,18001,,0,2,"
+A,1,17999,,0,3,"
+A,1,18002,,0,4,"
+Q,1,How many metres are there in 19 kilometres?,19 km = 19000 m.,S,1,18,0,0,0,0
+A,1,19001,,0,1,"
+A,1,19000,,1,2,"
+A,1,18999,,0,3,"
+A,1,19002,,0,4,"
+Q,1,How many metres are there in 20 kilometres?,20 km = 20000 m.,S,1,19,0,0,0,0
+A,1,20001,,0,1,"
+A,1,19999,,0,2,"
+A,1,20000,,1,3,"
+A,1,20002,,0,4,"
+Q,1,How many metres are there in 21 kilometres?,21 km = 21000 m.,S,1,20,0,0,0,0
+A,1,21001,,0,1,"
+A,1,20999,,0,2,"
+A,1,21002,,0,3,"
+A,1,21000,,1,4,"
+Q,1,How many metres are there in 22 kilometres?,22 km = 22000 m.,S,1,21,0,0,0,0
+A,1,22000,,1,1,"
+A,1,22001,,0,2,"
+A,1,21999,,0,3,"
+A,1,22002,,0,4,"
+S,1,C2 - Time,Single-choice time conversion questions (sample test data).
+Q,1,How many seconds are there in 2 minutes?,2 min = 120 s.,S,1,1,0,0,0,0
+A,1,120,,1,1,"
+A,1,121,,0,2,"
+A,1,119,,0,3,"
+A,1,122,,0,4,"
+Q,1,How many seconds are there in 3 minutes?,3 min = 180 s.,S,1,2,0,0,0,0
+A,1,181,,0,1,"
+A,1,180,,1,2,"
+A,1,179,,0,3,"
+A,1,182,,0,4,"
+Q,1,How many seconds are there in 4 minutes?,4 min = 240 s.,S,1,3,0,0,0,0
+A,1,241,,0,1,"
+A,1,239,,0,2,"
+A,1,240,,1,3,"
+A,1,242,,0,4,"
+Q,1,How many seconds are there in 5 minutes?,5 min = 300 s.,S,1,4,0,0,0,0
+A,1,301,,0,1,"
+A,1,299,,0,2,"
+A,1,302,,0,3,"
+A,1,300,,1,4,"
+Q,1,How many seconds are there in 6 minutes?,6 min = 360 s.,S,1,5,0,0,0,0
+A,1,360,,1,1,"
+A,1,361,,0,2,"
+A,1,359,,0,3,"
+A,1,362,,0,4,"
+Q,1,How many seconds are there in 7 minutes?,7 min = 420 s.,S,1,6,0,0,0,0
+A,1,421,,0,1,"
+A,1,420,,1,2,"
+A,1,419,,0,3,"
+A,1,422,,0,4,"
+Q,1,How many seconds are there in 8 minutes?,8 min = 480 s.,S,1,7,0,0,0,0
+A,1,481,,0,1,"
+A,1,479,,0,2,"
+A,1,480,,1,3,"
+A,1,482,,0,4,"
+Q,1,How many seconds are there in 9 minutes?,9 min = 540 s.,S,1,8,0,0,0,0
+A,1,541,,0,1,"
+A,1,539,,0,2,"
+A,1,542,,0,3,"
+A,1,540,,1,4,"
+Q,1,How many seconds are there in 10 minutes?,10 min = 600 s.,S,1,9,0,0,0,0
+A,1,600,,1,1,"
+A,1,601,,0,2,"
+A,1,599,,0,3,"
+A,1,602,,0,4,"
+Q,1,How many seconds are there in 11 minutes?,11 min = 660 s.,S,1,10,0,0,0,0
+A,1,661,,0,1,"
+A,1,660,,1,2,"
+A,1,659,,0,3,"
+A,1,662,,0,4,"
+Q,1,How many seconds are there in 12 minutes?,12 min = 720 s.,S,1,11,0,0,0,0
+A,1,721,,0,1,"
+A,1,719,,0,2,"
+A,1,720,,1,3,"
+A,1,722,,0,4,"
+Q,1,How many seconds are there in 13 minutes?,13 min = 780 s.,S,1,12,0,0,0,0
+A,1,781,,0,1,"
+A,1,779,,0,2,"
+A,1,782,,0,3,"
+A,1,780,,1,4,"
+Q,1,How many seconds are there in 14 minutes?,14 min = 840 s.,S,1,13,0,0,0,0
+A,1,840,,1,1,"
+A,1,841,,0,2,"
+A,1,839,,0,3,"
+A,1,842,,0,4,"
+Q,1,How many seconds are there in 15 minutes?,15 min = 900 s.,S,1,14,0,0,0,0
+A,1,901,,0,1,"
+A,1,900,,1,2,"
+A,1,899,,0,3,"
+A,1,902,,0,4,"
+Q,1,How many seconds are there in 16 minutes?,16 min = 960 s.,S,1,15,0,0,0,0
+A,1,961,,0,1,"
+A,1,959,,0,2,"
+A,1,960,,1,3,"
+A,1,962,,0,4,"
+Q,1,How many seconds are there in 17 minutes?,17 min = 1020 s.,S,1,16,0,0,0,0
+A,1,1021,,0,1,"
+A,1,1019,,0,2,"
+A,1,1022,,0,3,"
+A,1,1020,,1,4,"
+Q,1,How many seconds are there in 18 minutes?,18 min = 1080 s.,S,1,17,0,0,0,0
+A,1,1080,,1,1,"
+A,1,1081,,0,2,"
+A,1,1079,,0,3,"
+A,1,1082,,0,4,"
+Q,1,How many seconds are there in 19 minutes?,19 min = 1140 s.,S,1,18,0,0,0,0
+A,1,1141,,0,1,"
+A,1,1140,,1,2,"
+A,1,1139,,0,3,"
+A,1,1142,,0,4,"
+Q,1,How many seconds are there in 20 minutes?,20 min = 1200 s.,S,1,19,0,0,0,0
+A,1,1201,,0,1,"
+A,1,1199,,0,2,"
+A,1,1200,,1,3,"
+A,1,1202,,0,4,"
+Q,1,How many seconds are there in 21 minutes?,21 min = 1260 s.,S,1,20,0,0,0,0
+A,1,1261,,0,1,"
+A,1,1259,,0,2,"
+A,1,1262,,0,3,"
+A,1,1260,,1,4,"
+Q,1,How many seconds are there in 22 minutes?,22 min = 1320 s.,S,1,21,0,0,0,0
+A,1,1320,,1,1,"
+A,1,1321,,0,2,"
+A,1,1319,,0,3,"
+A,1,1322,,0,4,"

@@ -36,6 +36,10 @@ require_once('../config/tce_config.php');
 $pagelevel = K_AUTH_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
+// check if CSV format is requested
+$csv_mode = K_ENABLE_CSV_CONVERSION && isset($_REQUEST['format']) && $_REQUEST['format'] === 'csv';
+$ext = $csv_mode ? 'csv' : 'tsv';
+
 // send headers
 header('Content-Description: TXT File Transfer');
 header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
@@ -46,12 +50,20 @@ header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 header('Content-Type: application/force-download');
 header('Content-Type: application/octet-stream', false);
 header('Content-Type: application/download', false);
-header('Content-Type: text/tab-separated-values', false);
+if ($csv_mode) {
+    header('Content-Type: text/csv', false);
+} else {
+    header('Content-Type: text/tab-separated-values', false);
+}
 // use the Content-Disposition header to supply a recommended filename
-header('Content-Disposition: attachment; filename=tcexam_users_' . date('YmdHis') . '.tsv;');
+header('Content-Disposition: attachment; filename=tcexam_users_' . date('YmdHis') . '.' . $ext . ';');
 header('Content-Transfer-Encoding: binary');
 
-echo F_tsv_export_users();
+$data = F_tsv_export_users();
+if ($csv_mode) {
+    $data = F_tsv_to_csv($data);
+}
+echo $data;
 
 /**
  * Export all users to TSV grouped by users' groups.
