@@ -170,14 +170,15 @@ div.container {
   padding: 5px 5px 5px 5px;
   width: 98%;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 div.content {
   float: left;
   margin: 0px 0px 0px 0px;
-  padding: 5px 5px 5px 5px;
+  padding: 5px 15px 5px 15px;
   text-align: left;
-  width: 84%;
+  width: 98%;
   box-sizing: border-box;
 }
 
@@ -331,6 +332,14 @@ div.row span.formw {
   width: 69%;
 }
 
+div.row div.formw {
+  display: inline;
+  float: right;
+  font-size: 95%;
+  text-align: left;
+  width: 69%;
+}
+
 div.row span.label {
   float: left;
   text-align: right;
@@ -358,10 +367,34 @@ div.row span.value {
   width: 69%;
 }
 
+div.row fieldset {
+  display: inline;
+  position: relative;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+div.row fieldset span.label {
+  float: left;
+  text-align: right;
+  width: 30%;
+  font-size: 95%;
+}
+
+div.row fieldset span.formw {
+  float: right;
+  font-size: 95%;
+  text-align: left;
+  width: 69%;
+}
+
 div.rowl {
   clear: both;
   padding: 1px 1px 1px 1px;
   text-align: left;
+  overflow: auto;
 }
 
 div.spacer {
@@ -449,6 +482,7 @@ div.warning {
 
 fieldset.noborder {
   border: none;
+  display: inline;
 }
 
 h1 {
@@ -486,6 +520,7 @@ input {
 
 label {
   cursor: pointer;
+  font-size: 95%;
 }
 
 label.timerlabel {
@@ -1122,11 +1157,19 @@ div.body {
   width: 100%;
 }
 
+div.content {
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+  width: 100%;
+}
+
 div.container {
   margin: 0 auto;
   max-width: 100%;
   padding: 0;
   width: 100%;
+  overflow: auto;
 }
 
 h1,
@@ -1635,7 +1678,7 @@ ul.answer li.comment {
    its previous full-width layout. */
 div.tceformbox:has(#form_login) {
   margin: 16px auto;
-  max-width: 560px;
+  /* max-width: 560px; */
 }
 
 div.tceformbox:has(#form_usereditor) {

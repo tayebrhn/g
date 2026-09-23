@@ -1566,3 +1566,9 @@ html .ss-main {
 .flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg {
   fill: #ec9233;
 }
+
+/* Login form card */
+/* div.tceformbox:has(#form_login) {
+  margin: 16px auto;
+  max-width: 560px;
+} */

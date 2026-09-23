@@ -31,6 +31,7 @@
 
 
 echo K_NEWLINE;
+echo '</div>' . K_NEWLINE; //close div.content
 echo '</div>' . K_NEWLINE; //close div.body
 
 include('../../shared/code/tce_page_userbar.php'); // display user bar
