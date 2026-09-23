@@ -1,0 +1,29 @@
+/*
+//============================================================+
+// File name   : exam.css
+// Begin       : 2026-09-23
+// Last Update : 2026-09-23
+//
+// Description : "exam" theme entry point for the public area (LTR).
+//               The theme is layered on top of the default stylesheet:
+//               default.css keeps the baseline structure, exam-core.css
+//               provides the design tokens and the redesigned components.
+//               Activate it with K_PUBLIC_THEME = 'exam' in
+//               public/config/tce_config.php.
+//
+// Author: Nicola Asuni
+//
+// (c) Copyright:
+//               Nicola Asuni
+//               Tecnick.com LTD
+//               www.tecnick.com
+//               info@tecnick.com
+//
+// License:
+//    Copyright (C) 2004-2026 Nicola Asuni - Tecnick.com LTD
+//    See LICENSE.TXT file for more information.
+//============================================================+
+*/
+
+@import "default.css";
+@import "exam-core.css?v=1";

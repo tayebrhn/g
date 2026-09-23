@@ -1420,7 +1420,7 @@ ul.admin-section-menu {
   gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   list-style: none;
-  margin: 0;
+  margin: 5px;
   padding: 0;
 }
 ul.admin-section-menu li {

@@ -33,10 +33,10 @@
 // IMPORTANT: DO NOT REMOVE OR ALTER THIS PAGE!
 
 // skip links
-echo '<div class="minibutton" dir="ltr">' . K_NEWLINE;
-echo '<a href="#timersection" accesskey="3" title="[3] ' . $l['w_jump_timer'] . '" class="white">' . $l['w_jump_timer'] . '</a> <span style="color:white;">|</span>' . K_NEWLINE;
-echo '<a href="#menusection" accesskey="4" title="[4] ' . $l['w_jump_menu'] . '" class="white">' . $l['w_jump_menu'] . '</a>' . K_NEWLINE;
-echo '</div>' . K_NEWLINE;
+// echo '<div class="minibutton" dir="ltr">' . K_NEWLINE;
+// echo '<a href="#timersection" accesskey="3" title="[3] ' . $l['w_jump_timer'] . '" class="white">' . $l['w_jump_timer'] . '</a> <span style="color:white;">|</span>' . K_NEWLINE;
+// echo '<a href="#menusection" accesskey="4" title="[4] ' . $l['w_jump_menu'] . '" class="white">' . $l['w_jump_menu'] . '</a>' . K_NEWLINE;
+// echo '</div>' . K_NEWLINE;
 
 echo '<div class="userbar">' . K_NEWLINE;
 if ($_SESSION['session_user_level'] > 0) {

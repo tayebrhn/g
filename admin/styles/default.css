@@ -573,10 +573,10 @@ label {
   cursor: pointer;
   font-size: 95%;
 }
-
+/* 
 label.timerlabel {
   color: #37833d;
-}
+} */
 
 li.tcecode {
 }
@@ -1421,7 +1421,7 @@ ul.admin-section-menu {
   gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   list-style: none;
-  margin: 0;
+  margin: 5px;
   padding: 0;
 }
 

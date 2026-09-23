@@ -1,0 +1,849 @@
+/*
+//============================================================+
+// File name   : exam-core.css
+// Begin       : 2026-09-23
+// Last Update : 2026-09-23
+//
+// Description : Shared design-token layer for the "exam" theme (admin area).
+//               Loaded after default.css / default_rtl.css by exam.css and
+//               exam_rtl.css. All colours, spacing, radii and shadows are
+//               declared once as --tce-* custom properties; components below
+//               consume the tokens, so re-branding is a single-file change.
+//               Directional rules use logical properties, so the same file
+//               serves both LTR and RTL.
+//
+// Author: Nicola Asuni
+//
+// (c) Copyright:
+//               Nicola Asuni
+//               Tecnick.com LTD
+//               www.tecnick.com
+//               info@tecnick.com
+//
+// License:
+//    Copyright (C) 2004-2026 Nicola Asuni - Tecnick.com LTD
+//    See LICENSE.TXT file for more information.
+//============================================================+
+*/
+
+/* ---------------------------------------------------------------------------
+   Design tokens
+   --------------------------------------------------------------------------- */
+:root {
+  /* Brand */
+  --tce-primary: #4051b5;
+  --tce-primary-hover: #34429a;
+  --tce-primary-active: #2a3580;
+  --tce-primary-soft: #e8eaf7;
+  --tce-on-primary: #ffffff;
+  --tce-accent: #1976d2;
+  --tce-accent-hover: #135ba1;
+  --tce-on-accent: #ffffff;
+
+  /* Surfaces and lines */
+  --tce-bg: #f4f6fb;
+  --tce-surface: #ffffff;
+  --tce-surface-alt: #eef1f8;
+  --tce-border: #d4dae8;
+  --tce-border-strong: #b9c2d6;
+
+  /* Text */
+  --tce-text: #1b2430;
+  --tce-muted: #5a6b80;
+
+  /* Semantic states */
+  --tce-success: #2e7d32;
+  --tce-success-bg: #e7f4e8;
+  --tce-success-border: #b7dfba;
+  --tce-warning: #9c5200;
+  --tce-warning-bg: #fff4e5;
+  --tce-warning-border: #f0d0a3;
+  --tce-danger: #c62828;
+  --tce-danger-bg: #fdeaea;
+  --tce-danger-border: #f1c2c2;
+  --tce-info: #0277bd;
+  --tce-info-bg: #e5f2fb;
+  --tce-info-border: #bcdcf0;
+  --tce-focus: #7c8cf8;
+  --tce-disabled-bg: #e9ecf3;
+  --tce-disabled-text: #8b95a7;
+
+  /* Spacing scale */
+  --tce-space-1: 4px;
+  --tce-space-2: 8px;
+  --tce-space-3: 12px;
+  --tce-space-4: 16px;
+  --tce-space-5: 24px;
+  --tce-space-6: 32px;
+
+  /* Radius and elevation */
+  --tce-radius-sm: 4px;
+  --tce-radius-md: 8px;
+  --tce-radius-lg: 12px;
+  --tce-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 3px rgba(16, 24, 40, 0.08);
+  --tce-shadow-md: 0 4px 12px rgba(16, 24, 40, 0.1), 0 1px 3px rgba(16, 24, 40, 0.06);
+
+  /* Typography */
+  --tce-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+html {
+  background: var(--tce-bg);
+}
+
+body {
+  background: var(--tce-bg);
+  color: var(--tce-text);
+  font-family: var(--tce-font);
+  line-height: 1.5;
+}
+
+a,
+a:visited {
+  color: var(--tce-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.14em;
+}
+
+a:hover {
+  color: var(--tce-primary-hover);
+}
+
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--tce-focus);
+  outline-offset: 2px;
+}
+
+h1,
+h2 {
+  color: var(--tce-primary);
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--tce-space-4);
+  padding: 0;
+  width: auto;
+}
+
+h1 {
+  font-size: 1.6em;
+}
+
+h2 {
+  font-size: 1.25em;
+}
+
+/* ---------------------------------------------------------------------------
+   Header (logo + title + timer)
+   --------------------------------------------------------------------------- */
+div.header {
+  background: var(--tce-primary);
+  box-shadow: var(--tce-shadow-md);
+  height: 58px;
+}
+
+div.header div.left {
+  background-color: transparent;
+  margin: 11px 14px;
+}
+
+div.header div.headertitle {
+  color: var(--tce-on-primary);
+  float: inline-start;
+  font-size: 120%;
+  font-weight: bold;
+  line-height: 58px;
+  margin-inline-start: 12px;
+  white-space: nowrap;
+}
+
+div.header div.right,
+div.header div.right input {
+  background-color: transparent;
+}
+
+div.header div.right {
+  margin-block-start: 10px;
+  margin-inline-end: 16px;
+}
+
+label.timerlabel,
+div.header div.right label {
+  color: var(--tce-on-primary);
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation
+   --------------------------------------------------------------------------- */
+div.scrollmenu {
+  background: var(--tce-primary);
+  box-shadow: var(--tce-shadow-sm);
+  font-size: 82%;
+  min-height: 32px;
+}
+
+div.scrollmenu ul {
+  width: 100%;
+}
+
+div.scrollmenu ul li {
+  height: 32px;
+  line-height: 32px;
+}
+
+ul.menu li a,
+ul.menu li a:visited {
+  border: 0;
+  color: var(--tce-on-primary);
+  padding: 0 12px;
+}
+
+ul.menu li a:hover,
+ul.menu li a:focus {
+  background: var(--tce-primary-hover);
+  color: var(--tce-on-primary);
+}
+
+ul.menu li > ul,
+ul.menu li:hover > ul,
+ul.menu *:focus + ul,
+ul.menu ul li,
+ul.menu ul li:hover > ul,
+ul.menu ul *:focus + ul {
+  background-color: var(--tce-primary);
+}
+
+ul.menu li:hover > ul,
+ul.menu *:focus + ul {
+  border-radius: 0 0 var(--tce-radius-sm) var(--tce-radius-sm);
+  box-shadow: var(--tce-shadow-md);
+  top: 32px;
+}
+
+ul.menu li a.active,
+ul.menu li span.active,
+ul.menu ul li *.active {
+  background-color: var(--tce-surface);
+  color: var(--tce-primary);
+  border-color: var(--tce-surface);
+}
+
+/* ---------------------------------------------------------------------------
+   Layout
+   --------------------------------------------------------------------------- */
+div.body {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: var(--tce-space-5);
+  width: 100%;
+}
+
+div.content {
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+  width: 100%;
+}
+
+div.container {
+  margin: 0 auto;
+  max-width: 100%;
+  overflow: auto;
+  padding: 0;
+  width: 100%;
+}
+
+/* ---------------------------------------------------------------------------
+   Cards, boxes and help
+   --------------------------------------------------------------------------- */
+div.tceformbox,
+div.tcecontentbox,
+div.contentbox,
+div.preview {
+  background: var(--tce-surface);
+  border: 1px solid var(--tce-border);
+  border-radius: var(--tce-radius-md);
+  box-shadow: var(--tce-shadow-sm);
+  padding: var(--tce-space-4);
+}
+
+div.pagehelp {
+  background: var(--tce-surface-alt);
+  border: 1px solid var(--tce-border);
+  border-inline-start: 3px solid var(--tce-accent);
+  border-radius: var(--tce-radius-sm);
+  color: var(--tce-text);
+  line-height: 1.5;
+  margin-top: var(--tce-space-4);
+  padding: var(--tce-space-3) var(--tce-space-4);
+}
+
+/* ---------------------------------------------------------------------------
+   System messages
+   --------------------------------------------------------------------------- */
+div.message,
+div.warning,
+div.error,
+div.confirmbox {
+  border: 1px solid transparent;
+  border-radius: var(--tce-radius-sm);
+  box-sizing: border-box;
+  margin: 0 0 var(--tce-space-4);
+  padding: var(--tce-space-3) var(--tce-space-4);
+}
+
+div.message {
+  background: var(--tce-info-bg);
+  border-color: var(--tce-info-border);
+  color: var(--tce-info);
+}
+
+div.warning,
+div.confirmbox {
+  background: var(--tce-success-bg);
+  border-color: var(--tce-success-border);
+  color: var(--tce-success);
+}
+
+div.error {
+  background: var(--tce-danger-bg);
+  border-color: var(--tce-danger-border);
+  color: var(--tce-danger);
+}
+
+/* ---------------------------------------------------------------------------
+   Forms
+   --------------------------------------------------------------------------- */
+input,
+select,
+textarea {
+  background: var(--tce-surface);
+  border: 1px solid var(--tce-border-strong);
+  border-radius: var(--tce-radius-sm);
+  box-sizing: border-box;
+  color: var(--tce-text);
+  font-family: inherit;
+  padding: 6px 8px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--tce-primary);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  padding: 0;
+}
+
+textarea {
+  line-height: 1.45;
+  min-height: 5em;
+}
+
+label {
+  color: var(--tce-text);
+}
+
+/* Primary actions */
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+  background: var(--tce-primary);
+  border-color: var(--tce-primary);
+  border-radius: var(--tce-radius-sm);
+  color: var(--tce-on-primary);
+  cursor: pointer;
+  font-weight: bold;
+  min-height: 32px;
+  padding: 7px 14px;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover {
+  background: var(--tce-primary-hover);
+  border-color: var(--tce-primary-hover);
+}
+
+input[type="submit"]:active,
+input[type="button"]:active,
+input[type="reset"]:active {
+  background: var(--tce-primary-active);
+  border-color: var(--tce-primary-active);
+}
+
+input[type="submit"]:disabled,
+input[type="button"]:disabled,
+input[type="reset"]:disabled {
+  background: var(--tce-disabled-bg);
+  border-color: var(--tce-disabled-bg);
+  color: var(--tce-disabled-text);
+  cursor: not-allowed;
+}
+
+/* Secondary actions */
+button,
+a.xmlbutton:link,
+a.xmlbutton:visited {
+  background: var(--tce-surface);
+  border: 1px solid var(--tce-border-strong);
+  border-radius: var(--tce-radius-sm);
+  color: var(--tce-primary);
+  cursor: pointer;
+  display: inline-block;
+  font-family: inherit;
+  font-size: 95%;
+  line-height: 1.4;
+  padding: 5px 12px;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+button:hover,
+a.xmlbutton:hover {
+  background: var(--tce-primary-soft);
+  border-color: var(--tce-primary);
+  color: var(--tce-primary-hover);
+}
+
+button:active,
+a.xmlbutton:active {
+  background: #d9ddef;
+  border-color: var(--tce-primary);
+}
+
+/* Semantic link actions */
+a.buttongreen:link,
+a.buttongreen:visited {
+  background: var(--tce-success);
+  border: 1px solid var(--tce-success);
+  border-radius: var(--tce-radius-sm);
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  padding: 5px 12px;
+  text-decoration: none;
+}
+
+a.buttongreen:hover {
+  background: #256428;
+  border-color: #256428;
+  color: #ffffff;
+}
+
+a.buttonblue:link,
+a.buttonblue:visited {
+  background: var(--tce-accent);
+  border: 1px solid var(--tce-accent);
+  border-radius: var(--tce-radius-sm);
+  color: var(--tce-on-accent);
+  display: inline-block;
+  font-weight: bold;
+  padding: 5px 12px;
+  text-decoration: none;
+}
+
+a.buttonblue:hover {
+  background: var(--tce-accent-hover);
+  border-color: var(--tce-accent-hover);
+  color: var(--tce-on-accent);
+}
+
+a.buttonred:link,
+a.buttonred:visited {
+  background: var(--tce-danger);
+  border: 1px solid var(--tce-danger);
+  border-radius: var(--tce-radius-sm);
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  padding: 5px 12px;
+  text-decoration: none;
+}
+
+a.buttonred:hover {
+  background: #a11f1f;
+  border-color: #a11f1f;
+  color: #ffffff;
+}
+
+/* Row-level delete chip */
+a.deletebutton:link,
+a.deletebutton:visited {
+  background: transparent;
+  border: 1px solid var(--tce-danger-border);
+  border-radius: var(--tce-radius-sm);
+  color: var(--tce-danger);
+  font-size: 85%;
+  padding: 2px 7px;
+  text-decoration: none;
+}
+
+a.deletebutton:hover {
+  background: var(--tce-danger-bg);
+  border-color: var(--tce-danger);
+  color: #8f1d1d;
+}
+
+a.minibutton span {
+  background-color: var(--tce-primary-soft);
+  color: var(--tce-primary);
+}
+
+/* Form rows */
+div.row {
+  padding: var(--tce-space-2) 1px;
+}
+
+div.row span.label,
+div.row fieldset span.label {
+  color: var(--tce-text);
+}
+
+div.row fieldset {
+  border: none;
+}
+
+span.labeldesc {
+  color: var(--tce-muted);
+  font-size: 80%;
+}
+
+/* ---------------------------------------------------------------------------
+   Tables
+   --------------------------------------------------------------------------- */
+table.userselect,
+table.filemanager {
+  border: 1px solid var(--tce-border);
+  border-collapse: separate;
+  border-radius: var(--tce-radius-md);
+  border-spacing: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+table.userselect td,
+table.userselect th,
+table.filemanager td,
+table.filemanager th {
+  border: 0;
+  border-bottom: 1px solid var(--tce-border);
+  padding: 9px 10px;
+}
+
+table.userselect th,
+table.filemanager th {
+  background: var(--tce-surface-alt);
+  color: var(--tce-text);
+  font-weight: bold;
+}
+
+table.userselect tr:nth-child(even) td,
+table.filemanager tr:nth-child(even) td {
+  background: #f9fafd;
+}
+
+table.userselect tr:hover td,
+table.filemanager tr:hover td {
+  background: var(--tce-primary-soft);
+}
+
+td.questionid {
+  background-color: var(--tce-warning-bg);
+}
+
+td.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------------
+   User bar (bottom)
+   --------------------------------------------------------------------------- */
+div.userbar {
+  background: var(--tce-surface-alt);
+  border-top: 1px solid var(--tce-border);
+  box-shadow: none;
+  box-sizing: border-box;
+  color: var(--tce-text);
+  margin: var(--tce-space-5) 0 0;
+  padding: 10px 20px;
+}
+
+div.userbar a.logoutbutton:link,
+div.userbar a.logoutbutton:visited {
+  background: var(--tce-danger);
+  border: 0;
+  border-radius: var(--tce-radius-sm);
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  padding: 4px 10px;
+  text-decoration: none;
+}
+
+div.userbar a.logoutbutton:hover {
+  background: #a11f1f;
+  color: #ffffff;
+}
+
+div.userbar a.loginbutton:link,
+div.userbar a.loginbutton:visited {
+  background: var(--tce-primary);
+  border: 0;
+  border-radius: var(--tce-radius-sm);
+  color: var(--tce-on-primary);
+  display: inline-block;
+  font-weight: bold;
+  padding: 4px 10px;
+  text-decoration: none;
+}
+
+div.userbar a.loginbutton:hover,
+div.userbar a.loginbutton:focus {
+  background: var(--tce-primary-hover);
+  color: var(--tce-on-primary);
+}
+
+/* ---------------------------------------------------------------------------
+   Titles, popups and miscellaneous
+   --------------------------------------------------------------------------- */
+div.popuptitle,
+div.title {
+  color: var(--tce-primary);
+}
+
+hr.delimiter {
+  background-color: var(--tce-border);
+}
+
+hr.dashed {
+  border-top-color: var(--tce-border-strong);
+}
+
+.explanation {
+  color: var(--tce-danger);
+}
+
+ul.answer li.comment {
+  color: var(--tce-danger);
+}
+
+span.langselector span.selected {
+  background: var(--tce-primary-soft);
+  color: var(--tce-primary);
+}
+
+/* State markers */
+acronym.nobox {
+  background-color: var(--tce-danger-bg);
+  border-color: var(--tce-danger-border);
+  color: var(--tce-danger);
+}
+
+acronym.offbox {
+  background-color: var(--tce-disabled-bg);
+  border-color: var(--tce-border);
+  color: var(--tce-muted);
+}
+
+acronym.okbox {
+  background-color: var(--tce-success-bg);
+  border-color: var(--tce-success-border);
+  color: var(--tce-success);
+}
+
+acronym.onbox {
+  background-color: var(--tce-warning-bg);
+  border-color: var(--tce-warning-border);
+  color: var(--tce-warning);
+}
+
+.disabled,
+.disablednum {
+  background-color: var(--tce-disabled-bg) !important;
+  color: var(--tce-disabled-text) !important;
+}
+
+.disablednumg {
+  background-color: var(--tce-disabled-bg) !important;
+  color: var(--tce-success) !important;
+  text-align: end !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Section landing pages (users / modules / tests)
+   --------------------------------------------------------------------------- */
+ul.admin-section-menu li a,
+ul.admin-section-menu li span.active {
+  background: var(--tce-surface);
+  border: 1px solid var(--tce-border);
+  border-radius: var(--tce-radius-md);
+  box-shadow: var(--tce-shadow-sm);
+  color: var(--tce-primary);
+}
+
+ul.admin-section-menu li a:after {
+  color: var(--tce-accent);
+}
+
+ul.admin-section-menu li a:hover,
+ul.admin-section-menu li a:focus {
+  background: var(--tce-primary-soft);
+  border-color: var(--tce-primary);
+  box-shadow: var(--tce-shadow-md);
+  color: var(--tce-primary-hover);
+}
+
+ul.admin-section-menu li span.active {
+  background: var(--tce-surface-alt);
+  color: var(--tce-primary);
+}
+
+/* ---------------------------------------------------------------------------
+   Vendor components (SlimSelect + Flatpickr) follow the brand palette
+   --------------------------------------------------------------------------- */
+html:root {
+  --ss-primary-color: var(--tce-primary);
+}
+
+html .ss-main {
+  background-color: var(--tce-surface);
+}
+
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.startRange,
+.flatpickr-calendar .flatpickr-day.endRange,
+.flatpickr-calendar .flatpickr-day.selected.inRange,
+.flatpickr-calendar .flatpickr-day.startRange.inRange,
+.flatpickr-calendar .flatpickr-day.endRange.inRange,
+.flatpickr-calendar .flatpickr-day.selected:focus,
+.flatpickr-calendar .flatpickr-day.startRange:focus,
+.flatpickr-calendar .flatpickr-day.endRange:focus,
+.flatpickr-calendar .flatpickr-day.selected:hover,
+.flatpickr-calendar .flatpickr-day.startRange:hover,
+.flatpickr-calendar .flatpickr-day.endRange:hover,
+.flatpickr-calendar .flatpickr-day.selected.prevMonthDay,
+.flatpickr-calendar .flatpickr-day.startRange.prevMonthDay,
+.flatpickr-calendar .flatpickr-day.endRange.prevMonthDay,
+.flatpickr-calendar .flatpickr-day.selected.nextMonthDay,
+.flatpickr-calendar .flatpickr-day.startRange.nextMonthDay,
+.flatpickr-calendar .flatpickr-day.endRange.nextMonthDay {
+  background: var(--tce-primary);
+  border-color: var(--tce-primary);
+  color: var(--tce-on-primary);
+}
+
+.flatpickr-calendar .flatpickr-day.today {
+  border-color: var(--tce-accent);
+}
+
+.flatpickr-calendar .flatpickr-day.today:hover,
+.flatpickr-calendar .flatpickr-day.today:focus {
+  background: var(--tce-accent);
+  border-color: var(--tce-accent);
+  color: var(--tce-on-accent);
+}
+
+.flatpickr-calendar .flatpickr-day.inRange {
+  background: var(--tce-primary-soft);
+  border-color: var(--tce-primary-soft);
+  box-shadow:
+    -5px 0 0 var(--tce-primary-soft),
+    5px 0 0 var(--tce-primary-soft);
+}
+
+.flatpickr-calendar
+  .flatpickr-day.selected.startRange
+  + .endRange:not(:nth-child(7n + 1)) {
+  box-shadow: -10px 0 0 var(--tce-primary);
+}
+
+.flatpickr-calendar .flatpickr-day.week.selected {
+  box-shadow:
+    -5px 0 0 var(--tce-primary),
+    5px 0 0 var(--tce-primary);
+}
+
+.flatpickr-calendar .flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg {
+  fill: var(--tce-accent-hover);
+}
+
+/* ---------------------------------------------------------------------------
+   Responsive
+   --------------------------------------------------------------------------- */
+@media screen and (max-width: 700px) {
+  div.header {
+    height: auto;
+    min-height: 58px;
+  }
+
+  div.header div.right {
+    clear: both;
+    float: none;
+    margin: 0;
+    padding: 0 14px 10px;
+    width: auto;
+  }
+
+  div.header div.right input {
+    width: 100%;
+  }
+
+  div.scrollmenu {
+    overflow-x: auto;
+  }
+
+  div.scrollmenu ul {
+    min-width: max-content;
+  }
+
+  div.body {
+    padding: var(--tce-space-3);
+  }
+
+  div.row div.formw,
+  div.row span.label,
+  div.row span.formw,
+  div.row span.value {
+    float: none;
+    text-align: start;
+    width: 100%;
+  }
+
+  div.row span.label {
+    display: block;
+    margin-bottom: var(--tce-space-1);
+  }
+
+  table.userselect,
+  table.filemanager {
+    display: block;
+    overflow-x: auto;
+  }
+
+  div.userbar {
+    text-align: center;
+    white-space: normal;
+  }
+
+  ul.admin-section-menu {
+    grid-template-columns: 1fr;
+  }
+}

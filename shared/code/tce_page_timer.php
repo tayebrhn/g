@@ -41,7 +41,7 @@ if (! isset($_REQUEST['examtime'])) {
 echo '<form action="' . $_SERVER['SCRIPT_NAME'] . '" id="timerform">' . K_NEWLINE;
 echo '<div>' . K_NEWLINE;
 echo '<label for="timer" class="timerlabel">' . $l['w_time'] . ':</label>' . K_NEWLINE;
-echo '<input type="text" name="timer" id="timer" value="" size="29" maxlength="29" title="' . $l['w_clock_timer'] . '" readonly="readonly"/>' . K_NEWLINE;
+echo '<input type="text" name="timer" id="timer" value="" size="15" maxlength="29" title="' . $l['w_clock_timer'] . '" readonly="readonly"/>' . K_NEWLINE;
 echo '&nbsp;</div>' . K_NEWLINE;
 echo '</form>' . K_NEWLINE;
 echo '<script src="' . K_PATH_SHARED_JSCRIPTS . 'timer.js" type="text/javascript"></script>' . K_NEWLINE;
