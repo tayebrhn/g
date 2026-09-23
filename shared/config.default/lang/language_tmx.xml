@@ -1,0 +1,3151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmx version="1.4">
+   <header datatype="PlainText"
+           changedate="20200617T010500Z"
+           creationtoolversion="1"
+           segtype="sentence"
+           creationtool="hand made"
+           creationid="NicolaAsuni"
+           srclang="EN"
+           adminlang="en-us"
+           creationdate="20040427T100100Z"
+           o-tmf="ABCTransMem"/>
+   <body>
+      <tu tuid="a_meta_charset" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>UTF-8</seg>
+         </tuv>
+      </tu>
+      <tu tuid="a_meta_dir" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>ltr</seg>
+         </tuv>
+      </tu>
+      <tu tuid="a_meta_language" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>en</seg>
+         </tuv>
+      </tu>
+      <tu tuid="d_admin_index" datatype="plaintext">
+         <!-- <tuv xml:lang="EN">
+            <seg>This is the administration area of &lt;a href="tce_page_info.php" title="about TCExam"&gt;TCExam&lt;/a&gt;, is not a platform and language independent user-friendly software to create, manage and perform online tests.&lt;br /&gt;&lt;br /&gt;From the menu you can access the different sections of the system:&lt;ul&gt;&lt;li&gt;&lt;strong&gt;users&lt;/strong&gt;&lt;br /&gt;This sections contains the forms for &lt;a href="tce_edit_user.php" title="User Management"&gt;insert and manage&lt;/a&gt; users, &lt;a href="tce_select_users.php" title="User Selection"&gt; to select them&lt;/a&gt; and to show the list of the ones currently &lt;a href="tce_show_online_users.php" title="Online Users"&gt;online&lt;/a&gt;.&lt;br /&gt;Only the registered users granted a username and a password are entitled to access the public area of the system and perform the tests.&lt;br /&gt;It is possible to specify different access levels for both the users and the different components and parts of the system (pages, forms, sections).&lt;br /&gt;TCExam also uses another security system to prevent unauthorized access based on checking the IP addresses.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;modules&lt;/strong&gt;&lt;br /&gt;This section contains the forms to insert and modify test &lt;a href="tce_edit_module.php" title="Modules Management"&gt;modules&lt;/a&gt;, &lt;a href="tce_edit_subject.php" title="Topic Management"&gt;topics&lt;/a&gt;, the related &lt;a href="tce_edit_question.php" title="Question Management"&gt;questions&lt;/a&gt; and &lt;a href="tce_edit_answer.php" title="Multiple-Answer Management"&gt;answers&lt;/a&gt;.&lt;br /&gt;You can select an unlimited number of topics that can be used together for a specific test, and for each topic you can define an unlimited number of questions and possible answers. Depending on the settings of the Random question and Random answer tick boxes, the system can randomly select questions and answers among the available ones.&lt;br /&gt;TCExam supports both multiple-answer questions and free-answer questions. The latter will be evaluated through a specific evaluation form &lt;a href="tce_edit_rating.php" title="Answer evaluation"&gt;&lt;/a&gt;, while the former will be automatically evaluated.&lt;br /&gt;All the descriptions of tests, topics, questions and answers support a particular proprietary code (tcecode) that, by using a specific form, allows the use of images and text formatting.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;test&lt;/strong&gt;&lt;br /&gt;This section includes a form to insert, generate and modify the different &lt;a href="tce_edit_test.php" title="Test Management"&gt;tests&lt;/a&gt;, a form to &lt;a href="tce_edit_rating.php" title="Answer Evaluation"&gt;evaluate&lt;/a&gt; the free answers and forms to show or generate PDF versions of the &lt;a href="tce_show_result_allusers.php" title="Test Results Summary"&gt;results&lt;/a&gt;, a detailed view of the &lt;a href="tce_show_result_user.php" title="Test Results"&gt;users' tests&lt;/a&gt; and the &lt;a href="tce_show_result_allusers.php" title="Question Statistics"&gt;statistics&lt;/a&gt; of questions and answers used.&lt;br /&gt;TCExam can be instructed to select, on a random basis, the various questions and related available answers, so that all tests for the different users will be different from each other.&lt;br /&gt;It is also possible to generate an arbitrary number of tests in PDF format so that they can be printed and used for a conventional exam.&lt;/li&gt;&lt;/ul&gt;</seg>
+         </tuv> -->
+      </tu>
+      <tu tuid="d_logout_desc" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>click on the button to exit the system</seg>
+         </tuv>
+      </tu>
+      <tu tuid="d_tcexam_desc" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>TCExam is software for managing and perform online tests.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_add" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Add this record to the database</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_add_image" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>insert selected image into text</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_add_object" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>insert selected object into text</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_add_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>insert the selected type of questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_add_subject" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Add the selected topic to this test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_add_tag" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>insert selected item</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_allow_no_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, an additional -no answer- choice will be added to each question</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>possible answer for the question selected</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answer_isright" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>select this option if the answer is correct</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answer_right" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>correct answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answer_score" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>points for this question (e.g.: 0.5, -0.1, ...)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answer_selected" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>selected answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answer_time" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>average time to answer in mm:ss</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answer_wrong" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>wrong answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answers_right" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>correct answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answers_wrong" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>wrong answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_birth_date" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user's date of birth</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_birth_place" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user's place of birth (city, state, country)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_cancel" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>cancel changes or the current operation</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_cancel_window" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>close form and cancels changes</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_clear" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>reset form fields to blank</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_close_window" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>close window</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_continue" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>continue test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_database" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>manage the database</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_delete" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Delete this record from the database</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_display_all" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>show all answers including the ones already evaluated</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_display_user_info" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>show the data of the user who wrote this answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_email_all_results" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>send email test reports to all users</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_email_result" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>send email test report to users</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_enable_single_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, enable the single answer mode</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_enable_multiple_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, enable multiple answers mode</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_enable_free_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, enable free-text answer mode</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_enabled" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>enable/disable current record</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_execute" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Start this test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_file_type" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>file type</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_file_type_xml" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>eXtensible Markup Language</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_file_type_tsv" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Tab-delimited text file</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_firstname" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user's first name (e.g.: Michael, John, ...)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_fiscal_code" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user's fayda number</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_global_score" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, overwrite the answers points with the points below</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_group_name" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>users' group name</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_guide" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>help</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_index" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>main page</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_info" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>about TCExam</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_ip" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>IP address of the computer from which data have been sent</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_ip_range" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>list of enabled IP addresses separated by commas (e.g.: 192.168.*.*,127.0.0.*,192.168.234.16-192.168.234.32,::ffff:c0a8:0110-::ffff:c0a8:0140)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_lastname" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user's last name (for example: Smith, Palmer, ...)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_level" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user's level, level 0 indicates an anonymous user (not registered), level 1 indicates a basic user, level 10 indicates an administrator with full access rights</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_login_button" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>click here to log-in</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_login_name" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>username, name used to log in this multi-user system</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_logout_link" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>click on this link to exit the system (session end)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_num_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>maximum number of alternative answers for each question</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_num_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>maximum number of questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_num_tquestions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>maximum number of free-answer questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_object_width" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>object width [pixels]</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_object_height" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>object height [pixels]</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>password, alphanumeric code that together with the username grants access to this system</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_password_repeat" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>repeat the password in this field to check for possible typing mistakes</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_pdf" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>generate a PDF document</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_pdf_all" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>generate a detailed report for each user</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_pdf_offline_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>generate PDF documents for off-line test execution</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_preview" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>show a preview of the code previously entered</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>question related to the topic selected</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_answered" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>this question has been already answered</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_not_answered" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>this question has not been answered</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_description" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>type of question (e.g.: true, false, ...)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_difficulty" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>difficulty level - multiplier for basic points</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_displayed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>this question has been displayed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_not_displayed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>this question has not been displayed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_recurrence" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>recurrence of this question in the various tests</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_type" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>type of question</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_questions_unanswered" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unanswered questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_questions_undisplayed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>questions not displayed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_questions_unrated" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>questions not rated</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_random_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, extract randomly the multiple answers related to each question</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_random_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, extract randomly the questions related to each selected topic</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_regcode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>registration number, user's registration number</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_regdate" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user's date of registration</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_result" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>shows the results of the test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_results_to_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, allow users to see results</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_select_question" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>select this question</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_score" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>points for this answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_score_average" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>average score</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_score_right" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>basic points for each difficulty level of questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_score_total" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>final score</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_score_unanswered" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>points for non-answered questions (e.g.: 0, -0.5, ...)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_score_wrong" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>points for wrong answers (e.g.: 0, -0.1, ...)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_select_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>select the answers to be evaluated</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_select_user" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Open the user selection page</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_subject" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test topic</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_subject_description" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>description of test topic</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_subject_name" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>name of test topic</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_subjects" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>list of test topics</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_submit" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Submit this form</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_tcecode_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>editor that allows text formatting by using a simple proprietary code</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test, exam</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_test_description" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test description</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_test_name" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test name</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_test_time" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>maximum duration of the test in minutes</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_time_begin" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test starting date and time [yyyy-mm-dd hh:mm:ss]</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_time_end" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test ending date and time [yyyy-mm-dd hh:mm:ss]</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_update" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>update current data</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_upload_image" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Choose an image to upload</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_upload_file" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Choose a file to upload</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_user_info" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>show information related to the user connected</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_usered_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user's email address (e.g.: name@example.com)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_view_details" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>show details</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_tsv_export" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>export data to TSV (Tab delimited text file)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_xml_export" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>export data to XML</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can manage all possible answers related to the question selected. You can add an arbitrary number of correct and wrong answers for each question; during the test the system will automatically select only one of the correct answers and will show it in the list of possible answers. You cannot modify or delete an answer that is part of a test already performed, in this case you can just disable it by using the [delete] button. Legend: [+] Enabled; [-] Disabled. Legend for questions: [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free Answer; [O] ORDER - Ordering Answer. Legend for answers: [T] true answer; [F] false answer.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_group" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>In this form you can manage the different users' groups.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_question" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can manage the different questions related to the topic selected. You cannot modify or delete a question that is part of a test already performed. In this case you can disable it by using the [delete] button. Legend: [+] Enabled; [-] Disabled; [S] MCSA - Multiple Choice Single Answer question; [M] MCMA - Multiple Choice Multiple Answer question; [T] TEXT - Free answer; [O] ORDER - Ordering Answers.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_rating" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>In this form you can specify the points for the free answers. You can see the user's data by selecting the field 'user data'. The field 'shows all' enables you to see and also to correct the answers already evaluated</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_subject" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can manage the different topics that belong to a selected module. The questions in the system can be cataloged according to these topics. In a single test there can be several topics. You cannot modify or delete a topic that is a part of a test previously performed. In this case you can disable it by using the [delete] button. Legend: [+] Enabled; [-] Disabled;</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_tcecode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can add images and formatting to the text</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>In this form you can insert, modify or delete the tests. In order to insert a test you must have previously defined at least one topic with a number of questions and answers. The test will be active just during the specified time frame and, once started, it will have to be completed within the specified maximum time. Tests can contain several topics with different type of questions that will be randomly extracted. You can also specify a basic score for each point of difficulty level of questions. You cannot modify a test that has already performed. When a test is deleted all of its logs (test data) are also deleted. The letters and numbers inside the squared parenthesis on topics are quick statistics for questions: [ (number of questions)(question type S,M,T,O)(difficulty):(min answers)-(max answers) ].</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_user" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>In this form you can manage the different users allowed to access the system. For each user you can choose a name, a password and an access level. Level 0 indicates an anonymous user (not registered), level 1 a basic user (e.g.: a student), level 10 an administrator with full access rights</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_email_result" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Send results to users by email</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_import_xml_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can import questions from a TSV file.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_import_xml_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can import users and groups from a TSV (tab-delimited text) file. The file format is the same as the one produced when exporting data from the user selection form.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_login" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>In order to access the different sections of TCExam you must log in using the name and password provided to you by the system administrator</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_online_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This form shows the users currently logged</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_public_index" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This is the main page of Exam. From this page you can start or continue your tests</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_result_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This page shows statistical data for a selected test. By clicking on the column names you can change the display sequence of the table. By clicking on the line number you can access the modification page for the selected question.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_result_user" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This page shows the details of the test for the user selected. The data in each line are: &lt;br /&gt; question number. [score] (user IP | viewing time in hh:mm:ss| time of last modification in hh:mm:ss| time to answer in mm:ss) &lt;br /&gt;The symbol ® indicates a question correctly answered, while the answers chosen by the user are indicated by an 'x'. The [PDF] button outputs the results in a PDF document.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_select_all_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>In this form you can see and select all the questions and related answers for a specific topic.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_select_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>In this form you can see and select the registered users. You can change the displayed sequence by clicking on the column names.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_sending_in_progress" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Email sending in progress. Please wait while the sending process completes.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_test_execute" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This page allows to perform the selected test.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_test_info" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Show information for the selected test.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_test_results" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This page shows the results of the selected test. The results are related just to the questions with multiple answers.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_authorization_denied" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>You do not have permission to view this page.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_databasempty" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>No data is available yet.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_delete_anonymous" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>the anonymous user cannot be deleted</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_delete_confirm" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Delete this record? This cannot be undone.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_delete_confirm_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Deleting this test also deletes all of its results. This cannot be undone.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_delete_prohibited" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>this record cannot be deleted</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_deleted" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The record has been deleted.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_different_passwords" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The passwords do not match.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_empty_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Enter a password.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_disabled_vs_deleted" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This record was disabled because it is used by other data. Delete that data first, then you can delete this record.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_duplicate_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This answer already exists.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_duplicate_name" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This name is already in use. Choose another name.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_duplicate_regnumber" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This registration number is already in use. Choose another one.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_duplicate_ssn" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This ID number is already in use. Choose another one.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_duplicate_question" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This question already exists.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_exam_end_time" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Time is up. Your test has ended.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_form_missing_fields" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Some required fields are empty.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_form_wrong_fields" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Some fields contain invalid values.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_group_deleted" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The group has been deleted.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_group_updated" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The user data has been saved.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_importing_complete" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Import completed.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_login_wrong" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Incorrect username or password.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_authenticate" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SMTP Error: Could not authenticate.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_connect_host" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SMTP Error: Could not connect to SMTP host.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_data_not_accepted" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SMTP Error: data not accepted.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_empty_message" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Message body empty</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_encoding" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Unknown encoding: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_execute" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Could not execute: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_file_access" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Could not access file: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_file_open" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>File Error: Could not open file: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_from_failed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The following From address failed: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_instantiate" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Could not instantiate mail function.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_invalid_address" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Invalid address: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_mailer_not_supported" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg> mailer is not supported.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_provide_address" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>You must provide at least one recipient email address.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_recipients_failed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SMTP Error: The following recipients failed: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_signing" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Signing Error: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_smtp_connect_failed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SMTP connect() failed.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_smtp_error" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SMTP server error: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_variable_set" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Cannot set or reset variable: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_mailerror_extension_missing" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Extension missing: </seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_new_window_link" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This link opens in a new window.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_no_test_available" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>No tests are available.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_process_completed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Done.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_search_void" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>No results found.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_unanswered" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>No answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_unknown_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Unknown email address</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_update_restrict" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This record cannot be updated because it is used by other data.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_updated" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Changes saved.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_upload_not" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The file could not be uploaded.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_upload_yes" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>File uploaded successfully.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_used_not_update" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This record cannot be updated because it is used in the test results. Delete the test that uses it first, or disable it with the [delete] button.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_used_not_update_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This record cannot be updated because it is used in the test results.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_user_deleted" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The user has been deleted.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_user_updated" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The user data has been saved.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_answers_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Multiple-answer management</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_email_result" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Send results</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_error" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Error</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_group_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Group management</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_group_select" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Group list</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_help" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Help</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_image_upload" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Add image</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_login_form" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Authentication</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_main" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>TCExam</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_message" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Message</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_online_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Users online</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_page_guide" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>TCExam :: Help</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_page_info" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>About TCExam</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_public_index" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>TCExam :: Test execution</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_questions_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Question management</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_questions_list" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Questions list</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_question_importer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Question importer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_rating_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Answer evaluation</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_result_all_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Test results summary</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_result_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Question statistics</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_result_user" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Test results</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_subjects_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Topic management</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_tcecode_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Text formatting</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_test_execute" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Test execution</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_test_info" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Test information</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_test_results" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Test results</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_tests_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Test management</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_third_parties" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Third-party software</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_user_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>User management</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_user_importer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>User importer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_user_select" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>User selection</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_warning" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Attention</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_add" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>add</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_add_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>add questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_add_subject" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>add topic</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_allow_no_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>no answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_anonymous" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>anonymous</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_answer_time" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>time</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_answers_right" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>correct</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_answers_right_th" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>correct</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_answers_wrong" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>wrong</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_answers_wrong_th" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>wrong</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_ascent" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>ascent</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_attachment" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>attachment</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_author" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>author</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_birth_date" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>date of birth</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_birth_place" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>place of birth</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_cancel" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>cancel</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_city" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>city</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_clear" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>clear</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_clock_timer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>clock / timer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_close" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>close</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_code" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>code</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_confirm" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>confirm</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_continue" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>continue</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_country" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>country</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_database" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>database</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_date_format" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>[yyyy-mm-dd]</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_datetime_format" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>[yyyy-mm-dd hh:mm:ss]</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_delete" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>delete</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_descent" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>descent</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_description" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>description</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_disabled" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>disabled</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_display_all" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>display all</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_display_user_info" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user data</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_edit" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>edit</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>email</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_email_all_results" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>send emails</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_email_result" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>send email</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_group" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>group</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_groups" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>groups</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_group_select" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>list of groups</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_single_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>single answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_multiple_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>multiple answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_free_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>free answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_enabled" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>enabled</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_end" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>end</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_execute" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>start test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_filter" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>filter</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_firstname" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>first name</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_fiscal_code" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>fayda number</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_generate" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>generate</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_global_score" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>overall score</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_guide" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>help</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_height" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>height</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_help" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>help</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_image" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>image</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_index" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>index</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_import" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>import</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_info" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>info</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_ip" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>IP</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_ip_range" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>authorized IP's</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_jump_menu" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>jump to navigation menu</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_jump_timer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>jump to clock/timer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_jump_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>jump to questions list</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_lastname" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>last name</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>level</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_levels" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>levels</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_license" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>license</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_list" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>list</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_login" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>log in</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_logout" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>log out</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_main" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>main</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_max_score" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>maximum score</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_minutes" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>min</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_modify" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>edit</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_name" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>name</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_name_first" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>first name</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_name_last" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>last name</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_next" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>next</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_notes" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>notes</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_num_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>number of answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_num_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>number of questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_num_tquestions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>number of free-answer questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_number_of_records" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>number of records</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_object" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>object</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_online" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>online</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_page" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>page</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_pdf" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>PDF</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_pdf_all" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>PDF tests</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_pdf_offline_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>PDF offline test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_place" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>place</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_postal_code" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>zip</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_preview" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>preview</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_previous" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>previous</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_print" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>print</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_province" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>state/province</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_question" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>question</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_question_difficulty" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>difficulty</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_available" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>available questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_unanswered" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unanswered</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_unanswered_th" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unans.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_undisplayed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>undisplayed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_undisplayed_th" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>undisp.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_unrated" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unrated</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_unrated_th" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unrated</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_quote" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>quote</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_random_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>random answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_random_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>random questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_rating" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>evaluation</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_record_status" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>record status</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_recurrence" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>recurrence</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_regcode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>registration number</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_regdate" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>registration date</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_reload" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>reload</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_result" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>result</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_results" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>results</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_results_to_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>results to users</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_right" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>right</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_skip_navigation" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>skip navigation menu</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_score" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>points</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_score_average" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>average</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_score_right" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>basic points</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_score_unanswered" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>points for no answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_score_wrong" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>points for wrong answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_search" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>search</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_select" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>select</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_selection" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>selection</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_show" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>show</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_start" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>start</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_stats" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>statistics</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_street" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>address</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_subject" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>topic</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_subjects" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>topics</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_submit" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>submit</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_teacher" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>teacher</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_test_time" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test time</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_tests" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>tests</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_tests_available" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>available tests</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_text" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>text</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_time" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>time</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_time_begin" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>start time</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_time_end" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>end time</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_time_hhmmss" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>hh:mm:ss</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_time_mmss" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>mm:ss</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_timestamp" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>timestamp</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_type" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>type</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_update" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>update</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_updated_at" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>updated to</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_upload" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>upload</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_upload_file" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>upload file</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_user" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>user</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_username" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>username</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>users</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_weight" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>weight</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_width" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>width</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_no" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>no</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_xml" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>XML</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_yes" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>yes</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_undo" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>undo</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_redo" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>redo</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_undo" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>undo last action</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_redo" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>redo last action</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_submit_file" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Upload this file</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_for" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>questions for</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_unavailable_questions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The selected questions are no longer available.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_status" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>status</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_lock" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>lock</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_unlock" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unlock</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_locked" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>locked</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_unlocked" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unlocked</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_add_five_minutes" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>add five minutes</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_terminate" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>End test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_terminate_exam" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>End test now</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_confirm_test_termination" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>End this test now? You will not be able to continue.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_comment" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>comment</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_testcomment" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test comment</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_translations" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Translations</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_position" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>position</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_ordering_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>ordering answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_enable_ordering_answer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, enable the ordering answers mode</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_user_registration" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>New user registration</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_user_registration" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This form allows you to create a new user account.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_user_registration_link" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Don't have a login? Create an account.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_user_verification_sent" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>A verification message has been sent to this address.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_user_registration_ok" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Registration complete.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_i_agree" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>I agree to terms and agreements</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_registration_verification" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Registration Verification</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_email_registration" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd"&gt;&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"&gt;&lt;body&gt;&lt;p&gt;This is an automated response to verify a &lt;a href="#TCEXAMURL#"&gt;TCExam&lt;/a&gt; New User Registration Request.&lt;br /&gt;Request verification for email #EMAIL# submitted by remote IP #USERIP#.&lt;br /&gt;If this message has been sent in error, please disregard.&lt;br /&gt;&lt;br /&gt;&lt;b&gt;TO CONFIRM THE REGISTRATION USE THE FOLLOWING LINK:&lt;br /&gt;&lt;a href="#SUBSCRIBEURL#"&gt;#SUBSCRIBEURL#&lt;/a&gt;&lt;/b&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 6.0.000 -->
+      <tu tuid="w_timer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>timer [sec]</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_timer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>maximum number of seconds to display the question (0 = disable timer)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_fullscreen" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>fullscreen</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_fullscreen" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>enable/disable the fullscreen mode for this question</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_position" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>correct visualization order</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_order" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>order</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_test_score_threshold" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>points to pass the exam</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_test_score_threshold" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>minimum required points to pass the exam</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_mcma_radio" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>radio buttons for MCMA</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_mcma_radio" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, use radio buttons instead of checkboxes for MCMA questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_enable_noanswer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>'no answer' options</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_enable_noanswer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, enable the 'no answer' options as alternative answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_enable_menu" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>questions menu</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_enable_menu" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, enable the questions navigation menu</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_enable_comment" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test comment</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_enable_comment" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, enable a text field to leave a general comment about the test.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_report_to_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>reports to users</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_report_to_users" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, enable users to view a detailed test report</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_passed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Passed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_not_passed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Not passed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_inline_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>inline answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_inline_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, display answers one next each other.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_auto_next" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>automatic next question</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_question_auto_next" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, move automatically to next question when an answer of MCSA question is selected.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_keyboard_key" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>selection key</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answer_keyboard_key" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>optional keyboard key used to select this answer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_reaction" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>reaction</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_true" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>true</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_false" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>false</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_true_acronym" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>T</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_false_acronym" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>F</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_unanswered_acronym" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>U</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_required" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>required</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_not_required" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>not required</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_details" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>details</seg>
+         </tuv>
+      </tu>
+      <!-- 6.1.000 2008-11-24 -->
+      <tu tuid="w_hide_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>hide answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_enable" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>enable</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_disable" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>disable</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_copy" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>copy</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_move" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>move</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_from" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>from</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_to" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>to</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_check_all" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>check all</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_uncheck_all" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>uncheck all</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_with_selected" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With selected:</seg>
+         </tuv>
+      </tu>
+      <!-- 7.0.000 2008-11-24 -->
+      <tu tuid="w_module" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>module</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_modules" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>modules</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_modules_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Module management</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_module" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can manage the different modules. The topics in the system can be cataloged according to these modules. In a single test there can be several modules. You cannot modify or delete a module that is a part of a test previously performed. In this case you can disable it by using the [delete] button. Legend: [+] Enabled; [-] Disabled;</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_all" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>all</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 7.0.012-->
+      <tu tuid="w_number" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>number</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_minimum" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>minimum</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_maximum" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>maximum</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_sum" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>sum</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_sumsq" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>squared sum</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_mean" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>mean</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_median" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>median</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_mode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>mode</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_range" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>range</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_variance" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>variance</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_standard_deviation" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>standard deviation</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_statistics" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>statistics</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 7.0.013 - 2008-12-26 -->
+      <tu tuid="w_skewness" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>skewness</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_kurtosi" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>kurtosis</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_all_results_user" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>User's results</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_allresults_user" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This form summarizes the results for the specified user.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_result_alluser" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This form summarizes the results for all users of a selected test.</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 8.0.000 -->
+      <tu tuid="h_module_name" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>name of the module</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_explanation" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>explanation</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_explanation" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>explanation to be printed on results</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 9.0.000 -->
+      <tu tuid="w_repeatable" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>repeatable</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_repeatable_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>users can repeat this test several times</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_repeat" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>repeat</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_repeat_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>repeat this test (current results will be deleted)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_calendar" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>calendar</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 9.0.014 (2009-06-03) -->
+      <tu tuid="m_score_higher_than_max" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The score is higher than the maximum allowed.</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 10.0.000 (2010-02-12) -->
+      <tu tuid="w_mcma_partial_score" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>partial score for MCMA</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_mcma_partial_score" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, uses partial score for MCMA questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_logout_on_timeout" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>if selected, logs out the user when the time expires</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_logout_on_timeout" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>logout when time expires</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_backup_editor" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Database backup and restore</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_backup" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>backup</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_restore" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>restore</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_backup_file" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>backup file</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_backup" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>create a new backup</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_restore" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>restore the selected backup</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_backup_completed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Backup created successfully.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_restore_completed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Backup restored successfully.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_restore_confirm" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Restore this backup? Your current data will be replaced.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_edit_backups" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This page allows you to make and restore database backups (works only on POSIX systems with MySQL or PostgreSQL).
+Push the [backup] button to create a new TCExam database dump in compressed SQL format (structure and data).
+To restore an existing backup archive, select it and push the [restore] button.
+Note that before each restore the system automatically execute a new backup, so you can undo the operation.
+Backup files are stored on the "cache/backup" folder using the following syntax: YYYYMMDDhhmmss_tcexam_backup.sql.gz , where YYYYMMDDhhmmss are the digits of year (Y), month (M), day (D), hour (h), minutes (m), seconds (s).</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 11.0.000 -->
+      <tu tuid="w_download" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>download</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_download" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>download the selected backup file</seg>
+         </tuv>
+      </tu>
+      <!-- TCExam 11.1.000 (2010-09-20) -->
+      <tu tuid="t_user_change_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Change password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_user_change_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Change email</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_user_change_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can change your access password.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_user_change_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can change your email. A verification message will be sent to your new email address. Your account will be disabled until confirmation receipt.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_password_updated" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Your password has been updated.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_email_updated" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Your email address has been updated.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_different_emails" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The email addresses do not match.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_current_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>current password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_new_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>new password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="d_password_length" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>at least 8 alphanumeric characters</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_new_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>new email</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>email address</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_login_link" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>click on this link to access on this system</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_change_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>change email</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_change_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>change password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_admin" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>admin</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_admin_link" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>administration area</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_public_link" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>public area</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_public" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>public</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_test_list" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Test list</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_action" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>action</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_show" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>show</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_hide" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>hide</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_change_dir" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>change directory</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_size" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>size</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_date" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>date</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_permissions" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>permissions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_filemanager" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Media file manager</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_filemanager" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can manage multimedia files.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_used_file" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This file is used in a question or answer.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_delete_file_error" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The file or directory could not be deleted.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_rename" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>rename</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_file_renamed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>the file has been renamed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_file_rename_error" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The file could not be renamed.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_file_already_exist" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>A file or directory with this name already exists.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_file_manager" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>file manager</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_new_directory" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>new directory</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_create_directory" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>create</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_directory_created" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>the directory has been created</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_directory_create_error" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The directory could not be created.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_directory" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>directory</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_table" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>table</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_visual" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>visual</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_select_media_file" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Select object</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_select_media_file" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>This page allows you to insert a multimedia file object in the current description. Select the object you want to insert, fill description fields and click the [add] button.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_owner" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>owner</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_module_owner" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>owner of this module</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_topic_owner" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>owner of this topic</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_omr_answers_importer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Import answers (OMR)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_omr_answers_importer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can import user's answers from scanned images of answer sheets. The images will be processed using Optical Mark Recognition (OMR) system to identify test data and user's answers. The OMR sheets must be fully scanned with full color range at 200DPI or more.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_import_omr_answers" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>import answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_omr_data_page" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>OMR DATA</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_omr_answer_sheet" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>OMR ANSWER SHEET</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_omr_data_page" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>scanned image of the page labeled OMR DATA</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_omr_wrong_test_data" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The OMR DATA page image is missing or unreadable.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_omr_wrong_answer_sheet" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>The OMR ANSWER SHEET page image is missing or unreadable.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_import_ok" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Import completed successfully.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_import_error" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Import failed.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_forgot_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>I forgot my password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_reset_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>reset the password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="d_reset_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Please enter the email address you used to create your account, and we will send you a link to reset your password.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_password_assistance" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Password assistance</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_unknown_email" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unknown email</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_result_graph" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>graph of points and correct answers percentage for each listed test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_omr_dir" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>OMR Import Directory</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_omr_dir" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>OMR Directory</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_omr_bulk_importer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>OMR bulk importer</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_omr_bulk_importer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can import in bulk test answers from scanned images of answer sheets. The image files must be located on a subfolder of the cache/OMR directory. The images containing the QR code must be named "OMR_[USRREG]_QR.png" where [USRREG] is the registration code of the user. The images containing the answers must be named "OMR_[USRREG]_A[X].png" where [X] is the sheet number. The images will be processed using Optical Mark Recognition (OMR) system to identify test data and user's answers. The OMR sheets must be fully scanned with full color range at 200DPI or more.</seg>
+         </tuv>
+      </tu>
+      <!-- 12.0.000 -->
+      <tu tuid="w_alphabetic" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>alphabetic</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_id" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>id</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_database_id" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>database ID</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_order_by" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>order by</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_questions_order_mode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>questions order</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_questions_order_mode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>ordering mode for questions</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_answers_order_mode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>answers order</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_answers_order_mode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>ordering mode for answers</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_otpkey" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>OTP key</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_otpkey" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>One Time Password secret key</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_otp_qrcode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>OTP QR-Code</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_otp_qrcode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>TCExam uses a 2-step verification process that requires you to enter two pieces of information before you can access the system. The required information is the standard TCExam password and the verification code generated by your smartphone. This prevents hackers from accessing your account if they only have your password or phone. However, it also means that you will always need to have your phone at hand whenever you want to login to your TCExam Account.&lt;br /&gt;&lt;br /&gt;You must download and install the &lt;a href="https://support.google.com/accounts/answer/1066447" title="Install Google Authenticator"&gt;Google Authenticator&lt;/a&gt; app on your smartphone. When you have downloaded and installed the app you can use the following code, or scan the QR-Code:</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_otpcode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>OTP code</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_otpcode" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>One Time Password code generated using your smartphone application</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_login_brute_force" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Too many failed login attempts. Please wait this number of seconds before trying again:</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_test_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>test password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_test_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>password, alphanumeric code required to take this test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_test_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>To take this test you must provide the test password</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_wrong_test_password" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Incorrect test password.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_test_select" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Test selection</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_select_test" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>open a test selection page</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_select_tests" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>In this form you can see and select the tests. You can change the displayed sequence by clicking on the column names.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_limit" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>limit</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_total" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>total</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_day" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>day</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_month" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>month</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_year" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>year</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_remaining_tests" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>remaining tests</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_remaining_tests" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>remaining number of tests that can be executed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_reached_test_limit" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>You have reached the maximum number of tests.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_under_limit" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>under limit</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_over_limit" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>over limit</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_font" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>font</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_font_size" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>font size</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_keyboard" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>keyboard</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_layout" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>layout</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_language" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>language</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_max" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>max</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_remaining" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>remaining</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_executed" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>executed</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_overwrite" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>overwrite</seg>
+         </tuv>
+      </tu>
+      <tu tuid="h_omr_overwrite" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>select this option to overwrite existing results on non-repeatable test</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_sslcerts" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SSL certificates</seg>
+         </tuv>
+      </tu>
+      <tu tuid="t_sslcerts" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SSL certificates</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_sslcert" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>SSL certificate</seg>
+         </tuv>
+      </tu>
+      <tu tuid="hp_import_ssl_certificates" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>With this form you can import client SSL certificates (pfx, pem, crt). These certificates can be used to restrict the access to certain tests or areas.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="m_ssl_certificate_required" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>A valid client SSL certificate is required to access this page.</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_graph" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>graph</seg>
+         </tuv>
+      </tu>
+   </body>
+</tmx>
