@@ -33,7 +33,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_RESULTS;
+$pageperm = K_PERM_OPERATOR;
 $thispage_title = $l['t_email_result'];
 $thispage_description = $l['hp_email_result'];
 require_once('../../shared/code/tce_authorization.php');

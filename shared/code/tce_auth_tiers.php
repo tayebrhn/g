@@ -22,14 +22,15 @@
 
 /**
  * @file
- * Authorization tiers (capability levels).
+ * Authorization tiers (legacy user levels).
  *
- * These constants are the single place where a capability is mapped to a
- * numeric user level. Pages and helpers refer to the tier names; the numeric
- * values can be overridden from the per-installation configuration files
- * (admin/config/tce_auth.php), which are loaded before this file.
+ * The pages and the helpers are gated by the independent capabilities defined
+ * in shared/code/tce_auth_caps.php: the constants below are kept only for
+ * backward compatibility with older configurations and third-party code, and
+ * the user level now only ranks the accounts (which user an identity
+ * administrator may manage, the maximum rank it may grant).
  *
- * Ladder:
+ * Legacy ladder:
  *   0  anonymous user
  *   1  registered user
  *   2  K_AUTH_VIEW_CONTENT     read-only access to group-shared content

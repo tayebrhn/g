@@ -1,32 +1,42 @@
 # Authorization model
 
-Full spec: `PERMISSIONS.md` (authoritative, keep in sync). Three independent axes: **page access**, **edit vs read-only**, **row-level visibility**.
+Full spec: `PERMISSIONS.md` (authoritative, keep in sync). Five axes: **page access**, **edit vs read-only**, **row-level visibility**, **modify authority**, **rank (precedence)**. Since 2026-09-24 the admin area is capability-based, **non-cumulative**: a higher capability never includes a lower one.
 
-## Page access
-- Each page sets `$pagelevel = K_AUTH_*` then `require_once('../../shared/code/tce_authorization.php')`.
-- `tce_authorization.php` denies when `$_SESSION['session_user_level'] < $pagelevel` (strictly `<`; threshold semantics are `>=`). It also handles login, brute-force delay, SSL client-cert check (`K_AUTH_SSL_LEVEL`), and test-password.
-- Menu `admin/code/tce_page_menu.php` uses the same constants, so a menu entry appears iff the page is reachable.
-- Public area page levels are all `1` (`public/config/tce_auth.php`); admin link shown from `K_ADMIN_LINK` (5).
+## Capabilities (page access + functional rights)
+- `tce_users.user_perms` bitmask; bits defined in `shared/code/tce_auth_caps.php` (loaded for both areas via `tce_functions_general.php` and file-level requires in `tce_functions_authorization.php` / `tce_functions_menu.php`): `K_PERM_VIEW_CONTENT`(1), `K_PERM_EDIT_CONTENT`(2), `K_PERM_OPERATOR`(4), `K_PERM_MANAGE_IDENTITY`(8), `K_PERM_GLOBAL_VIEW`(16), `K_PERM_BACKUP`(32), `K_PERM_ADMIN`(64); `K_PERM_ALL` = 127.
+- Admin pages declare `$pageperm = K_PERM_*` then include `tce_authorization.php`, which denies when `! F_user_can_any($pageperm)` (authenticated → access-denied page; anonymous → login form). `$pageperm = 0` = no capability required (emailed-results token path in `tce_pdf_results.php`).
+- Public (test-taker) pages keep the `$pagelevel` numeric threshold; `tce_page_info.php` is level 0 by design.
+- Menu `admin/code/tce_page_menu.php` uses `'perm' => K_PERM_*` keys; renderer `F_menu_link` checks `F_user_can_any()` when `perm` is set, else falls back to the `level` key (login/logout/public). Public menu shows the admin link when the mask is non-zero.
 
-## Levels (cumulative ladder)
-`0` anonymous · `1` registered · `2` `K_AUTH_VIEW_CONTENT` (read-only editors) · `3` `K_AUTH_EDIT_CONTENT` (author content/media/import) · `5` `K_AUTH_OPERATOR` (tests/results/OMR/SSL/online) · `6` `K_AUTH_MANAGE_IDENTITY` (users/groups) · `9` `K_AUTH_GLOBAL_VIEW` + `K_AUTH_SITE_ADMIN` (all-group visibility, backup) · `10` `K_AUTH_ADMINISTRATOR` (system update, reassign owners, any level). Levels **4, 7, 8 are intentionally unused**.
+## Rank (user_level, 0-10)
+- Grants **no** page/data access; only precedence: user-list filters `user_level < own` (SQL in edit_user/select/xml/tsv/omr importers), "target must be lower rank" in `F_isAuthorizedUserRecord`, grant ceilings in user editor/importers (`min(own - 1, …)`; `K_PERM_ADMIN` unrestricted), owner-candidate list (`user_level >= K_AUTH_ADMINISTRATOR`).
 
-## Where values live
-- Numeric values: `admin/config/tce_auth.php` (`K_AUTH_VIEW_CONTENT`, `K_AUTH_EDIT_CONTENT`, `K_AUTH_MANAGE_IDENTITY`, `K_AUTH_GLOBAL_VIEW`, `K_AUTH_SITE_ADMIN`, plus legacy `K_AUTH_ADMIN_*`).
-- Fallback defaults + names: `shared/code/tce_auth_tiers.php` (defines each tier only `if (!defined(...))`, so install config wins). Defaults reproduce pre-tier behaviour so code-only upgrades never widen rights.
-- Labels: `F_getUserLevelLabel($level, $with_number)` uses `w_level_*` keys with built-in English fallback; unassigned levels render `unused`; unknown level falls back to its number.
-- `K_DATABASE_TYPE` and table constants: `shared/config/tce_db_config.php`.
+## Helpers (shared/code/tce_functions_authorization.php)
+- `F_user_perms()` = `session_user_perms`, falling back to `F_cumulative_perms_for_level(session_user_level)` for pre-upgrade sessions (mapping: 2→1, 3→3, 5→7, 6→15, 9→63, 10→127, else 0).
+- `F_user_can($perm)` = all bits held; `F_user_can_any($perm)` = any bit held.
+- `F_is_readonly_content()` = `! F_user_can(K_PERM_EDIT_CONTENT)`; `F_has_global_view()` = `F_user_can(K_PERM_GLOBAL_VIEW)`.
+- Visibility: `F_isAuthorizedUser()` → `F_isAuthorizedRecord(K_PERM_GLOBAL_VIEW, …)`: capability, or owner, or real-owner shared group. `F_getAuthorizedUsers()` / `F_visible_user_ids()`.
+- Modify: `F_isAuthorizedToModify()` → `F_isAuthorizedRecord(K_PERM_ADMIN, …)` (new record `$id <= 0` always modifiable); `F_isAuthorizedToModifyUser/Group()` (admin/code/tce_functions_user_select.php) = self/own-group, or lower rank + shared group, or `K_PERM_ADMIN`.
+- In-file gates: owner-reassign selects, file-manager root (`F_getAuthorizedDirs`), OMR importer scope and the `< K_AUTH_OPERATOR` upload/delete gates are `F_user_can(K_PERM_ADMIN|K_PERM_OPERATOR)` now.
+- Key invariant: **GLOBAL_VIEW sees everything but only its own/shared-group records are modifiable; K_PERM_ADMIN alone opens no content page** — grant what the account needs.
 
-## Row-level visibility
-- `F_isAuthorizedUser($table, $id_field, $id, $owner_field)` true if: global view (level >= `K_AUTH_GLOBAL_VIEW`), or owner, or owner is a real user (`owner_id > 1`) sharing a group.
-- `F_getAuthorizedUsers()` / `F_visible_user_ids()` return the visible user-id list. Group sharing is symmetric and all-or-nothing (no per-record ACL).
-- `F_has_global_view()` = "sees all groups"; `>= K_AUTH_ADMINISTRATOR` = "may do anything". Do not conflate them (a historical bug that was fixed).
-- `F_is_readonly_content()` gates the four content editors (`tce_edit_module|subject|question|answer.php`): below `K_AUTH_EDIT_CONTENT` they discard submitted actions and omit edit buttons.
+## Session
+- `session_user_perms` set at the 3 login paths in `tce_authorization.php` (with `?? F_cumulative_perms_for_level()` fallback for pre-migration DBs); per-request refresh block re-reads `SELECT *` from `tce_users` when `K_CHECK_USER_PER_REQUEST` (shared/config/tce_config.php, default true) — grants/demotions/deletions apply immediately; deleted user falls back to anonymous.
+- SSL client-cert gate: applies to capability-gated admin pages and level-gated pages ≥ `K_AUTH_SSL_LEVEL`.
+
+## User editor / provisioning
+- `tce_edit_user.php`: capability checkboxes (`user_perms[]`), labels via `F_getCapabilityLabel` / `w_cap_*` TMX keys (+ `w_capabilities` heading). Grant rules: non-`K_PERM_ADMIN` editors may only grant capabilities they hold; bits they cannot grant are **preserved** on the target (`(new & own) | (current & ~own)`); own mask frozen. Update keeps current mask when the form omits the field.
+- XML user import/export carries `<perms>` (default: derived from rank); TSV keeps its column format, mask derived from rank; same ceiling rules in `tce_import_users.php`.
+- Alt-auth (SSL/HTTP-BASIC/CAS/Shibboleth/RADIUS/LDAP): `K_*_USER_PERMS` config constants (default 0; fallback cumulative-from-level) wired through `tce_altauth.php` and the provisioning INSERT.
+
+## DB
+- `user_perms` added to the 3 install structure SQLs + `db_data.sql` (admin seeded with 127); upgrade scripts `install/upgrade/{mysql,postgresql,oracle}/*_db_upgrade_16to17.sql` add the column and seed masks **behavior-preserving** (CASE mapping above). `K_AUTH_*` tier constants remain defined (legacy compat, marked LEGACY in the config files) but no shipped page references them.
+
+## Emailed results token
+- `F_getResultsToken()` / `F_checkResultsToken()` (password-hash over `r<testuser>|<test>|<user>|<ts>|K_RANDOM_SECURITY`; TTL `K_RESULTS_LINK_TTL` default 30 days). The PDF is fetched server-side from admin `tce_pdf_results.php` (`$pageperm 0` when `email` param present) and **attached** to the mail; noindex/no-store headers on the token path. Public `tce_pdf_results.php` has no pagelevel (0) and binds the token to the session user.
 
 ## Known limitations
-- Level changes only apply at next login (`session_user_level` is not re-read; sessions slide on every request).
-- Content owned by anonymous user (id 1) is visible only to global-view users.
-- Results belong to the test, not a group.
+- Group sharing symmetric, all-or-nothing; results belong to the test, not the group; anonymous-owned (user_id 1) content visible only to GLOBAL_VIEW; a non-ADMIN editor cannot strip capabilities it does not hold (preserved instead).
 
-## Regression tests
-`test/menu_authorization.php` and `test/authorization_tiers.php` (DB-free). `test/README.md` lists the equivalent browser checks.
+## Regression tests (DB-free, from repo root)
+`php test/menu_authorization.php` (menu per mask + legacy level fallback), `php test/authorization_tiers.php` (bits distinct, helpers vs masks, editor read-only guard, $pageperm assertions), `php test/modify_authority.php` (modify predicates per mask + token TTL + fallback), `php test/capability_matrix.php` (level→mask mapping, all-of/any-of semantics, every admin page's `$pageperm`, menu capability validity), `php test/online_users_tracker_rows.php`. `test/README.md` lists the browser checks with capability-mask accounts.

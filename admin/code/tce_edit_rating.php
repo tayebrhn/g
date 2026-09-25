@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_RATING;
+$pageperm = K_PERM_OPERATOR;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_rating_editor'];
@@ -66,6 +66,12 @@ if (isset($_REQUEST['test_id']) && $_REQUEST['test_id'] > 0) {
 // comma separated list of required fields
 $_REQUEST['ff_required'] = 'testlog_score';
 $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_score'], ENT_COMPAT, $l['a_meta_charset']);
+
+// a global viewer who does not own the test may only read its results
+$record_readonly = $test_id > 0 && ! F_isAuthorizedToModify(K_TABLE_TESTS, 'test_id', $test_id, 'test_user_id');
+if ($record_readonly) {
+    $menu_mode = '';
+}
 
 switch ($menu_mode) {
     case 'update': { // Update
@@ -383,7 +389,7 @@ echo getFormRowTextBox('testlog_comment', $l['w_comment'], $l['w_comment'], $tes
 echo '<div class="row">' . K_NEWLINE;
 
 // show buttons by case
-if (isset($testlog_id) && $testlog_id > 0) {
+if (!$record_readonly && isset($testlog_id) && $testlog_id > 0) {
     F_submit_button("update", $l['w_update'], $l['h_update']);
 }
 

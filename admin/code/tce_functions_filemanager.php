@@ -37,7 +37,7 @@
 function F_deleteMediaFile($filename)
 {
     require_once('../config/tce_config.php');
-    if ($_SESSION['session_user_level'] < K_AUTH_DELETE_MEDIAFILE) {
+    if (! F_user_can(K_PERM_OPERATOR)) {
         // insufficient user level
         return false;
     }
@@ -73,7 +73,7 @@ function F_deleteMediaFile($filename)
 function F_renameMediaFile($filename, $newname)
 {
     require_once('../config/tce_config.php');
-    if ($_SESSION['session_user_level'] < K_AUTH_RENAME_MEDIAFILE) {
+    if (! F_user_can(K_PERM_OPERATOR)) {
         // insufficient user level
         return false;
     }
@@ -125,7 +125,7 @@ function F_renameMediaFile($filename, $newname)
 function F_createMediaDir($dirname)
 {
     require_once('../config/tce_config.php');
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMIN_DIRS) {
+    if (! F_user_can(K_PERM_OPERATOR)) {
         // insufficient user level
         return false;
     }
@@ -149,7 +149,7 @@ function F_createMediaDir($dirname)
 function F_deleteMediaDir($dirname)
 {
     require_once('../config/tce_config.php');
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMIN_DIRS) {
+    if (! F_user_can(K_PERM_OPERATOR)) {
         // insufficient user level
         return false;
     }
@@ -479,7 +479,9 @@ function F_getAuthorizedDirs()
 {
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_authorization.php');
-    if (F_has_global_view()) {
+    if (isset($_SESSION['session_user_level']) && F_user_can(K_PERM_ADMIN)) {
+        // a full administrator reaches the media directory of every user;
+        // a global viewer (level 9) only reaches the directories of its groups
         return '[^/]*';
     }
 

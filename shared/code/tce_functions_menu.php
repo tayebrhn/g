@@ -28,6 +28,8 @@
  * @since 2010-09-16
  */
 
+require_once __DIR__ . '/tce_auth_caps.php';
+
 /**
  * Returns a menu element link wit subitems.
  * If the link refers to the current page, only the name will be returned.
@@ -39,8 +41,19 @@ function F_menu_link($link, $data, $level = 0)
 {
     global $l, $db;
     require_once('../config/tce_config.php');
-    if (! $data['enabled'] || $_SESSION['session_user_level'] < $data['level']) {
+    if (! $data['enabled']) {
         // this item is disabled
+        return;
+    }
+
+    if (isset($data['perm'])) {
+        // capability gate: the item is shown when the user holds at
+        // least one of the specified capabilities (0 = any user)
+        if ($data['perm'] != 0 && ! F_user_can_any($data['perm'])) {
+            return;
+        }
+    } elseif ($_SESSION['session_user_level'] < $data['level']) {
+        // legacy level gate (login, logout and public links)
         return;
     }
 

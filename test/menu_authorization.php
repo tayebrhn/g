@@ -7,18 +7,15 @@
 
 /**
  * Verify the number of permitted links on each admin landing page for the
- * representative access levels.
+ * representative capability masks and for the legacy level fallback.
  *
  * This test uses the real menu definitions and authorization helper but does
  * not connect to the database or require a user account.
  *
- * Tier mapping (see shared/code/tce_auth_tiers.php and admin/config/tce_auth.php):
- *   2  view content (modules/subjects/questions/answers editors, read-only)
- *   3  edit content (adds question import and file manager)
- *   5  examiner    (adds question list, and the whole tests section)
- *   6  manage identity (the whole users section)
- *   9  global view + backup
- *  10  administrator
+ * Capability masks (see shared/code/tce_auth_caps.php) are independent:
+ * a mask is not extended by a higher capability. The legacy level rows
+ * verify the fallback used by sessions created before the capabilities
+ * were introduced.
  */
 
 declare(strict_types=1);
@@ -43,7 +40,68 @@ $sections = [
     'tests' => $menu['tce_menu_tests.php']['sub'],
 ];
 
-$expected = [
+$failures = [];
+
+/**
+ * Runs the menu renderer for each section with the given session state.
+ * @param string $label description of the session under test
+ * @param array $session $_SESSION replacement
+ * @param array $expected section name => expected link count
+ */
+$menu_test_session = function (string $label, array $session, array $expected) use ($sections, &$failures) {
+    $_SESSION = $session;
+    foreach ($sections as $section => $items) {
+        $output = '';
+        foreach ($items as $link => $data) {
+            $output .= F_menu_link($link, $data, 1);
+        }
+
+        $actual = substr_count($output, '<li>');
+        if ($actual !== $expected[$section]) {
+            $failures[] = sprintf('%s: expected %d %s links, received %d.', $label, $expected[$section], $section, $actual);
+        }
+    }
+};
+
+// --- capability masks: independent, never cumulative ----------------------
+$menu_test_session(
+    'OPERATOR only',
+    ['session_user_id' => 2, 'session_user_level' => 5, 'session_user_perms' => K_PERM_OPERATOR],
+    ['users' => 0, 'modules' => 1, 'tests' => 5]
+);
+$menu_test_session(
+    'MANAGE_IDENTITY only',
+    ['session_user_id' => 2, 'session_user_level' => 6, 'session_user_perms' => K_PERM_MANAGE_IDENTITY],
+    ['users' => 5, 'modules' => 0, 'tests' => 0]
+);
+$menu_test_session(
+    'VIEW_CONTENT only',
+    ['session_user_id' => 2, 'session_user_level' => 2, 'session_user_perms' => K_PERM_VIEW_CONTENT],
+    ['users' => 0, 'modules' => 4, 'tests' => 0]
+);
+$menu_test_session(
+    'EDIT_CONTENT only (the VIEW_CONTENT editors stay closed)',
+    ['session_user_id' => 2, 'session_user_level' => 3, 'session_user_perms' => K_PERM_EDIT_CONTENT],
+    ['users' => 0, 'modules' => 2, 'tests' => 0]
+);
+$menu_test_session(
+    'GLOBAL_VIEW only',
+    ['session_user_id' => 2, 'session_user_level' => 9, 'session_user_perms' => K_PERM_GLOBAL_VIEW],
+    ['users' => 0, 'modules' => 0, 'tests' => 0]
+);
+$menu_test_session(
+    'ADMIN without content capabilities',
+    ['session_user_id' => 2, 'session_user_level' => 10, 'session_user_perms' => K_PERM_ADMIN],
+    ['users' => 0, 'modules' => 0, 'tests' => 0]
+);
+$menu_test_session(
+    'all capabilities',
+    ['session_user_id' => 2, 'session_user_level' => 10, 'session_user_perms' => K_PERM_ALL],
+    ['users' => 5, 'modules' => 7, 'tests' => 5]
+);
+
+// --- legacy level fallback (sessions created before the capabilities) ------
+$legacy_expected = [
     0 => ['users' => 0, 'modules' => 0, 'tests' => 0],
     1 => ['users' => 0, 'modules' => 0, 'tests' => 0],
     2 => ['users' => 0, 'modules' => 4, 'tests' => 0],
@@ -53,27 +111,12 @@ $expected = [
     9 => ['users' => 5, 'modules' => 7, 'tests' => 5],
     10 => ['users' => 5, 'modules' => 7, 'tests' => 5],
 ];
-
-$failures = [];
-foreach ($expected as $level => $expectedCounts) {
-    $_SESSION['session_user_level'] = $level;
-    foreach ($sections as $section => $items) {
-        $output = '';
-        foreach ($items as $link => $data) {
-            $output .= F_menu_link($link, $data, 1);
-        }
-
-        $actual = substr_count($output, '<li>');
-        if ($actual !== $expectedCounts[$section]) {
-            $failures[] = sprintf(
-                'Level %d: expected %d %s links, received %d.',
-                $level,
-                $expectedCounts[$section],
-                $section,
-                $actual
-            );
-        }
-    }
+foreach ($legacy_expected as $level => $expectedCounts) {
+    $menu_test_session(
+        'legacy level ' . $level,
+        ['session_user_id' => 2, 'session_user_level' => $level],
+        $expectedCounts
+    );
 }
 
 if ($failures !== []) {
@@ -81,4 +124,4 @@ if ($failures !== []) {
     exit(1);
 }
 
-echo "Admin menu authorization checks passed." . PHP_EOL;
+echo 'Admin menu authorization checks passed.' . PHP_EOL;

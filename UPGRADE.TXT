@@ -105,3 +105,42 @@ see, the online-users list is restricted to the users the current user may
 manage, and the user/group selection boxes no longer list out-of-scope entries.
 
 ------------------------------------------------------------
+CAPABILITIES (version 17)
+------------------------------------------------------------
+
+The cumulative level ladder is replaced by independent capabilities stored in
+the new tce_users.user_perms bitmask (one bit per capability; see
+shared/code/tce_auth_caps.php and PERMISSIONS.md):
+
+	K_PERM_VIEW_CONTENT      1	open the content editors read-only
+	K_PERM_EDIT_CONTENT      2	author content, media, question import
+	K_PERM_OPERATOR          4	tests, results, rating, OMR, SSL, online users
+	K_PERM_MANAGE_IDENTITY   8	administer users and groups
+	K_PERM_GLOBAL_VIEW      16	see the data of every group
+	K_PERM_BACKUP           32	run backups
+	K_PERM_ADMIN            64	system update, reassign owners, unrestricted grants
+
+The upgrade is mandatory and behavior-preserving: the install/upgrade SQL
+adds the user_perms column and derives the initial mask from the current user
+level, so every account keeps exactly the rights it had. Capabilities are
+independent: granting a higher one never includes a lower one, and the
+numeric user_level no longer grants any right (it only ranks accounts for
+the "manage lower-rank users" and "cannot grant an equal or higher rank"
+rules). Use the checkboxes in the user editor to fine-tune each account.
+
+The alternate authentication methods (SSL, HTTP-BASIC, CAS, Shibboleth,
+RADIUS, LDAP) accept a new K_*_USER_PERMS constant in their configuration
+files: the capability mask granted to the accounts they provision
+(0 = no capability; when the constant is missing the mask is derived from
+the configured K_*_USER_LEVEL).
+
+With the new K_CHECK_USER_PER_REQUEST constant (shared/config/tce_config.php)
+set to true, the rank and the capability mask are re-read from the database
+at every request: grants, demotions and account removals now take effect
+without waiting for the next login.
+
+The XML user export/import carries the capability mask in a new <perms>
+element; TSV files keep their format and imported users get the mask derived
+from their rank.
+
+------------------------------------------------------------

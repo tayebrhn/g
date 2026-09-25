@@ -33,7 +33,7 @@
 
 // check user's authorization
 require_once('../config/tce_config.php');
-$pagelevel = K_AUTH_MANAGE_IDENTITY;
+$pageperm = K_PERM_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
 // check if CSV format is requested

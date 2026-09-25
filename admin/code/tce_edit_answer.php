@@ -31,7 +31,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_VIEW_CONTENT;
+$pageperm = K_PERM_VIEW_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_answers_editor'];
@@ -146,9 +146,12 @@ if ($answer_id > 0) {
     }
 }
 
-if (F_is_readonly_content()) {
+if (F_is_readonly_content() || ($answer_id > 0 && ! F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id') && ! F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $question_subject_id, 'subject_user_id'))) {
     // read-only access: disable any modification
+    $record_readonly = true;
     $menu_mode = '';
+} else {
+    $record_readonly = false;
 }
 
 switch ($menu_mode) {
@@ -867,18 +870,18 @@ echo '<div class="row">' . K_NEWLINE;
 
 // show buttons by case
 
-if (! F_is_readonly_content() && isset($answer_id) && $answer_id > 0) {
+if (! $record_readonly && isset($answer_id) && $answer_id > 0) {
     echo '<span style="background-color:#999999;">';
     echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
     F_submit_button('update', $l['w_update'], $l['h_update']);
     echo '</span>';
     F_submit_button('add', $l['w_add'], $l['h_add']);
     F_submit_button('delete', $l['w_delete'], $l['h_delete']);
-} elseif (! F_is_readonly_content()) {
+} elseif (! $record_readonly) {
     F_submit_button('add', $l['w_add'], $l['h_add']);
 }
 
-if (! F_is_readonly_content()) {
+if (! $record_readonly) {
     F_submit_button('clear', $l['w_clear'], $l['h_clear']);
 }
 

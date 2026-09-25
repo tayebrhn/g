@@ -96,6 +96,13 @@ define('K_LDAP_UTF8', true);
 define('K_LDAP_USER_LEVEL', 1);
 
 /**
+ * Capability mask granted to the accounts provisioned by this
+ * authentication method (see shared/code/tce_auth_caps.php).
+ * 0 = no capability.
+ */
+define('K_LDAP_USER_PERMS', 0);
+
+/**
  * Default user group ID.
  * This is the TCExam group id to which the LDAP accounts belongs.
  * You can also set 0 for all available groups or a string containing a comma-separated list of group IDs.

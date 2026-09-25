@@ -47,7 +47,7 @@ $menu = [
         'name' => $l['w_results'],
         'level' => K_AUTH_PUBLIC_TEST_RESULTS,
         'key' => 'r',
-        'enabled' => ($_SESSION['session_user_level'] > K_AUTH_PUBLIC_TEST_RESULTS),
+        'enabled' => ($_SESSION['session_user_level'] >= K_AUTH_PUBLIC_TEST_RESULTS),
     ],
     // 'tce_page_user.php' => [
     //     'link' => 'tce_page_user.php',
@@ -61,9 +61,9 @@ $menu = [
         'link' => '../../admin/code/index.php',
         'title' => $l['h_admin_link'],
         'name' => $l['w_admin'],
-        'level' => K_ADMIN_LINK,
+        'perm' => K_PERM_ALL,
         'key' => 'a',
-        'enabled' => ($_SESSION['session_user_level'] >= K_ADMIN_LINK),
+        'enabled' => F_user_can_any(K_PERM_ALL),
     ],
     'tce_logout.php' => [
         'link' => 'tce_logout.php',

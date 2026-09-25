@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_SSLCERT;
+$pageperm = K_PERM_OPERATOR;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_sslcerts'];
@@ -70,6 +70,12 @@ if (isset($_FILES['userfile']['name']) && ! empty($_FILES['userfile']['name'])) 
         //remove certificate file
         unlink(K_PATH_CACHE . $uploadedfile);
     }
+}
+
+// a global viewer who does not own the certificate may only read it
+$record_readonly = $ssl_id > 0 && ! F_isAuthorizedToModify(K_TABLE_SSLCERTS, 'ssl_id', $ssl_id, 'ssl_user_id');
+if ($record_readonly) {
+    $menu_mode = '';
 }
 
 switch ($menu_mode) {
@@ -137,7 +143,7 @@ switch ($menu_mode) {
                 break;
             }
 
-            if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+            if (F_user_can(K_PERM_ADMIN)) {
                 $ssl_user_id = (int) $ssl_user_id;
             } else {
                 $ssl_user_id = (int) $_SESSION['session_user_id'];
@@ -168,7 +174,7 @@ switch ($menu_mode) {
                 break;
             }
 
-            if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+            if (F_user_can(K_PERM_ADMIN)) {
                 $ssl_user_id = (int) $ssl_user_id;
             } else {
                 $ssl_user_id = (int) $_SESSION['session_user_id'];
@@ -314,17 +320,21 @@ echo '<div class="row">' . K_NEWLINE;
 
 // show buttons by case
 if (isset($ssl_id) && $ssl_id > 0) {
-    echo '<span style="background-color:#999999;">';
-    echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
-    F_submit_button('update', $l['w_update'], $l['h_update']);
-    echo '</span>';
-    //F_submit_button('add', $l['w_add'], $l['h_add']);
-    F_submit_button('delete', $l['w_delete'], $l['h_delete']);
-} else {
+    if (!$record_readonly) {
+        echo '<span style="background-color:#999999;">';
+        echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
+        F_submit_button('update', $l['w_update'], $l['h_update']);
+        echo '</span>';
+        //F_submit_button('add', $l['w_add'], $l['h_add']);
+        F_submit_button('delete', $l['w_delete'], $l['h_delete']);
+    }
+} elseif (!$record_readonly) {
     F_submit_button('add', $l['w_add'], $l['h_add']);
 }
 
-F_submit_button('clear', $l['w_clear'], $l['h_clear']);
+if (!$record_readonly) {
+    F_submit_button('clear', $l['w_clear'], $l['h_clear']);
+}
 
 echo '</div>' . K_NEWLINE;
 echo F_getCSRFTokenField() . K_NEWLINE;

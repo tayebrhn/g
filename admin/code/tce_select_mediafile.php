@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_EDIT_CONTENT;
+$pageperm = K_PERM_EDIT_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
@@ -43,7 +43,7 @@ require_once('../code/tce_page_header_popup.php');
 
 
 // Non-administrators may access to their cache folder or the cache folders of the users in their groups
-if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+if (! F_user_can(K_PERM_ADMIN)) {
     $root_dir = K_PATH_CACHE . 'uid/';
     $usr_dir = $root_dir . $_SESSION['session_user_id'] . '/';
     // create user directory if missing
@@ -145,7 +145,7 @@ if (isset($_POST['rename'])) {
 switch ($menu_mode) {
     case 'delete':{
         
-        if ($_SESSION['session_user_level'] < K_AUTH_DELETE_MEDIAFILE) {
+        if (! F_user_can(K_PERM_OPERATOR)) {
             F_print_error('WARNING', $l['m_authorization_denied']);
             break;
         }
@@ -173,7 +173,7 @@ switch ($menu_mode) {
 
     case 'forcedelete':{
          // Delete
-        if ($_SESSION['session_user_level'] < K_AUTH_DELETE_MEDIAFILE) {
+        if (! F_user_can(K_PERM_OPERATOR)) {
             F_print_error('WARNING', $l['m_authorization_denied']);
             break;
         }
@@ -200,7 +200,7 @@ switch ($menu_mode) {
 
     case 'rename':{
         
-        if ($_SESSION['session_user_level'] < K_AUTH_RENAME_MEDIAFILE) {
+        if (! F_user_can(K_PERM_OPERATOR)) {
             F_print_error('WARNING', $l['m_authorization_denied']);
             break;
         }
@@ -229,7 +229,7 @@ switch ($menu_mode) {
 
     case 'newdir':{
         
-        if ($_SESSION['session_user_level'] < K_AUTH_ADMIN_DIRS) {
+        if (! F_user_can(K_PERM_OPERATOR)) {
             F_print_error('WARNING', $l['m_authorization_denied']);
             break;
         }
@@ -256,7 +256,7 @@ switch ($menu_mode) {
 
     case 'deldir':{
          // Delete
-        if ($_SESSION['session_user_level'] < K_AUTH_ADMIN_DIRS) {
+        if (! F_user_can(K_PERM_OPERATOR)) {
             F_print_error('WARNING', $l['m_authorization_denied']);
             break;
         }
@@ -312,11 +312,11 @@ if (! empty($file)) {
     echo '<input type="hidden" name="file" id="file" value="' . $file . '" />' . K_NEWLINE;
     echo '<input type="hidden" name="tcefile" id="tcefile" value="' . $filedata['tcefile'] . '" />' . K_NEWLINE;
     echo '<input type="text" name="newname" id="newname" value="' . basename($file) . '" size="30" maxlength="255" title="' . $l['w_name'] . '" />' . K_NEWLINE;
-    if ($_SESSION['session_user_level'] >= K_AUTH_RENAME_MEDIAFILE) {
+    if (F_user_can(K_PERM_OPERATOR)) {
         F_submit_button('rename', $l['w_rename'], $l['w_rename']);
     }
 
-    if ($_SESSION['session_user_level'] >= K_AUTH_DELETE_MEDIAFILE) {
+    if (F_user_can(K_PERM_OPERATOR)) {
         F_submit_button('delete', $l['w_delete'], $l['w_delete']);
     }
 
@@ -369,7 +369,7 @@ echo '</div>' . K_NEWLINE;
 echo '<br />' . K_NEWLINE;
 echo '<strong>' . $l['w_position'] . ': ' . F_getMediaDirPathLink($dir, $viewmode) . '</strong>';
 
-if ($_SESSION['session_user_level'] >= K_AUTH_ADMIN_DIRS) {
+if (F_user_can(K_PERM_OPERATOR)) {
     // directory mode
     echo ' <input type="text" name="newdirname" id="newdirname" value="" size="15" maxlength="255" title="' . $l['w_new_directory'] . '" />' . K_NEWLINE;
     F_submit_button('newdir', $l['w_create_directory'], $l['w_new_directory']);

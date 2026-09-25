@@ -25,13 +25,14 @@
  * @file
  * This script handles user's sessions.
  * Just the registered users granted with a username and a password are entitled to access the restricted areas (level > 0) of TCExam and the public area to perform the tests.
- * The user's level is a numeric value that indicates which resources (pages, modules, services) are accessible by the user.
- * To gain access to a specific resource, the user's level must be equal or greater to the one specified for the requested resource.
- * TCExam has 10 predefined user's levels:<ul>
+ * The admin pages are gated by independent capabilities ($pageperm, a bitmask of the K_PERM_* constants defined in tce_auth_caps.php): a higher capability never includes a lower one.
+ * The public pages keep the numeric user's level threshold ($pagelevel): the user's level must be equal or greater to the one specified for the requested resource.
+ * The user's level only ranks the accounts (which account an identity administrator may manage and the maximum rank it may grant).
+ * TCExam has 10 predefined user's ranks:<ul>
  * <li>0 = anonymous user (unregistered).</li>
  * <li>1 = basic user (registered);</li>
- * <li>2-9 = configurable/custom levels;</li>
- * <li>10 = administrator with full access rights</li>
+ * <li>2-9 = configurable/custom ranks;</li>
+ * <li>10 = maximum rank</li>
  * </ul>
  * @package com.tecnick.tcexam.shared
  * @brief TCExam Shared Area
@@ -76,6 +77,7 @@ if ($rs = F_db_query($sqls, $db)) {
         $_SESSION['session_user_name'] = '- [' . substr($PHPSESSID, 12, 8) . ']';
         $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
         $_SESSION['session_user_level'] = 0;
+        $_SESSION['session_user_perms'] = 0;
         $_SESSION['session_user_firstname'] = '';
         $_SESSION['session_user_lastname'] = '';
         $_SESSION['session_test_login'] = '';
@@ -228,6 +230,7 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
                     $_SESSION['session_user_name'] = $m['user_name'];
                     $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
                     $_SESSION['session_user_level'] = $m['user_level'];
+                    $_SESSION['session_user_perms'] = (int) ($m['user_perms'] ?? F_cumulative_perms_for_level($m['user_level']));
                     $_SESSION['session_user_firstname'] = urlencode($m['user_firstname']);
                     $_SESSION['session_user_lastname'] = urlencode($m['user_lastname']);
                     $_SESSION['session_test_login'] = '';
@@ -259,6 +262,7 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
                                 $_SESSION['session_user_name'] = $md['user_name'];
                                 $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
                                 $_SESSION['session_user_level'] = $md['user_level'];
+                                $_SESSION['session_user_perms'] = (int) ($md['user_perms'] ?? F_cumulative_perms_for_level($md['user_level']));
                                 $_SESSION['session_user_firstname'] = urlencode($md['user_firstname']);
                                 $_SESSION['session_user_lastname'] = urlencode($md['user_lastname']);
                                 $_SESSION['session_last_visit'] = 0;
@@ -279,33 +283,36 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
                 } elseif ($altusr !== false) {
                     // this user do not exist on TCExam database
                     // replicate external user account on TCExam local database
+                    $altusr_perms = (int) ($altusr['user_perms'] ?? F_cumulative_perms_for_level($altusr['user_level']));
                     $sql = 'INSERT INTO ' . K_TABLE_USERS . ' (
-							user_regdate,
-							user_ip,
-							user_name,
-							user_email,
-							user_password,
-							user_regnumber,
-							user_firstname,
-							user_lastname,
-							user_birthdate,
-							user_birthplace,
-							user_ssn,
-							user_level
-							) VALUES (
-							\'' . F_escape_sql($db, date(K_TIMESTAMP_FORMAT)) . '\',
-							\'' . F_escape_sql($db, getNormalizedIP($_SERVER['REMOTE_ADDR'])) . '\',
-							\'' . F_escape_sql($db, $_POST['xuser_name']) . '\',
-							' . F_empty_to_null($altusr['user_email']) . ',
-							\'' . F_escape_sql($db, $xuser_password) . '\',
-							' . F_empty_to_null($altusr['user_regnumber']) . ',
-							' . F_empty_to_null($altusr['user_firstname']) . ',
-							' . F_empty_to_null($altusr['user_lastname']) . ',
-							' . F_empty_to_null($altusr['user_birthdate']) . ',
-							' . F_empty_to_null($altusr['user_birthplace']) . ',
-							' . F_empty_to_null($altusr['user_ssn']) . ',
-							\'' . (int) $altusr['user_level'] . '\'
-							)';
+						user_regdate,
+						user_ip,
+						user_name,
+						user_email,
+						user_password,
+						user_regnumber,
+						user_firstname,
+						user_lastname,
+						user_birthdate,
+						user_birthplace,
+						user_ssn,
+						user_level,
+						user_perms
+						) VALUES (
+						\'' . F_escape_sql($db, date(K_TIMESTAMP_FORMAT)) . '\',
+						\'' . F_escape_sql($db, getNormalizedIP($_SERVER['REMOTE_ADDR'])) . '\',
+						\'' . F_escape_sql($db, $_POST['xuser_name']) . '\',
+						' . F_empty_to_null($altusr['user_email']) . ',
+						\'' . F_escape_sql($db, $xuser_password) . '\',
+						' . F_empty_to_null($altusr['user_regnumber']) . ',
+						' . F_empty_to_null($altusr['user_firstname']) . ',
+						' . F_empty_to_null($altusr['user_lastname']) . ',
+						' . F_empty_to_null($altusr['user_birthdate']) . ',
+						' . F_empty_to_null($altusr['user_birthplace']) . ',
+						' . F_empty_to_null($altusr['user_ssn']) . ',
+						\'' . (int) $altusr['user_level'] . '\',
+						\'' . $altusr_perms . '\'
+						)';
                     if (! $r = F_db_query($sql, $db)) {
                         F_display_db_error();
                     } else {
@@ -315,6 +322,7 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
                         $_SESSION['session_user_name'] = F_escape_sql($db, $_POST['xuser_name']);
                         $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
                         $_SESSION['session_user_level'] = (int) $altusr['user_level'];
+                        $_SESSION['session_user_perms'] = $altusr_perms;
                         $_SESSION['session_user_firstname'] = urlencode($altusr['user_firstname']);
                         $_SESSION['session_user_lastname'] = urlencode($altusr['user_lastname']);
                         $_SESSION['session_last_visit'] = 0;
@@ -335,13 +343,36 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
     } // end of brute-force check
 }
 
+// --- refresh the user's rank and capabilities from the database
+// so that grants, demotions and account removals take effect on the
+// current session without waiting for a new login.
+if (K_CHECK_USER_PER_REQUEST && empty($_SESSION['logout']) && ! empty($_SESSION['session_user_id']) && $_SESSION['session_user_id'] > 1) {
+    $sqlu = 'SELECT * FROM ' . K_TABLE_USERS . ' WHERE user_id=\'' . (int) $_SESSION['session_user_id'] . '\' LIMIT 1';
+    if (! $ru = F_db_query($sqlu, $db)) {
+        F_display_db_error();
+    } elseif (! $mu = F_db_fetch_array($ru)) {
+        // the user does not exist anymore: fall back to an anonymous session
+        $_SESSION['session_user_id'] = 1;
+        $_SESSION['session_user_name'] = '- [' . substr($PHPSESSID, 12, 8) . ']';
+        $_SESSION['session_user_level'] = 0;
+        $_SESSION['session_user_perms'] = 0;
+        $_SESSION['session_user_firstname'] = '';
+        $_SESSION['session_user_lastname'] = '';
+    } else {
+        $_SESSION['session_user_level'] = (int) $mu['user_level'];
+        $_SESSION['session_user_perms'] = (int) ($mu['user_perms'] ?? F_cumulative_perms_for_level($mu['user_level']));
+    }
+}
+
 if (! isset($pagelevel)) {
     // set default page level
     $pagelevel = 0;
 }
 
 // check client SSL certificate if required
-if (K_AUTH_SSL_LEVEL && K_AUTH_SSL_LEVEL <= $pagelevel) {
+// (applies to the capability-gated admin pages and to the level-gated
+// pages at or above K_AUTH_SSL_LEVEL)
+if (K_AUTH_SSL_LEVEL && ((isset($pageperm) && $pageperm > 0) || K_AUTH_SSL_LEVEL <= $pagelevel)) {
     $sslids = preg_replace('/[^0-9,]*/', '', K_AUTH_SSLIDS);
     if (! empty($sslids)) {
         $client_hash = F_getSSLClientHash();
@@ -364,6 +395,23 @@ if ($pagelevel && $_SESSION['session_user_level'] < $pagelevel) {
     // To gain access to a specific resource, the user's level must be equal or greater to the one specified for the requested resource.
     F_login_form();
     //display login form
+}
+
+// check user's capabilities (admin area)
+// the page declares the capabilities that grant access in $pageperm
+// (a bitmask; 0 means: any user, no capability required)
+if (isset($pageperm) && $pageperm > 0 && ! F_user_can_any($pageperm)) {
+    if (! empty($_SESSION['session_user_id']) && $_SESSION['session_user_id'] > 1) {
+        // the user is authenticated but does not hold the required capability
+        $thispage_title = $l['t_login_form']; //set page title
+        require_once('../code/tce_page_header.php');
+        F_print_error('ERROR', $l['m_authorization_denied']);
+        require_once('../code/tce_page_footer.php');
+        exit(); //break page here
+    }
+
+    // anonymous user: display login form
+    F_login_form();
 }
 
 if ($logged) { //if user is just logged in: reloads page

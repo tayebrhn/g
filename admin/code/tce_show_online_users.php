@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_ONLINE_USERS;
+$pageperm = K_PERM_OPERATOR;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_online_users'];

@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_EDIT_CONTENT;
+$pageperm = K_PERM_EDIT_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_question_importer'];
@@ -217,7 +217,7 @@ function F_TSVQuestionImporter($tsvfile)
                 if ($r = F_db_query($sql, $db)) {
                     if ($m = F_db_fetch_array($r)) {
                         // get existing module ID
-                        if (! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $m['module_id'], 'module_user_id')) {
+                        if (! F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $m['module_id'], 'module_user_id')) {
                             // unauthorized user
                             $current_module_id = 0;
                         } else {

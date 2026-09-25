@@ -59,6 +59,7 @@ function F_altLogin()
         $usr['user_regnumber'] = '';
         $usr['user_ssn'] = '';
         $usr['user_level'] = K_SSL_USER_LEVEL;
+        $usr['user_perms'] = defined('K_SSL_USER_PERMS') ? K_SSL_USER_PERMS : F_cumulative_perms_for_level(K_SSL_USER_LEVEL);
         $usr['usrgrp_group_id'] = K_SSL_USER_GROUP_ID;
         return $usr;
     }
@@ -80,6 +81,7 @@ function F_altLogin()
         $usr['user_regnumber'] = '';
         $usr['user_ssn'] = '';
         $usr['user_level'] = K_HTTPBASIC_USER_LEVEL;
+        $usr['user_perms'] = defined('K_HTTPBASIC_USER_PERMS') ? K_HTTPBASIC_USER_PERMS : F_cumulative_perms_for_level(K_HTTPBASIC_USER_LEVEL);
         $usr['usrgrp_group_id'] = K_HTTPBASIC_USER_GROUP_ID;
         return $usr;
     }
@@ -106,6 +108,7 @@ function F_altLogin()
             $usr['user_regnumber'] = '';
             $usr['user_ssn'] = '';
             $usr['user_level'] = K_CAS_USER_LEVEL;
+            $usr['user_perms'] = defined('K_CAS_USER_PERMS') ? K_CAS_USER_PERMS : F_cumulative_perms_for_level(K_CAS_USER_LEVEL);
             $usr['usrgrp_group_id'] = K_CAS_USER_GROUP_ID;
             return $usr;
         }
@@ -131,6 +134,7 @@ function F_altLogin()
 
         $usr['user_ssn'] = '';
         $usr['user_level'] = K_SHIBBOLETH_USER_LEVEL;
+        $usr['user_perms'] = defined('K_SHIBBOLETH_USER_PERMS') ? K_SHIBBOLETH_USER_PERMS : F_cumulative_perms_for_level(K_SHIBBOLETH_USER_LEVEL);
         $usr['usrgrp_group_id'] = K_SHIBBOLETH_USER_GROUP_ID;
         return $usr;
     }
@@ -161,6 +165,7 @@ function F_altLogin()
                     'user_regnumber' => '',
                     'user_ssn' => '',
                     'user_level' => K_RADIUS_USER_LEVEL,
+                    'user_perms' => defined('K_RADIUS_USER_PERMS') ? K_RADIUS_USER_PERMS : F_cumulative_perms_for_level(K_RADIUS_USER_LEVEL),
                     'usrgrp_group_id' => K_RADIUS_USER_GROUP_ID,
                 ];
             }
@@ -203,6 +208,7 @@ function F_altLogin()
                     }
 
                     $usr['user_level'] = K_LDAP_USER_LEVEL;
+                    $usr['user_perms'] = defined('K_LDAP_USER_PERMS') ? K_LDAP_USER_PERMS : F_cumulative_perms_for_level(K_LDAP_USER_LEVEL);
                     $usr['usrgrp_group_id'] = K_LDAP_USER_GROUP_ID;
                     return $usr;
                 }

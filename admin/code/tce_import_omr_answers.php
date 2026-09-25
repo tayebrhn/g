@@ -33,7 +33,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_OMR_IMPORT;
+$pageperm = K_PERM_OPERATOR;
 $enable_calendar = true;
 $max_omr_sheets = 10;
 require_once('../../shared/code/tce_authorization.php');
@@ -48,7 +48,7 @@ require_once('tce_functions_user_select.php');
 
 if (isset($_REQUEST['user_id'])) {
     $user_id = (int) $_REQUEST['user_id'];
-    if (! F_isAuthorizedEditorForUser($user_id)) {
+    if (! F_isAuthorizedToModifyUser($user_id)) {
         F_print_error('ERROR', $l['m_authorization_denied']);
         exit;
     }
@@ -127,7 +127,7 @@ echo '</span>' . K_NEWLINE;
 echo '<span class="formw">' . K_NEWLINE;
 echo '<select name="user_id" id="user_id" size="0" onchange="">' . K_NEWLINE;
 $sql = 'SELECT user_id, user_lastname, user_firstname, user_name FROM ' . K_TABLE_USERS . ' WHERE (user_id>1)';
-if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+if (! F_user_can(K_PERM_ADMIN)) {
     // filter for level
     $sql .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
     // filter for groups

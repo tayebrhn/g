@@ -32,7 +32,7 @@
 
 
 require_once('../config/tce_config.php');
-$pagelevel = K_AUTH_ADMIN_RESULTS;
+$pageperm = K_PERM_OPERATOR;
 require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/code/tce_functions_auth_sql.php');
 require_once('../../shared/code/tce_functions_tcecode.php');

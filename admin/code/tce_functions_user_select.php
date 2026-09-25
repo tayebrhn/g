@@ -214,24 +214,24 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
             echo '<br />' . K_NEWLINE;
             echo '<strong style="margin:5px">' . $l['m_with_selected'] . '</strong>' . K_NEWLINE;
             echo '<ul style="margin:0">';
-            if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
+            if (F_user_can(K_PERM_MANAGE_IDENTITY)) {
                 // delete user
                 echo '<li>';
                 F_submit_button('delete', $l['w_delete'], $l['h_delete'], 'onclick="return confirm(\'' . $l['m_delete_confirm'] . '\')"');
                 echo '</li>' . K_NEWLINE;
             }
 
-            if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
+            if (F_user_can(K_PERM_MANAGE_IDENTITY)) {
                 echo '<li>';
                 // add/delete group
                 echo F_user_group_select('new_group_id');
                 F_submit_button('addgroup', $l['w_add'], $l['w_add']);
-                if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
+                if (F_user_can(K_PERM_MANAGE_IDENTITY)) {
                     F_submit_button('delgroup', $l['w_delete'], $l['h_delete'], 'onclick="return confirm(\'' . $l['m_delete_confirm'] . '\')"');
                 }
 
                 echo '</li>' . K_NEWLINE;
-                if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
+                if (F_user_can(K_PERM_MANAGE_IDENTITY)) {
                     // move group
                     echo '<li>';
                     $arr = $l['a_meta_dir'] == 'rtl' ? '&larr;' : '&rarr;';
@@ -528,12 +528,70 @@ function F_isAuthorizedEditorForGroup($group_id)
 }
 
 /**
+ * Return true if the current user is authorized to modify the specified group.
+ * Unlike F_isAuthorizedEditorForGroup(), which answers "may I see it?" and grants global
+ * access with the K_PERM_GLOBAL_VIEW capability, this predicate requires K_PERM_ADMIN
+ * to modify a group the user does not belong to.
+ * @param $group_id (int) group ID
+ * @return boolean true/false
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ */
+function F_isAuthorizedToModifyGroup($group_id)
+{
+    global $l, $db;
+    require_once('../config/tce_config.php');
+    if (empty($group_id)) {
+        // creating a new group
+        return true;
+    }
+
+    if (isset($_SESSION['session_user_level']) && F_user_can(K_PERM_ADMIN)) {
+        // full administrator
+        return true;
+    }
+
+    return F_isUserOnGroup($_SESSION['session_user_id'], $group_id);
+}
+
+/**
  * Return true if the current user is authorized to edit the specified user
  * @param $user_id (int) user ID
  * @return boolean true/false
  * @since 11.1.003 (2010-10-05)
  */
 function F_isAuthorizedEditorForUser($user_id)
+{
+    return F_isAuthorizedUserRecord(K_PERM_GLOBAL_VIEW, $user_id);
+}
+
+/**
+ * Return true if the current user is authorized to modify the specified user.
+ * Unlike F_isAuthorizedEditorForUser(), which answers "may I see it?" and grants global
+ * access with the K_PERM_GLOBAL_VIEW capability, this predicate requires K_PERM_ADMIN
+ * to modify a user outside the current user's groups.
+ * @param $user_id (int) user ID
+ * @return boolean true/false
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ */
+function F_isAuthorizedToModifyUser($user_id)
+{
+    return F_isAuthorizedUserRecord(K_PERM_ADMIN, $user_id);
+}
+
+/**
+ * Return true if the current user is authorized to access the specified user, when the user
+ * holds the specified global capability. A user is accessible when any of these holds: the user
+ * holds the $global_perm capability, the target is the current user, or the target has a lower
+ * rank and shares at least one group.
+ * @param $global_perm (int) capability bitmask granting access to every account
+ * @param $user_id (int) user ID
+ * @return boolean true/false
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ */
+function F_isAuthorizedUserRecord($global_perm, $user_id)
 {
     global $l, $db;
     require_once('../config/tce_config.php');
@@ -543,8 +601,8 @@ function F_isAuthorizedEditorForUser($user_id)
         return true;
     }
 
-    if (F_has_global_view()) {
-        // user has global visibility
+    if (F_user_can($global_perm)) {
+        // the user has access to every account
         return true;
     }
 

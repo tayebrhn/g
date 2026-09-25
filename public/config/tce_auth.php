@@ -77,9 +77,10 @@ define('K_AUTH_USER_CHANGE_PASSWORD', 1);
  */
 define('K_ADMIN_LINK', 5);
 
-// -- AUTHORIZATION TIERS ------------------------------------------------------
-// Define the same tiers as the administration area (admin/config/tce_auth.php)
-// so that both areas agree; see shared/code/tce_auth_tiers.php for the ladder.
+// -- LEGACY TIER CONSTANTS (COMPATIBILITY ONLY) -------------------------------
+// The shared helpers are gated by the independent capabilities defined in
+// shared/code/tce_auth_caps.php (see PERMISSIONS.md); these constants are
+// kept only for backward compatibility with older configurations.
 
 /**
  * Read-only access to the content of the authorized groups.

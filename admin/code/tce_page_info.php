@@ -32,6 +32,8 @@
 
 require_once('../config/tce_config.php');
 
+// Level 0 (K_AUTH_ADMIN_INFO): this informational page is intentionally public
+// and is not linked from the navigation menu.
 $pagelevel = K_AUTH_ADMIN_INFO;
 require_once('../../shared/code/tce_authorization.php');
 

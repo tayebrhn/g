@@ -29,7 +29,7 @@
 
 require_once "../config/tce_config.php";
 
-$pagelevel = K_AUTH_ADMIN_TESTS;
+$pageperm = K_PERM_OPERATOR;
 require_once "../../shared/code/tce_authorization.php";
 require_once "../../shared/config/tce_user_registration.php";
 
@@ -340,7 +340,14 @@ if (isset($_REQUEST["test_id"]) && $_REQUEST["test_id"] > 0) {
     $test_id = 0;
 }
 
-if (isset($_POST["lock"])) {
+// a global viewer who does not own the test may only read it
+$record_readonly =
+    $test_id > 0 &&
+    !F_isAuthorizedToModify(K_TABLE_TESTS, "test_id", $test_id, "test_user_id");
+
+if ($record_readonly) {
+    $menu_mode = "";
+} elseif (isset($_POST["lock"])) {
     $menu_mode = "lock";
 } elseif (isset($_POST["unlock"])) {
     $menu_mode = "unlock";
@@ -1900,24 +1907,26 @@ echo '<input type="hidden" name="test_password" id="test_password" value="' .
 
 // show buttons by case
 
-if (isset($test_id) && $test_id > 0) {
-    echo '<span style="background-color:#999999;">';
-    echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
-    F_submit_button("update", $l["w_update"], $l["h_update"]);
-    echo "</span>";
-}
-
-F_submit_button("add", $l["w_add"], $l["h_add"]);
-if (isset($test_id) && $test_id > 0) {
-    F_submit_button("delete", $l["w_delete"], $l["h_delete"]);
-    if (substr($test_end_time, 0, 1) < $millennium) {
-        F_submit_button("unlock", $l["w_unlock"], $l["w_unlock"]);
-    } else {
-        F_submit_button("lock", $l["w_lock"], $l["w_lock"]);
+if (!$record_readonly) {
+    if (isset($test_id) && $test_id > 0) {
+        echo '<span style="background-color:#999999;">';
+        echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
+        F_submit_button("update", $l["w_update"], $l["h_update"]);
+        echo "</span>";
     }
-}
 
-F_submit_button("clear", $l["w_clear"], $l["h_clear"]);
+    F_submit_button("add", $l["w_add"], $l["h_add"]);
+    if (isset($test_id) && $test_id > 0) {
+        F_submit_button("delete", $l["w_delete"], $l["h_delete"]);
+        if (substr($test_end_time, 0, 1) < $millennium) {
+            F_submit_button("unlock", $l["w_unlock"], $l["w_unlock"]);
+        } else {
+            F_submit_button("lock", $l["w_lock"], $l["w_lock"]);
+        }
+    }
+
+    F_submit_button("clear", $l["w_clear"], $l["h_clear"]);
+}
 
 echo "<br /><br />" . K_NEWLINE;
 echo "</div>" . K_NEWLINE;

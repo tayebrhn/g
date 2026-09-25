@@ -29,6 +29,7 @@
  */
 
 require_once __DIR__ . '/tce_auth_tiers.php';
+require_once __DIR__ . '/tce_auth_caps.php';
 
 /**
  * Count rows of the given table.

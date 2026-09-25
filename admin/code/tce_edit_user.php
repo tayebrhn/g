@@ -31,7 +31,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_MANAGE_IDENTITY;
+$pageperm = K_PERM_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/config/tce_user_registration.php');
 
@@ -57,6 +57,13 @@ if (isset($_REQUEST['group_id'])) {
     }
 }
 
+// a global viewer who does not administer the account or the group may only read it
+$record_readonly = (isset($user_id) && $user_id > 0 && ! F_isAuthorizedToModifyUser($user_id))
+    || (isset($group_id) && $group_id > 0 && ! F_isAuthorizedToModifyGroup($group_id));
+if ($record_readonly) {
+    $menu_mode = '';
+}
+
 if (isset($_REQUEST['user_groups'])) {
     $user_groups = $_REQUEST['user_groups'];
     if (! is_array($user_groups)) {
@@ -68,13 +75,50 @@ if (isset($_REQUEST['user_groups'])) {
 
 if (isset($_REQUEST['user_level'])) {
     $user_level = (int) $_REQUEST['user_level'];
-    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+    if (! F_user_can(K_PERM_ADMIN)) {
         if ($user_id == $_SESSION['session_user_id']) {
             // you cannot change your own level
             $user_level = $_SESSION['session_user_level'];
         } else {
             // you cannot create a user with a level equal or higher than yours
             $user_level = min(max(0, ($_SESSION['session_user_level'] - 1)), $user_level);
+        }
+    }
+}
+
+// capability mask (tce_users.user_perms)
+$user_perms_submitted = isset($_REQUEST['user_perms']);
+$user_perms = 0;
+if ($user_perms_submitted) {
+    if (is_array($_REQUEST['user_perms'])) {
+        foreach ($_REQUEST['user_perms'] as $perm_item) {
+            $user_perms |= (int) $perm_item;
+        }
+    } else {
+        $user_perms = (int) $_REQUEST['user_perms'];
+    }
+
+    $user_perms &= K_PERM_ALL;
+    if (! F_user_can(K_PERM_ADMIN)) {
+        if (isset($user_id) && $user_id == $_SESSION['session_user_id']) {
+            // you cannot change your own capabilities
+            $user_perms = F_user_perms();
+        } else {
+            // you may only grant the capabilities you hold yourself;
+            // the capabilities you cannot grant stay as they are
+            $current_perms = 0;
+            if (! empty($user_id) && $user_id > 0) {
+                $sqlp = 'SELECT user_perms FROM ' . K_TABLE_USERS . ' WHERE user_id=' . (int) $user_id . ' LIMIT 1';
+                if ($rp = F_db_query($sqlp, $db)) {
+                    if ($mp = F_db_fetch_array($rp)) {
+                        $current_perms = (int) $mp['user_perms'];
+                    }
+                } else {
+                    F_display_db_error();
+                }
+            }
+
+            $user_perms = ($user_perms & F_user_perms()) | ($current_perms & ~ F_user_perms());
         }
     }
 }
@@ -86,7 +130,7 @@ $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_name'], ENT_COMPAT, $l[
 switch ($menu_mode) { // process submitted data
     case 'delete':{
          // ask confirmation
-        if ($_SESSION['session_user_level'] < K_AUTH_MANAGE_IDENTITY || $user_id == $_SESSION['session_user_id'] || $user_id == 1) {
+        if (! F_user_can(K_PERM_MANAGE_IDENTITY) || $user_id == $_SESSION['session_user_id'] || $user_id == 1) {
             F_print_error('ERROR', $l['m_authorization_denied']);
             break;
         }
@@ -112,7 +156,7 @@ switch ($menu_mode) { // process submitted data
 
     case 'forcedelete':{
          // Delete specified user
-        if ($_SESSION['session_user_level'] < K_AUTH_MANAGE_IDENTITY || $user_id == $_SESSION['session_user_id'] || $user_id == 1) {
+        if (! F_user_can(K_PERM_MANAGE_IDENTITY) || $user_id == $_SESSION['session_user_id'] || $user_id == 1) {
             F_print_error('ERROR', $l['m_authorization_denied']);
             break;
         }
@@ -181,6 +225,18 @@ switch ($menu_mode) { // process submitted data
                 }
             }
 
+            if (! $user_perms_submitted && $user_id > 0) {
+                // the submitted form did not carry the capability checkboxes: keep the current mask
+                $sqlp = 'SELECT user_perms FROM ' . K_TABLE_USERS . ' WHERE user_id=' . (int) $user_id . ' LIMIT 1';
+                if ($rp = F_db_query($sqlp, $db)) {
+                    if ($mp = F_db_fetch_array($rp)) {
+                        $user_perms = (int) $mp['user_perms'];
+                    }
+                } else {
+                    F_display_db_error();
+                }
+            }
+
             $sql = 'UPDATE ' . K_TABLE_USERS . ' SET
 				user_regdate=\'' . F_escape_sql($db, $user_regdate) . '\',
 				user_ip=\'' . F_escape_sql($db, $user_ip) . '\',
@@ -194,6 +250,7 @@ switch ($menu_mode) { // process submitted data
 				user_birthplace=' . F_empty_to_null($user_birthplace) . ',
 				user_ssn=' . F_empty_to_null($user_ssn) . ',
 				user_level=\'' . $user_level . '\',
+				user_perms=\'' . (int) $user_perms . '\',
 				user_otpkey=' . F_empty_to_null($user_otpkey) . '
 				WHERE user_id=' . $user_id . '';
             if (! $r = F_db_query($sql, $db)) {
@@ -298,6 +355,7 @@ switch ($menu_mode) { // process submitted data
 				user_birthplace,
 				user_ssn,
 				user_level,
+				user_perms,
 				user_otpkey
 				) VALUES (
 				\'' . F_escape_sql($db, $user_regdate) . '\',
@@ -312,6 +370,7 @@ switch ($menu_mode) { // process submitted data
 				' . F_empty_to_null($user_birthplace) . ',
 				' . F_empty_to_null($user_ssn) . ',
 				\'' . $user_level . '\',
+				\'' . (int) $user_perms . '\',
 				' . F_empty_to_null($user_otpkey) . '
 				)';
             if (! $r = F_db_query($sql, $db)) {
@@ -355,6 +414,7 @@ switch ($menu_mode) { // process submitted data
         $user_birthplace = '';
         $user_ssn = '';
         $user_level = '';
+        $user_perms = 0;
         $user_otpkey = '';
         break;
     }
@@ -380,6 +440,7 @@ if ($formstatus && $menu_mode != 'clear') {
         $user_birthplace = '';
         $user_ssn = '';
         $user_level = '';
+        $user_perms = 0;
         $user_otpkey = '';
     } else {
         $sql = 'SELECT * FROM ' . K_TABLE_USERS . ' WHERE user_id=' . $user_id . ' LIMIT 1';
@@ -398,6 +459,7 @@ if ($formstatus && $menu_mode != 'clear') {
                 $user_birthplace = $m['user_birthplace'] ?? '';
                 $user_ssn = $m['user_ssn'] ?? '';
                 $user_level = $m['user_level'] ?? '';
+                $user_perms = (int) ($m['user_perms'] ?? 0);
                 $user_otpkey = $m['user_otpkey'] ?? '';
             } else {
                 $user_regdate = '';
@@ -412,6 +474,7 @@ if ($formstatus && $menu_mode != 'clear') {
                 $user_birthplace = '';
                 $user_ssn = '';
                 $user_level = '';
+                $user_perms = 0;
                 $user_otpkey = '';
             }
         } else {
@@ -484,13 +547,49 @@ echo getFormRowTextInput('user_email', $l['w_email'], $l['h_usered_email'], '', 
 echo getFormRowTextInput('newpassword', $l['w_password'], $l['h_password'], ' (' . $l['d_password_length'] . ')', '', K_USRREG_PASSWORD_RE, 255, false, false, true);
 echo getFormRowTextInput('newpassword_repeat', $l['w_password'], $l['h_password_repeat'], ' (' . $l['w_repeat'] . ')', '', '', 255, false, false, true);
 echo getFormRowFixedValue('user_regdate', $l['w_regdate'], $l['h_regdate'], '', $user_regdate);
-// map each level to a "number - role name" label
+// map each grantable level to a "number - role name" label
+$grantable_levels = range(0, K_AUTH_ADMINISTRATOR);
+if (! F_user_can(K_PERM_ADMIN)) {
+    // a non-administrator cannot grant a level equal to or higher than its own
+    $grantable_levels = range(0, max(0, (int) $_SESSION['session_user_level'] - 1));
+    if (isset($user_id) && $user_id == $_SESSION['session_user_id']) {
+        // keep the user's own level selectable when editing the own account
+        $grantable_levels[] = (int) $_SESSION['session_user_level'];
+        sort($grantable_levels);
+    }
+}
+
 $user_level_items = [];
-foreach (range(0, K_AUTH_ADMINISTRATOR) as $level_item) {
+foreach ($grantable_levels as $level_item) {
     $user_level_items[$level_item] = htmlspecialchars(F_getUserLevelLabel($level_item, true), ENT_NOQUOTES, $l['a_meta_charset']);
 }
 
 echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_level, $user_level_items);
+
+// capability checkboxes: a full administrator may grant every capability,
+// while any other editor may only grant the capabilities it holds itself
+echo getFormRowVertDiv((isset($l['w_capabilities']) && $l['w_capabilities'] !== '') ? $l['w_capabilities'] : 'capabilities');
+foreach (F_getCapabilityNames() as $cap_mask => [$cap_key, $cap_label]) {
+    $cap_name = (isset($l[$cap_key]) && $l[$cap_key] !== '') ? $l[$cap_key] : $cap_label;
+    $cap_checked = (($user_perms & $cap_mask) !== 0);
+    $cap_disabled = (! F_user_can(K_PERM_ADMIN) && ! F_user_can_any($cap_mask));
+    echo '<div class="row">' . K_NEWLINE;
+    echo '<span class="label"><label for="user_perms_' . $cap_mask . '">' . htmlspecialchars($cap_name, ENT_COMPAT, $l['a_meta_charset']) . '</label></span>' . K_NEWLINE;
+    echo '<span class="formw">' . K_NEWLINE;
+    echo '<input type="checkbox" name="user_perms[]" id="user_perms_' . $cap_mask . '" value="' . $cap_mask . '"';
+    if ($cap_checked) {
+        echo ' checked="checked"';
+    }
+
+    if ($cap_disabled) {
+        echo ' readonly="readonly" class="disabled"';
+    }
+
+    echo ' />' . K_NEWLINE;
+    echo '</span>' . K_NEWLINE;
+    echo '</div>' . K_NEWLINE;
+}
+
 echo getFormRowTextInput('user_firstname', $l['w_firstname'], $l['h_firstname'], '', $user_firstname, '', 255, false, false, false);
 echo getFormRowTextInput('user_lastname', $l['w_lastname'], $l['h_lastname'], '', $user_lastname, '', 255, false, false, false);
 echo '<div style="display:none;">';
@@ -551,15 +650,17 @@ echo '</div>';
 
 echo '<div class="row">' . K_NEWLINE;
 // show buttons by case
-if (isset($user_id) && $user_id > 0) {
-    if ($user_level < $_SESSION['session_user_level'] || $user_id == $_SESSION['session_user_id'] || $_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+if ($record_readonly) {
+    // read-only access: no modification buttons
+} elseif (isset($user_id) && $user_id > 0) {
+    if ($user_level < $_SESSION['session_user_level'] || $user_id == $_SESSION['session_user_id'] || F_user_can(K_PERM_ADMIN)) {
         echo '<span style="background-color:#999999;">';
         echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
         F_submit_button('update', $l['w_update'], $l['h_update']);
         echo '</span>';
     }
 
-    if ($user_id > 1 && $_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY && $user_id != $_SESSION['session_user_id']) {
+    if ($user_id > 1 && F_user_can(K_PERM_MANAGE_IDENTITY) && $user_id != $_SESSION['session_user_id']) {
         // your account and anonymous user can't be deleted
         F_submit_button('delete', $l['w_delete'], $l['h_delete']);
     }
@@ -567,7 +668,9 @@ if (isset($user_id) && $user_id > 0) {
     F_submit_button('add', $l['w_add'], $l['h_add']);
 }
 
-F_submit_button('clear', $l['w_clear'], $l['h_clear']);
+if (!$record_readonly) {
+    F_submit_button('clear', $l['w_clear'], $l['h_clear']);
+}
 
 echo '<input type="hidden" name="user_password" id="user_password" value="' . $user_password . '" />' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;

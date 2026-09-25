@@ -44,6 +44,7 @@ CREATE TABLE tce_users (
 	user_regnumber VARCHAR2(255),
 	user_ssn VARCHAR2(255),
 	user_level NUMBER(5,0) DEFAULT 1 NOT NULL,
+	user_perms NUMBER(10,0) DEFAULT 0 NOT NULL,
 	user_verifycode VARCHAR2(32) UNIQUE,
 	user_otpkey VARCHAR2(255),
 constraint PK_tce_users_user_id primary key (user_id)

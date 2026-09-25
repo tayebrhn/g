@@ -31,7 +31,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_VIEW_CONTENT;
+$pageperm = K_PERM_VIEW_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_modules_editor'];
@@ -68,9 +68,12 @@ if (isset($_REQUEST['module_id']) && $_REQUEST['module_id'] > 0) {
 $_REQUEST['ff_required'] = 'module_name';
 $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_name'], ENT_COMPAT, $l['a_meta_charset']);
 
-if (F_is_readonly_content()) {
+if (F_is_readonly_content() || ($module_id > 0 && ! F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $module_id, 'module_user_id'))) {
     // read-only access: disable any modification
+    $record_readonly = true;
     $menu_mode = '';
+} else {
+    $record_readonly = false;
 }
 
 switch ($menu_mode) {
@@ -168,7 +171,7 @@ switch ($menu_mode) {
                 break;
             }
 
-            if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+            if (F_user_can(K_PERM_ADMIN)) {
                 $module_user_id = (int) $module_user_id;
             } else {
                 $module_user_id = (int) $_SESSION['session_user_id'];
@@ -199,7 +202,7 @@ switch ($menu_mode) {
                 break;
             }
 
-            if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+            if (F_user_can(K_PERM_ADMIN)) {
                 $module_user_id = (int) $module_user_id;
             } else {
                 $module_user_id = (int) $_SESSION['session_user_id'];
@@ -323,7 +326,7 @@ echo '<label for="module_user_id">' . $l['w_owner'] . '</label>' . K_NEWLINE;
 echo '</span>' . K_NEWLINE;
 echo '<span class="formw">' . K_NEWLINE;
 $userids = [];
-if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR) {
+if (F_user_can(K_PERM_ADMIN)) {
     echo '<select name="module_user_id" id="module_user_id" size="0" title="' . $l['h_module_owner'] . '" onchange="">' . K_NEWLINE;
     $sql = 'SELECT user_id, user_lastname, user_firstname, user_name FROM ' . K_TABLE_USERS . ' WHERE (user_level>=' . K_AUTH_ADMINISTRATOR . ') ORDER BY user_lastname, user_firstname, user_name';
     if ($r = F_db_query($sql, $db)) {
@@ -401,18 +404,18 @@ echo getFormRowCheckBox('module_enabled', $l['w_enabled'], $l['h_enabled'], '', 
 echo '<div class="row">' . K_NEWLINE;
 
 // show buttons by case
-if (! F_is_readonly_content() && isset($module_id) && $module_id > 0) {
+if (! $record_readonly && isset($module_id) && $module_id > 0) {
     echo '<span style="background-color:#999999;">';
     echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
     F_submit_button('update', $l['w_update'], $l['h_update']);
     echo '</span>';
     F_submit_button('add', $l['w_add'], $l['h_add']);
     F_submit_button('delete', $l['w_delete'], $l['h_delete']);
-} elseif (! F_is_readonly_content()) {
+} elseif (! $record_readonly) {
     F_submit_button('add', $l['w_add'], $l['h_add']);
 }
 
-if (! F_is_readonly_content()) {
+if (! $record_readonly) {
     F_submit_button('clear', $l['w_clear'], $l['h_clear']);
 }
 

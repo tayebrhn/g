@@ -31,7 +31,7 @@
 
 
 require_once('../config/tce_config.php');
-$pagelevel = 0;
+$pageperm = K_PERM_VIEW_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 $thispage_title = 'Color Picker';
 require_once('../code/tce_page_header_popup.php');

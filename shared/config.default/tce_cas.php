@@ -69,6 +69,13 @@ define('K_CAS_PATH', '/cas');
 define('K_CAS_USER_LEVEL', 1);
 
 /**
+ * Capability mask granted to the accounts provisioned by this
+ * authentication method (see shared/code/tce_auth_caps.php).
+ * 0 = no capability.
+ */
+define('K_CAS_USER_PERMS', 0);
+
+/**
  * Default user group ID
  * This is the TCExam group ID to which the CAS accounts belongs.
  * You can also set 0 for all available groups or a string containing a comma-separated list of group IDs.

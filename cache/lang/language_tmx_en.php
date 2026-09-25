@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: en
-// DATE: 2026-09-23 09:29:13
+// DATE: 2026-09-25 09:39:42
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -294,6 +294,23 @@ $tmx['w_jump_questions']='jump to questions list';
 $tmx['w_lastname']='last name';
 $tmx['w_level']='level';
 $tmx['w_levels']='levels';
+$tmx['w_level_anonymous']='anonymous';
+$tmx['w_level_registered']='registered user';
+$tmx['w_level_viewer']='viewer (read-only)';
+$tmx['w_level_author']='content author';
+$tmx['w_level_unused']='unused';
+$tmx['w_level_examiner']='examiner';
+$tmx['w_level_identity']='identity administrator';
+$tmx['w_level_siteadmin']='site administrator';
+$tmx['w_level_admin']='administrator';
+$tmx['w_cap_view_content']='view content';
+$tmx['w_cap_edit_content']='edit content';
+$tmx['w_cap_operator']='operator';
+$tmx['w_cap_manage_identity']='manage users and groups';
+$tmx['w_cap_global_view']='global view';
+$tmx['w_cap_backup']='backup';
+$tmx['w_cap_admin']='system administration';
+$tmx['w_capabilities']='capabilities';
 $tmx['w_license']='license';
 $tmx['w_list']='list';
 $tmx['w_login']='log in';

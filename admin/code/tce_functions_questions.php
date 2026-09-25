@@ -173,7 +173,7 @@ function F_question_copy($question_id, $new_subject_id)
         if ($m = F_db_fetch_array($r)) {
             $subject_module_id = $m['subject_module_id'];
             // check user's authorization for parent module
-            if (! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')) {
+            if (! F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')) {
                 return;
             }
         }

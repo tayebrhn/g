@@ -31,7 +31,7 @@
 
 
 require_once('../config/tce_config.php');
-$pagelevel = K_AUTH_ADMINISTRATOR;
+$pageperm = K_PERM_ADMIN;
 require_once('../../shared/code/tce_authorization.php');
 $thispage_title = 'UPDATE';
 require_once('../code/tce_page_header.php');

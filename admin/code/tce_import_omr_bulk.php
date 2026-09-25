@@ -34,7 +34,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_ADMIN_OMR_IMPORT;
+$pageperm = K_PERM_OPERATOR;
 $enable_calendar = true;
 $max_omr_sheets = 10;
 require_once('../../shared/code/tce_authorization.php');
@@ -114,7 +114,7 @@ if (isset($menu_mode) && $menu_mode == 'upload' && F_file_exists($omrdir)) {
                         // get user ID from user registration code
                         $user_id = F_getUIDfromRegnum($matches[1]);
                         // import answers
-                        if ($user_id > 0 && F_isAuthorizedEditorForUser($user_id) && F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $overwrite)) {
+                        if ($user_id > 0 && F_isAuthorizedToModifyUser($user_id) && F_importOMRTestData($user_id, $date, $omr_testdata, $omr_answers, $overwrite)) {
                             F_print_error('MESSAGE', '[' . $matches[1] . '] ' . $l['m_import_ok'] . ': <a href="tce_show_result_user.php?testuser_id=32&test_id=' . $omr_testdata[0] . '&user_id=' . $user_id . '" title="' . $l['t_result_user'] . '" style="text-decoration:underline;color:#0000ff;">' . $l['w_results'] . '</a>');
                             file_put_contents($logfile, 'OK	' . $matches[1] . "\t" . 'SUCCESSFULLY IMPORTED - UID: ' . $user_id . "\n", FILE_APPEND);
                         } else {

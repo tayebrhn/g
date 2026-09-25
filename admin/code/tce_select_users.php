@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_MANAGE_IDENTITY;
+$pageperm = K_PERM_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_user_select'];
@@ -136,7 +136,7 @@ if (isset($menu_mode) && ! empty($menu_mode)) {
             $user_id = (int) ${$keyname};
             switch ($menu_mode) {
                 case 'delete': {
-                    if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY && $user_id > 1 && $user_id != $_SESSION['session_user_id'] && F_isAuthorizedEditorForUser($user_id)) {
+                    if (F_user_can(K_PERM_MANAGE_IDENTITY) && $user_id > 1 && $user_id != $_SESSION['session_user_id'] && F_isAuthorizedToModifyUser($user_id)) {
                         $sql = 'DELETE FROM ' . K_TABLE_USERS . '
 							WHERE user_id=' . $user_id . '';
                         if (! $r = F_db_query($sql, $db)) {
@@ -147,7 +147,7 @@ if (isset($menu_mode) && ! empty($menu_mode)) {
                     break;
                 }
                 case 'addgroup': {
-                    if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY && $new_group_id > 0 && F_isAuthorizedEditorForGroup($new_group_id)) {
+                    if (F_user_can(K_PERM_MANAGE_IDENTITY) && $new_group_id > 0 && F_isAuthorizedToModifyGroup($new_group_id)) {
                         $groups = F_get_user_groups($user_id);
                         if (! in_array($new_group_id, $groups)) {
                             $sql = 'INSERT INTO ' . K_TABLE_USERGROUP . ' (
@@ -166,7 +166,7 @@ if (isset($menu_mode) && ! empty($menu_mode)) {
                     break;
                 }
                 case 'delgroup': {
-                    if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY && $new_group_id > 0 && F_isAuthorizedEditorForGroup($new_group_id)) {
+                    if (F_user_can(K_PERM_MANAGE_IDENTITY) && $new_group_id > 0 && F_isAuthorizedToModifyGroup($new_group_id)) {
                         $sql = 'DELETE FROM ' . K_TABLE_USERGROUP . '
 							WHERE usrgrp_user_id=' . $user_id . '
 								AND usrgrp_group_id=' . $new_group_id . '';
@@ -178,7 +178,7 @@ if (isset($menu_mode) && ! empty($menu_mode)) {
                     break;
                 }
                 case 'move': {
-                    if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY && isset($from_group_id) && $from_group_id > 0 && F_isAuthorizedEditorForGroup($from_group_id) && isset($to_group_id) && $to_group_id > 0 && F_isAuthorizedEditorForGroup($to_group_id)) {
+                    if (F_user_can(K_PERM_MANAGE_IDENTITY) && isset($from_group_id) && $from_group_id > 0 && F_isAuthorizedToModifyGroup($from_group_id) && isset($to_group_id) && $to_group_id > 0 && F_isAuthorizedToModifyGroup($to_group_id)) {
                         $groups = F_get_user_groups($user_id);
                         if (! in_array($to_group_id, $groups)) {
                             $sql = 'UPDATE ' . K_TABLE_USERGROUP . ' SET

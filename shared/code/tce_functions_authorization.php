@@ -28,6 +28,8 @@
  * @since 2001-09-26
  */
 
+require_once __DIR__ . '/tce_auth_caps.php';
+
 /**
  * Returns XHTML / CSS formatted string for login form.<br>
  * The CSS classes used are:
@@ -229,7 +231,7 @@ function F_isAuthorizedResultUser($test_id, $user_id)
  */
 function F_is_readonly_content()
 {
-    return $_SESSION['session_user_level'] < K_AUTH_EDIT_CONTENT;
+    return ! F_user_can(K_PERM_EDIT_CONTENT);
 }
 
 /**
@@ -240,7 +242,7 @@ function F_is_readonly_content()
  */
 function F_has_global_view()
 {
-    return $_SESSION['session_user_level'] >= K_AUTH_GLOBAL_VIEW;
+    return F_user_can(K_PERM_GLOBAL_VIEW);
 }
 
 /**
@@ -273,6 +275,51 @@ function F_visible_user_ids($user_id = 0)
  */
 function F_isAuthorizedUser($table, $field_id_name, $value_id, $field_user_id)
 {
+    return F_isAuthorizedRecord(K_PERM_GLOBAL_VIEW, $table, $field_id_name, $value_id, $field_user_id);
+}
+
+/**
+ * Returns true if the current user is authorized to update and delete the selected database record.
+ * Unlike F_isAuthorizedUser(), which answers "may I see it?" and grants global viewing with
+ * the K_PERM_GLOBAL_VIEW capability, this predicate requires K_PERM_ADMIN to modify a record
+ * owned by another user: a global viewer who does not own the record and shares no group with
+ * its owner may only read it.
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ * @param $table (string) table to be modified
+ * @param $field_id_name (string) name of the main ID field of the table
+ * @param $value_id (int) value of the ID field of the table (0 = new record)
+ * @param $field_user_id (string) name of the foreign key to to user_id
+ * @return boolean true if the user may modify the record, false otherwise
+ */
+function F_isAuthorizedToModify($table, $field_id_name, $value_id, $field_user_id)
+{
+    if ((int) $value_id <= 0) {
+        // a record that does not exist yet can be created by any authorized user
+        return true;
+    }
+
+    return F_isAuthorizedRecord(K_PERM_ADMIN, $table, $field_id_name, $value_id, $field_user_id);
+}
+
+/**
+ * Returns true if the current user is authorized to access the selected database record,
+ * when the user holds the specified global capability.
+ * The record is accessible when any of these holds:
+ *   1. the user holds the $global_perm capability, or
+ *   2. the user is the owner of the record, or
+ *   3. the record's owner is a real user (owner_id > 1) and shares at least one group.
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ * @param $global_perm (int) capability bitmask granting access to every record
+ * @param $table (string) table of the record
+ * @param $field_id_name (string) name of the main ID field of the table
+ * @param $value_id (int) value of the ID field of the table
+ * @param $field_user_id (string) name of the foreign key to to user_id
+ * @return boolean true if the user is authorized, false otherwise
+ */
+function F_isAuthorizedRecord($global_perm, $table, $field_id_name, $value_id, $field_user_id)
+{
     global $l,$db;
     require_once('../config/tce_config.php');
     $table = F_escape_sql($db, $table);
@@ -280,8 +327,8 @@ function F_isAuthorizedUser($table, $field_id_name, $value_id, $field_user_id)
     $value_id = (int) $value_id;
     $field_user_id = F_escape_sql($db, $field_user_id);
     $user_id = (int) $_SESSION['session_user_id'];
-    // check for global visibility
-    if (F_has_global_view()) {
+    // check for global access to every record
+    if (F_user_can($global_perm)) {
         return true;
     }
 
@@ -337,6 +384,79 @@ function F_getAuthorizedUsers($user_id)
     // add the user
     $str .= $user_id;
     return $str;
+}
+
+/**
+ * Returns the string signed by the emailed-results capability token.
+ * @param $testuser_id (int) test-user ID
+ * @param $test_id (int) test ID
+ * @param $user_id (int) user ID
+ * @param $timestamp (int) token issue time (unix epoch)
+ * @return string payload to be hashed
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ */
+function F_getResultsTokenPayload($testuser_id, $test_id, $user_id, $timestamp)
+{
+    return 'r' . (int) $testuser_id . '|' . (int) $test_id . '|' . (int) $user_id . '|' . (int) $timestamp . '|' . K_RANDOM_SECURITY;
+}
+
+/**
+ * Returns the validity of an emailed-results token in seconds (0 = never expires).
+ * Override with the K_RESULTS_LINK_TTL constant in the configuration files.
+ * @return int time to live in seconds
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ */
+function F_getResultsTokenTtl()
+{
+    return defined('K_RESULTS_LINK_TTL') ? (int) K_RESULTS_LINK_TTL : (30 * K_SECONDS_IN_DAY);
+}
+
+/**
+ * Returns a time-limited capability token for an emailed results report.
+ * @param $testuser_id (int) test-user ID
+ * @param $test_id (int) test ID
+ * @param $user_id (int) user ID
+ * @param $timestamp (int) token issue time (0 = now)
+ * @return string token
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ */
+function F_getResultsToken($testuser_id, $test_id, $user_id, $timestamp = 0)
+{
+    if ($timestamp <= 0) {
+        $timestamp = time();
+    }
+
+    return getPasswordHash(F_getResultsTokenPayload($testuser_id, $test_id, $user_id, $timestamp));
+}
+
+/**
+ * Validates an emailed-results capability token, checking both the signature and its expiry.
+ * @param $testuser_id (int) test-user ID
+ * @param $test_id (int) test ID
+ * @param $user_id (int) user ID
+ * @param $timestamp (int) token issue time
+ * @param $token (string) token to verify
+ * @return boolean true when the token is valid and not expired, false otherwise
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ */
+function F_checkResultsToken($testuser_id, $test_id, $user_id, $timestamp, $token)
+{
+    $timestamp = (int) $timestamp;
+    if ($timestamp <= 0 || ! is_string($token) || $token === '') {
+        return false;
+    }
+
+    $ttl = F_getResultsTokenTtl();
+    if ($ttl > 0 && (time() - $timestamp) > $ttl) {
+        // token expired
+        return false;
+    }
+
+    return checkPassword(F_getResultsTokenPayload($testuser_id, $test_id, $user_id, $timestamp), $token);
 }
 
 /**

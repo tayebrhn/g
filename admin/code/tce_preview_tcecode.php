@@ -31,7 +31,7 @@
 
 
 require_once('../config/tce_config.php');
-$pagelevel = K_AUTH_VIEW_CONTENT;
+$pageperm = K_PERM_VIEW_CONTENT;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = '';

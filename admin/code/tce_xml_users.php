@@ -33,7 +33,7 @@
 
 // check user's authorization
 require_once('../config/tce_config.php');
-$pagelevel = K_AUTH_MANAGE_IDENTITY;
+$pageperm = K_PERM_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
 $output_format = isset($_REQUEST['format']) ? strtoupper($_REQUEST['format']) : 'XML';
@@ -168,6 +168,10 @@ function F_xml_export_users()
             $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<level>';
             $xml .= F_text_to_xml($ma['user_level']);
             $xml .= '</level>' . K_NEWLINE;
+
+            $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<perms>';
+            $xml .= F_text_to_xml((int) ($ma['user_perms'] ?? 0));
+            $xml .= '</perms>' . K_NEWLINE;
 
             $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<verifycode>';
             $xml .= F_text_to_xml($ma['user_verifycode']);

@@ -48,6 +48,8 @@ function F_send_report_emails($test_id, $user_id = 0, $testuser_id = 0, $group_i
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_test.php');
     require_once('../../shared/code/tce_functions_test_stats.php');
+    require_once('../../shared/code/tce_functions_authorization.php');
+    require_once('../../shared/code/tce_functions_session.php');
     require_once('../../shared/code/tce_class_mailer.php');
     require_once('tce_functions_user_select.php');
 
@@ -152,9 +154,10 @@ function F_send_report_emails($test_id, $user_id = 0, $testuser_id = 0, $group_i
             }
 
             if ($mode == 0) {
-                $pdfkey = getPasswordHash(date('Y') . $tu['id'] . K_RANDOM_SECURITY . $tu['test']['test_id'] . date('m') . $tu['user_id']);
+                $pdfkey_timestamp = time();
+                $pdfkey = F_getResultsToken($tu['id'], $tu['test']['test_id'], $tu['user_id'], $pdfkey_timestamp);
                 // create PDF doc
-                $pdf_content = file_get_contents(K_PATH_HOST . K_PATH_TCEXAM . 'admin/code/tce_pdf_results.php?mode=3&diplay_mode=' . $display_mode . '&show_graph=' . $show_graph . '&test_id=' . $tu['test']['test_id'] . '&user_id=' . $tu['user_id'] . '&testuser_id=' . $tu['id'] . '&email=' . urlencode($pdfkey));
+                $pdf_content = file_get_contents(K_PATH_HOST . K_PATH_TCEXAM . 'admin/code/tce_pdf_results.php?mode=3&display_mode=' . $display_mode . '&show_graph=' . $show_graph . '&test_id=' . $tu['test']['test_id'] . '&user_id=' . $tu['user_id'] . '&testuser_id=' . $tu['id'] . '&email=' . urlencode($pdfkey) . '&ts=' . $pdfkey_timestamp);
                 // set PDF document file name
                 $doc_name = 'tcexam_report';
                 $doc_name .= '_3';

@@ -39,7 +39,7 @@
 
 
 require_once('../config/tce_config.php');
-$pagelevel = isset($_REQUEST['email']) ? 0 : K_AUTH_ADMIN_RESULTS;
+$pageperm = isset($_REQUEST['email']) ? 0 : K_PERM_OPERATOR;
 require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
 require_once('../../shared/code/tce_functions_test.php');
@@ -58,8 +58,17 @@ $order_field  = $_REQUEST['order_field'] ?? '';
 $orderdir  = $_REQUEST['orderdir'] ?? 0;
 
 $onlytext = ($mode == 5);
-if (isset($_REQUEST['email']) && ! checkPassword(date('Y') . $testuser_id . K_RANDOM_SECURITY . $test_id . date('m') . $user_id, $_REQUEST['email'])) {
-    F_print_error('ERROR', $l['m_authorization_denied'], true);
+if (isset($_REQUEST['email'])) {
+    // capability token received by email: validate its signature and expiry
+    $email_timestamp = isset($_REQUEST['ts']) ? (int) $_REQUEST['ts'] : 0;
+    if (! F_checkResultsToken($testuser_id, $test_id, $user_id, $email_timestamp, $_REQUEST['email'])) {
+        F_print_error('ERROR', $l['m_authorization_denied'], true);
+    }
+
+    // private, non-indexable response for the capability link
+    header('X-Robots-Tag: noindex, nofollow');
+    header('Cache-Control: private, no-store');
+    header('Pragma: no-cache');
 }
 
 $filter = 'sel=1';

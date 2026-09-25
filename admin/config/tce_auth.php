@@ -54,9 +54,11 @@ define('K_AUTH_ADMINISTRATOR', 10);
  */
 define('K_AUTH_OPERATOR', 5);
 
-// -- AUTHORIZATION TIERS ------------------------------------------------------
-// Defaults are defined in shared/code/tce_auth_tiers.php.
-// Redefine them here to redistribute the responsibilities among the levels.
+// -- LEGACY TIER CONSTANTS (COMPATIBILITY ONLY) -------------------------------
+// The pages are gated by the independent capabilities defined in
+// shared/code/tce_auth_caps.php (see PERMISSIONS.md); the user level no
+// longer grants any right and these constants are kept only for backward
+// compatibility with older configurations and third-party code.
 
 /**
  * Read-only access to the content of the authorized groups.
@@ -87,6 +89,15 @@ define('K_AUTH_SITE_ADMIN', 9);
  * Required user's level to access index page.
  */
 define('K_AUTH_INDEX', K_AUTH_OPERATOR);
+
+// --- LEGACY CONSTANTS (COMPATIBILITY ONLY, DO NOT USE IN NEW CODE) -----------
+// The constants below predate the authorization tiers. The pages no longer
+// reference them: they use the tier constants defined above
+// (K_AUTH_VIEW_CONTENT, K_AUTH_EDIT_CONTENT, K_AUTH_OPERATOR,
+// K_AUTH_MANAGE_IDENTITY, K_AUTH_GLOBAL_VIEW, K_AUTH_SITE_ADMIN).
+// They are kept defined so that older configurations and third-party code that
+// still reference them keep working; changing their values has no effect on the
+// shipped pages. See shared/code/tce_auth_tiers.php and PERMISSIONS.md.
 
 /**
  * Required user's level to access "user editor".

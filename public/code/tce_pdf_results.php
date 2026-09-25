@@ -51,8 +51,21 @@ $user_id = (int) $_SESSION['session_user_id'];
 $mode = isset($_REQUEST['mode']) && $_REQUEST['mode'] > 0 ? (int) $_REQUEST['mode'] : 0;
 
 $onlytext = ($mode == 5);
-if (isset($_REQUEST['email']) && ! checkPassword(date('Y') . $testuser_id . K_RANDOM_SECURITY . $test_id . date('m') . $user_id, $_REQUEST['email'])) {
-    F_print_error('ERROR', $l['m_authorization_denied'], true);
+if (isset($_REQUEST['email'])) {
+    // capability token received by email: validate its signature and expiry
+    // (the ids are taken from the request here because the common filtering
+    // variables are initialized after this block)
+    $email_test_id = isset($_REQUEST['test_id']) ? (int) $_REQUEST['test_id'] : 0;
+    $email_testuser_id = isset($_REQUEST['testuser_id']) ? (int) $_REQUEST['testuser_id'] : 0;
+    $email_timestamp = isset($_REQUEST['ts']) ? (int) $_REQUEST['ts'] : 0;
+    if (! F_checkResultsToken($email_testuser_id, $email_test_id, $user_id, $email_timestamp, $_REQUEST['email'])) {
+        F_print_error('ERROR', $l['m_authorization_denied'], true);
+    }
+
+    // private, non-indexable response for the capability link
+    header('X-Robots-Tag: noindex, nofollow');
+    header('Cache-Control: private, no-store');
+    header('Pragma: no-cache');
 }
 
 $filter = 'sel=1';

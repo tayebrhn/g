@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_MANAGE_IDENTITY;
+$pageperm = K_PERM_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_group_editor'];
@@ -63,10 +63,16 @@ $group_name_db = F_escape_sql($db, $group_name);
 $_REQUEST['ff_required'] = 'group_name';
 $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_name'], ENT_COMPAT, $l['a_meta_charset']);
 
+// a global viewer who does not administer the group may only read it
+$record_readonly = $group_id > 0 && ! F_isAuthorizedToModifyGroup($group_id);
+if ($record_readonly) {
+    $menu_mode = '';
+}
+
 switch ($menu_mode) { // process submitted data
     case 'delete':{
          // ask confirmation
-        if ($_SESSION['session_user_level'] < K_AUTH_MANAGE_IDENTITY) {
+        if (! F_user_can(K_PERM_MANAGE_IDENTITY)) {
             F_print_error('ERROR', $l['m_authorization_denied']);
             break;
         }
@@ -88,7 +94,7 @@ switch ($menu_mode) { // process submitted data
 
     case 'forcedelete':{
          // Delete specified user
-        if ($_SESSION['session_user_level'] < K_AUTH_MANAGE_IDENTITY) {
+        if (! F_user_can(K_PERM_MANAGE_IDENTITY)) {
             F_print_error('ERROR', $l['m_authorization_denied']);
             break;
         }
@@ -253,13 +259,15 @@ echo getFormRowTextInput('group_name', $l['w_name'], $l['h_group_name'], '', $gr
 echo '<div class="row">' . K_NEWLINE;
 
 // show buttons by case
-if (isset($group_id) && $group_id > 0) {
+if ($record_readonly) {
+    // read-only access: no modification buttons
+} elseif (isset($group_id) && $group_id > 0) {
     echo '<span style="background-color:#999999;">';
     echo '<input type="checkbox" name="confirmupdate" id="confirmupdate" value="1" title="confirm &rarr; update" />';
     F_submit_button('update', $l['w_update'], $l['h_update']);
     echo '</span>';
     F_submit_button('add', $l['w_add'], $l['h_add']);
-    if ($_SESSION['session_user_level'] >= K_AUTH_MANAGE_IDENTITY) {
+    if (F_user_can(K_PERM_MANAGE_IDENTITY)) {
         // your account and anonymous user can't be deleted
         F_submit_button('delete', $l['w_delete'], $l['h_delete']);
     }
@@ -267,7 +275,9 @@ if (isset($group_id) && $group_id > 0) {
     F_submit_button('add', $l['w_add'], $l['h_add']);
 }
 
-F_submit_button('clear', $l['w_clear'], $l['h_clear']);
+if (!$record_readonly) {
+    F_submit_button('clear', $l['w_clear'], $l['h_clear']);
+}
 
 echo '</div>' . K_NEWLINE;
 echo F_getCSRFTokenField() . K_NEWLINE;

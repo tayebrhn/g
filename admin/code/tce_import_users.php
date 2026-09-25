@@ -32,7 +32,7 @@
 
 require_once('../config/tce_config.php');
 
-$pagelevel = K_AUTH_MANAGE_IDENTITY;
+$pageperm = K_PERM_MANAGE_IDENTITY;
 require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_user_importer'];
@@ -251,6 +251,7 @@ class XMLUserImporter
             case 'regnumber':
             case 'ssn':
             case 'level':
+            case 'perms':
             case 'verifycode':
             case 'otpkey': {
                 $this->current_element = 'user_' . $name;
@@ -293,6 +294,7 @@ class XMLUserImporter
             case 'regnumber':
             case 'ssn':
             case 'level':
+            case 'perms':
             case 'verifycode':
             case 'otpkey': {
                 $this->current_data = F_escape_sql($db, F_xml_to_text($this->current_data));
@@ -346,9 +348,19 @@ class XMLUserImporter
                         $this->user_data['user_level'] = 1;
                     }
 
-                    if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+                    // capability mask: derive it from the imported rank when the file
+                    // does not carry the perms element (backward compatibility)
+                    if (! isset($this->user_data['user_perms']) || strlen($this->user_data['user_perms']) == 0) {
+                        $this->user_data['user_perms'] = F_cumulative_perms_for_level($this->user_data['user_level']);
+                    } else {
+                        $this->user_data['user_perms'] = ((int) $this->user_data['user_perms']) & K_PERM_ALL;
+                    }
+
+                    if (! F_user_can(K_PERM_ADMIN)) {
                         // you cannot edit a user with a level equal or higher than yours
                         $this->user_data['user_level'] = min(max(0, ($_SESSION['session_user_level'] - 1)), $this->user_data['user_level']);
+                        // you may only grant the capabilities you hold yourself
+                        $this->user_data['user_perms'] &= F_user_perms();
                         // non-administrator can access only to his/her groups
                         if (empty($this->group_data)) {
                             break;
@@ -361,7 +373,7 @@ class XMLUserImporter
                     }
 
                     // check if user already exist
-                    $sql = 'SELECT user_id,user_level
+                    $sql = 'SELECT user_id,user_level,user_perms
 						FROM ' . K_TABLE_USERS . '
 						WHERE user_name=\'' . $this->user_data['user_name'] . '\'
 							OR user_regnumber=\'' . $this->user_data['user_regnumber'] . '\'
@@ -371,8 +383,13 @@ class XMLUserImporter
                         if ($m = F_db_fetch_array($r)) {
                             // the user has been already added
                             $user_id = $m['user_id'];
-                            if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR || $_SESSION['session_user_level'] > $m['user_level']) {
+                            if (F_user_can(K_PERM_ADMIN) || $_SESSION['session_user_level'] > $m['user_level']) {
                                 //update user data
+                                if (! F_user_can(K_PERM_ADMIN)) {
+                                    // capabilities the importer cannot grant stay unchanged
+                                    $this->user_data['user_perms'] = ($this->user_data['user_perms'] & F_user_perms()) | (((int) $m['user_perms']) & ~ F_user_perms());
+                                }
+
                                 $sqlu = 'UPDATE ' . K_TABLE_USERS . ' SET
 									user_regdate=\'' . $this->user_data['user_regdate'] . '\',
 									user_ip=\'' . $this->user_data['user_ip'] . '\',
@@ -391,6 +408,7 @@ class XMLUserImporter
 									user_birthplace=' . F_empty_to_null($this->user_data['user_birthplace']) . ',
 									user_ssn=' . F_empty_to_null($this->user_data['user_ssn']) . ',
 									user_level=\'' . $this->user_data['user_level'] . '\',
+									user_perms=\'' . (int) $this->user_data['user_perms'] . '\',
 									user_verifycode=' . F_empty_to_null($this->user_data['user_verifycode']) . ',
 									user_otpkey=' . F_empty_to_null($this->user_data['user_otpkey']) . '
 									WHERE user_id=' . $user_id . '';
@@ -417,6 +435,7 @@ class XMLUserImporter
 								user_birthplace,
 								user_ssn,
 								user_level,
+								user_perms,
 								user_verifycode,
 								user_otpkey
 								) VALUES (
@@ -432,6 +451,7 @@ class XMLUserImporter
 								' . F_empty_to_null($this->user_data['user_birthplace']) . ',
 								' . F_empty_to_null($this->user_data['user_ssn']) . ',
 								\'' . $this->user_data['user_level'] . '\',
+								\'' . (int) $this->user_data['user_perms'] . '\',
 								' . F_empty_to_null($this->user_data['user_verifycode']) . ',
 								' . F_empty_to_null($this->user_data['user_otpkey']) . '
 								)';
@@ -540,7 +560,7 @@ function F_import_tsv_users($tsvfile)
             $userdata[12] = 1;
         }
 
-        if ($_SESSION['session_user_level'] < K_AUTH_ADMINISTRATOR) {
+        if (! F_user_can(K_PERM_ADMIN)) {
             // you cannot edit a user with a level equal or higher than yours
             $userdata[12] = min(max(0, ($_SESSION['session_user_level'] - 1)), $userdata[12]);
             // non-administrator can access only to his/her groups
@@ -555,8 +575,15 @@ function F_import_tsv_users($tsvfile)
             }
         }
 
+        // the TSV format does not carry the capability mask: derive it from the rank
+        $tsv_user_perms = F_cumulative_perms_for_level((int) $userdata[12]);
+        if (! F_user_can(K_PERM_ADMIN)) {
+            // you may only grant the capabilities you hold yourself
+            $tsv_user_perms &= F_user_perms();
+        }
+
         // check if user already exist
-        $sql = 'SELECT user_id,user_level
+        $sql = 'SELECT user_id,user_level,user_perms
 			FROM ' . K_TABLE_USERS . '
 			WHERE user_name=\'' . F_escape_sql($db, $userdata[1]) . '\'
 				OR user_regnumber=' . F_empty_to_null($userdata[10]) . '
@@ -566,8 +593,13 @@ function F_import_tsv_users($tsvfile)
             if ($m = F_db_fetch_array($r)) {
                 // the user has been already added
                 $user_id = $m['user_id'];
-                if ($_SESSION['session_user_level'] >= K_AUTH_ADMINISTRATOR || $_SESSION['session_user_level'] > $m['user_level']) {
+                if (F_user_can(K_PERM_ADMIN) || $_SESSION['session_user_level'] > $m['user_level']) {
                     //update user data
+                    if (! F_user_can(K_PERM_ADMIN)) {
+                        // capabilities the importer cannot grant stay unchanged
+                        $tsv_user_perms = ($tsv_user_perms & F_user_perms()) | (((int) $m['user_perms']) & ~ F_user_perms());
+                    }
+
                     $sqlu = 'UPDATE ' . K_TABLE_USERS . ' SET
 						user_name=\'' . F_escape_sql($db, $userdata[1]) . "',";
                     // update password only if it is specified
@@ -583,10 +615,11 @@ function F_import_tsv_users($tsvfile)
 						user_lastname=' . F_empty_to_null($userdata[7]) . ',
 						user_birthdate=' . F_empty_to_null($userdata[8]) . ',
 						user_birthplace=' . F_empty_to_null($userdata[9]) . ',
-						user_regnumber=' . F_empty_to_null($userdata[10]) . ',
-						user_ssn=' . F_empty_to_null($userdata[11]) . ',
-						user_level=\'' . (int) $userdata[12] . '\',
-						user_verifycode=' . F_empty_to_null($userdata[13]) . ',
+					user_regnumber=' . F_empty_to_null($userdata[10]) . ',
+					user_ssn=' . F_empty_to_null($userdata[11]) . ',
+					user_level=\'' . (int) $userdata[12] . '\',
+					user_perms=\'' . (int) $tsv_user_perms . '\',
+					user_verifycode=' . F_empty_to_null($userdata[13]) . ',
 						user_otpkey=' . F_empty_to_null($userdata[14]) . '
 						WHERE user_id=' . $user_id . '';
                     if (! $ru = F_db_query($sqlu, $db)) {
@@ -612,6 +645,7 @@ function F_import_tsv_users($tsvfile)
 					user_regnumber,
 					user_ssn,
 					user_level,
+					user_perms,
 					user_verifycode,
 					user_otpkey
 					) VALUES (
@@ -627,6 +661,7 @@ function F_import_tsv_users($tsvfile)
 					' . F_empty_to_null($userdata[10]) . ',
 					' . F_empty_to_null($userdata[11]) . ',
 					\'' . (int) $userdata[12] . '\',
+					\'' . (int) $tsv_user_perms . '\',
 					' . F_empty_to_null($userdata[13]) . ',
 					' . F_empty_to_null($userdata[14]) . '
 					)';

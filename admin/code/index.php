@@ -30,7 +30,7 @@
  */
 
 require_once('../config/tce_config.php');
-$pagelevel = K_AUTH_INDEX;
+$pageperm = K_PERM_OPERATOR;
 require_once('../../shared/code/tce_authorization.php');
 require_once('tce_page_header.php');
 

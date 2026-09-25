@@ -148,6 +148,13 @@ define("K_QUESTION_LINE_MAX_LENGTH", 70);
  */
 define("K_CHECK_SESSION_FINGERPRINT", false);
 
+/**
+ * If true, the rank and the capability mask of the logged-in user are
+ * re-read from the database at every request, so that grants, demotions
+ * and account removals take effect without waiting for a new login.
+ */
+define("K_CHECK_USER_PER_REQUEST", true);
+
 // Client Cookie settings
 
 /**

@@ -54,9 +54,11 @@ define('K_AUTH_ADMINISTRATOR', 10);
  */
 define('K_AUTH_OPERATOR', 5);
 
-// -- AUTHORIZATION TIERS ------------------------------------------------------
-// Defaults are defined in shared/code/tce_auth_tiers.php.
-// Redefine them here to redistribute the responsibilities among the levels.
+// -- LEGACY TIER CONSTANTS (COMPATIBILITY ONLY) -------------------------------
+// The pages are gated by the independent capabilities defined in
+// shared/code/tce_auth_caps.php (see PERMISSIONS.md); the user level no
+// longer grants any right and these constants are kept only for backward
+// compatibility with older configurations and third-party code.
 
 /**
  * Read-only access to the content of the authorized groups.
