@@ -97,7 +97,28 @@ if (strlen($limits) > 0) {
     echo '<table style="border: 1px solid #808080;margin-left:auto; margin-right:auto;"><tr><th colspan="4" style="text-align:center;">' . $l['w_remaining_tests'] . '</th></tr><tr style="background-color:#CCCCCC;"><th>' . $l['w_limit'] . '</th><th>' . $l['w_max'] . '</th><th>' . $l['w_executed'] . '</th><th>' . $l['w_remaining'] . '</th></tr>' . $limits . '</table><br />' . K_NEWLINE;
 }
 
-// echo $l['d_admin_index'];
+// capability-aware launcher: quick links to the sections this account may open
+echo '<div class="container">' . K_NEWLINE;
+echo '<h2>' . $l['w_admin_index'] . '</h2>' . K_NEWLINE;
+echo '<p>' . K_NEWLINE;
+if (F_user_can_any(K_PERM_MANAGE_IDENTITY)) {
+    echo '<a href="tce_menu_users.php" class="xmlbutton" title="' . $l['t_user_editor'] . '">' . $l['w_users'] . '</a> ' . K_NEWLINE;
+}
+
+if (F_user_can_any(K_PERM_VIEW_CONTENT)) {
+    echo '<a href="tce_menu_modules.php" class="xmlbutton" title="' . $l['t_modules_editor'] . '">' . $l['w_modules'] . '</a> ' . K_NEWLINE;
+}
+
+if (F_user_can_any(K_PERM_OPERATOR)) {
+    echo '<a href="tce_menu_tests.php" class="xmlbutton" title="' . $l['t_tests_editor'] . '">' . $l['w_tests'] . '</a> ' . K_NEWLINE;
+}
+
+if (F_user_can_any(K_PERM_BACKUP)) {
+    echo '<a href="tce_edit_backup.php" class="xmlbutton" title="' . $l['t_backup_editor'] . '">' . $l['w_backup'] . '</a> ' . K_NEWLINE;
+}
+
+echo '</p>' . K_NEWLINE;
+echo '</div>' . K_NEWLINE;
 
 require_once('tce_page_footer.php');
 

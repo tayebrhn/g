@@ -1,6 +1,6 @@
 <?php
 // CACHE FILE FOR LANGUAGE: en
-// DATE: 2026-09-25 09:39:42
+// DATE: 2026-09-25 16:48:23
 // *** DELETE THIS FILE TO RELOAD DATA FROM TMX FILE ***
 
 $tmx['a_meta_charset']='UTF-8';
@@ -547,6 +547,7 @@ $tmx['h_login_link']='click on this link to access on this system';
 $tmx['w_change_email']='change email';
 $tmx['w_change_password']='change password';
 $tmx['w_admin']='admin';
+$tmx['w_admin_index']='Choose an area to work in.';
 $tmx['h_admin_link']='administration area';
 $tmx['h_public_link']='public area';
 $tmx['w_public']='public';
