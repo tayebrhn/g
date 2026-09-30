@@ -582,7 +582,9 @@ foreach (F_getCapabilityNames() as $cap_mask => [$cap_key, $cap_label]) {
     }
 
     if ($cap_disabled) {
-        echo ' readonly="readonly" class="disabled"';
+        // the server preserves the capabilities this editor cannot grant,
+        // and "disabled" makes the lock visible and real in the browser
+        echo ' disabled="disabled" class="disabled"';
     }
 
     echo ' />' . K_NEWLINE;

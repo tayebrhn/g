@@ -455,7 +455,10 @@ function getFormRowCheckBox($field_name, $name, $description = '', $tip = '', $v
     $str .= '<span class="formw">' . K_NEWLINE;
     $str .= '<input type="checkbox"';
     if ($disabled) {
-        $str .= ' readonly="readonly" class="disabled"';
+        // the hidden field above keeps submitting the frozen value:
+        // "disabled" makes the lock real in the browser ("readonly"
+        // is ignored on checkboxes and would let users toggle them)
+        $str .= ' disabled="disabled" class="disabled"';
     }
 
     $str .= ' name="' . $field_name . '" id="' . $field_name . '" value="' . $value . '"';
@@ -560,7 +563,7 @@ function getFormRowVertSpace()
  */
 function getFormRowVertDiv($title = '')
 {
-    return '<div class="row"><hr class="dashed"/></div><div class="row"><div style="color:#666666;text-align:center;">' . $title . '</div></div>' . K_NEWLINE;
+    return '<div class="row"><hr class="dashed"/></div><div class="row"><div class="rowtitle">' . $title . '</div></div>' . K_NEWLINE;
 }
 
 /**

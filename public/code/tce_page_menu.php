@@ -102,7 +102,7 @@ $menu = [
 //     ],
 // ];
 
-echo '<a name="menusection" id="menusection"></a>' . K_NEWLINE;
+echo '<a id="menusection"></a>' . K_NEWLINE;
 
 // link to skip navigation
 echo '<div class="hidden">';

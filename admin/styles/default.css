@@ -1572,3 +1572,9 @@ html .ss-main {
   margin: 16px auto;
   max-width: 560px;
 } */
+
+/* form section divider title (replaces the former inline style) */
+div.rowtitle {
+  color: #666666;
+  text-align: center;
+}

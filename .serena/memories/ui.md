@@ -18,7 +18,14 @@
 - `picoman` (public only) — vendored Pico.css-based mobile theme (`public/styles/picoman.css`).
 
 ## Gotchas
-- `@import` must be the first statements in the entry file.
-- Only the entry file (`exam.css`) gets the `?v=<mtime>` cache-buster; the imported `exam-core.css` does not. Bump the `?v=` in the `@import` when iterating on the core, or hard-refresh.
-- `exam-core.css` overrides rely on load order (imported after `default.css`) and matching selectors; `default`'s `.disabled*` rules use `!important` and are countered in kind.
+- The `admin|public/code/tce_xhtml_header.php` stylesheets loader (added 2026-09-25) reads the theme entry css, extracts its `@import` targets and emits a direct `<link rel="stylesheet">` per file (same order, each with its own `?v=<mtime>`), so all layers are fetched in parallel - no flash of unstyled header. Entries without `@import` (picoman) or unreadable/broken references fall back to linking the entry itself. `exam-core.css` is therefore cache-busted automatically: no manual `?v=` bumping anymore.
+- `exam-core.css` overrides rely on load order (linked after `default.css`) and matching selectors; `default`'s `.disabled*` rules use `!important` and are countered in kind.
+
+## Chrome conventions (2026-09-25)
+- Header brand title renders `K_TCEXAM_TITLE` (admin) / `K_SITE_TITLE` (public) - per-install brand, set to 'EEU Exam' in this deployment's config files; no hardcoded title in code.
+- Locked checkboxes use the real `disabled` attribute (`getFormRowCheckBox` + the capability checkboxes in `tce_edit_user.php`); the helper's hidden field keeps submitting the frozen value.
+- Form section dividers use `getFormRowVertDiv($title)` -> `.rowtitle` class (rule in all four base stylesheets), no inline styles.
+- Integrity markers (base64 `K_KEY_SECURITY` copyright in meta description + footer comment, `<!-- Exam19730104 -->` head comment) are intentional and documented in code comments.
+- `meta name="author"` comes from `K_TCEXAM_AUTHOR`/`K_SITE_AUTHOR`; the `tcexam_level` meta was removed.
+- Skip navigation: `#topofdoc`, `#menusection`, `#timersection` anchors are live (id only, no `name=`).
 - The installer (`install/install.php`) hardcodes `admin/styles/default.css`; it is one-time and pre-auth, left alone.

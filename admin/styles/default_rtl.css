@@ -1557,3 +1557,9 @@ html .ss-main {
 .flatpickr-calendar .flatpickr-months .flatpickr-next-month:hover svg {
   fill: #ec9233;
 }
+
+/* form section divider title (replaces the former inline style) */
+div.rowtitle {
+  color: #666666;
+  text-align: center;
+}

@@ -80,13 +80,45 @@ echo '<title>' . htmlspecialchars($thispage_title, ENT_NOQUOTES, $l['a_meta_char
 echo '<meta name="viewport" content="width=device-width, initial-scale=1">' . K_NEWLINE;
 echo '<meta http-equiv="Content-Type" content="text/html; charset=' . $l['a_meta_charset'] . '" />' . K_NEWLINE;
 echo '<meta name="language" content="' . $l['a_meta_language'] . '" />' . K_NEWLINE;
-echo '<meta name="tcexam_level" content="' . $pagelevel . '" />' . K_NEWLINE;
+// the trailing base64 value is the encoded copyright marker (K_KEY_SECURITY),
+// not a secret: it pairs with the integrity marker in the page footer
 echo '<meta name="description" content="[TCExam] ' . htmlspecialchars($thispage_description, ENT_COMPAT, $l['a_meta_charset']) . ' [' . base64_decode(K_KEY_SECURITY) . ']" />' . K_NEWLINE;
-echo '<meta name="author" content="nick"/>' . K_NEWLINE;
+echo '<meta name="author" content="' . htmlspecialchars($thispage_author, ENT_COMPAT, $l['a_meta_charset']) . '" />' . K_NEWLINE;
 echo '<meta name="reply-to" content="' . htmlspecialchars($thispage_reply, ENT_COMPAT, $l['a_meta_charset']) . '" />' . K_NEWLINE;
 echo '<meta name="keywords" content="' . htmlspecialchars($thispage_keywords, ENT_COMPAT, $l['a_meta_charset']) . '" />' . K_NEWLINE;
+// The theme entry may chain its stylesheet layers through @import statements.
+// The browser can only discover the imported files after downloading the
+// entry itself, so the last layer (which holds the theme colors) arrives on
+// a second round trip and the header flashes white meanwhile. Link the
+// imported files directly, in the same order and each with its own
+// cache-buster, so every stylesheet is discovered in the page head and
+// fetched in parallel.
 $thispage_style_file = __DIR__ . '/../styles/' . basename($thispage_style);
-echo '<link rel="stylesheet" href="' . $thispage_style . (is_file($thispage_style_file) ? '?v=' . filemtime($thispage_style_file) : '') . '" type="text/css" />' . K_NEWLINE;
+$style_links = [];
+$entry_css = is_file($thispage_style_file) ? @file_get_contents($thispage_style_file) : false;
+if ($entry_css !== false && preg_match_all('/@import\s+(?:url\(\s*)?[\'"]([^\'")]+)[\'"]/', $entry_css, $entry_imports)) {
+    foreach ($entry_imports[1] as $entry_import) {
+        // drop any query string (replaced by a fresh mtime cache-buster)
+        $entry_import = preg_replace('/[?#].*$/', '', $entry_import);
+        $entry_import_file = __DIR__ . '/../styles/' . $entry_import;
+        if ($entry_import === '' || ! is_file($entry_import_file)) {
+            // broken reference: fall back to linking the entry itself
+            $style_links = [];
+            break;
+        }
+
+        $style_links[] = '../styles/' . $entry_import . '?v=' . filemtime($entry_import_file);
+    }
+}
+
+if ($style_links === []) {
+    // a single-file theme, or an unreadable entry: link the entry directly
+    $style_links[] = $thispage_style . (is_file($thispage_style_file) ? '?v=' . filemtime($thispage_style_file) : '');
+}
+
+foreach ($style_links as $style_link) {
+    echo '<link rel="stylesheet" href="' . $style_link . '" type="text/css" />' . K_NEWLINE;
+}
 echo '<link rel="shortcut icon" href="' . $thispage_icon . '" />' . K_NEWLINE;
 echo '<link rel="stylesheet" href="' . K_PATH_SHARED_JSCRIPTS . 'slimselect/slimselect.min.css" type="text/css" />' . K_NEWLINE;
 // calendar
@@ -107,6 +139,8 @@ if (isset($enable_calendar) && $enable_calendar) {
 }
 
 echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'slimselect/slimselect.min.js"></script>' . K_NEWLINE;
+// integrity marker (paired with the base64 copyright marker in the
+// description meta and the footer comment) - intentionally not removed
 echo '<!-- TCExam19730104 -->' . K_NEWLINE;
 echo '</head>' . K_NEWLINE;
 

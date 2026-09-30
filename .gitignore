@@ -28,3 +28,4 @@ phpstan.neon
 cache/
 .qwen
 shared/jscripts/flatpickr/l10n
+admin/backup/
