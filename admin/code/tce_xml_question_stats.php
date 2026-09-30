@@ -37,8 +37,8 @@ $pageperm = K_PERM_OPERATOR;
 require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/code/tce_functions_test.php');
 require_once('../../shared/code/tce_functions_test_stats.php');
-require_once('../code/tce_functions_statistics.php');
-require_once('../code/tce_functions_auth_sql.php');
+require_once('../../shared/code/tce_functions_statistics.php');
+require_once('../../shared/code/tce_functions_auth_sql.php');
 
 if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
     $test_id = (int) $_REQUEST['testid'];
@@ -105,7 +105,7 @@ function F_xml_export_question_stats($test_id)
     global $l, $db;
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_authorization.php');
-    require_once('../code/tce_functions_auth_sql.php');
+    require_once('../../shared/code/tce_functions_auth_sql.php');
 
     $boolean = ['false', 'true'];
     $type = ['single', 'multiple', 'text', 'ordering'];
@@ -149,10 +149,13 @@ function F_xml_export_question_stats($test_id)
 
             $xml .= K_TAB . K_TAB . K_TAB . '<id>' . $mr['question_id'] . '</id>' . K_NEWLINE;
             $question_description = '';
-            $sqlrq = 'SELECT question_description FROM ' . K_TABLE_QUESTIONS . ' WHERE question_id=' . $mr['question_id'] . '';
+            // the answer key is only visible to the question author (see F_canSeeAnswerKeys)
+            $show_keys = false;
+            $sqlrq = 'SELECT question_description, question_subject_id FROM ' . K_TABLE_QUESTIONS . ' WHERE question_id=' . $mr['question_id'] . '';
             if ($rrq = F_db_query($sqlrq, $db)) {
                 if ($mrq = F_db_fetch_array($rrq)) {
                     $question_description = $mrq['question_description'];
+                    $show_keys = F_canSeeAnswerKeys((int) $mrq['question_subject_id']);
                 }
             } else {
                 F_display_db_error();
@@ -194,8 +197,15 @@ function F_xml_export_question_stats($test_id)
 
                     $num_all_answers = F_count_rows(K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_ANSWERS . ', ' . K_TABLE_LOG_ANSWER . ' WHERE logansw_answer_id=answer_id AND logansw_testlog_id=testlog_id AND testlog_testuser_id=testuser_id AND testuser_test_id=' . $test_id . ' AND testlog_question_id=' . $mr['question_id'] . '');
                     $num_answers = F_count_rows(K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_ANSWERS . ', ' . K_TABLE_LOG_ANSWER . ' WHERE answer_id=' . $ma['answer_id'] . ' AND logansw_answer_id=answer_id AND logansw_testlog_id=testlog_id AND testlog_testuser_id=testuser_id AND testuser_test_id=' . $test_id . ' AND testlog_question_id=' . $mr['question_id'] . '');
-                    $right_answers = F_count_rows(K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_ANSWERS . ', ' . K_TABLE_LOG_ANSWER . ' WHERE answer_id=' . $ma['answer_id'] . ' AND logansw_answer_id=answer_id AND logansw_testlog_id=testlog_id AND testlog_testuser_id=testuser_id AND testuser_test_id=' . $test_id . ' AND testlog_question_id=' . $mr['question_id'] . " AND ((answer_isright='0' AND logansw_selected=0) OR (answer_isright='1' AND logansw_selected=1) OR (answer_position IS NOT NULL AND logansw_position IS NOT NULL AND answer_position=logansw_position))");
-                    $wrong_answers = F_count_rows(K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_ANSWERS . ', ' . K_TABLE_LOG_ANSWER . ' WHERE answer_id=' . $ma['answer_id'] . ' AND logansw_answer_id=answer_id AND logansw_testlog_id=testlog_id AND testlog_testuser_id=testuser_id AND testuser_test_id=' . $test_id . ' AND testlog_question_id=' . $mr['question_id'] . " AND ((answer_isright='0' AND logansw_selected=1) OR (answer_isright='1' AND logansw_selected=0) OR (answer_position IS NOT NULL AND answer_position!=logansw_position))");
+                    $right_answers = 0;
+                    $wrong_answers = 0;
+                    if ($show_keys) {
+                        // the correct/wrong counts of a single answer are derived from the
+                        // answer key, so they are only computed for the question author
+                        $right_answers = F_count_rows(K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_ANSWERS . ', ' . K_TABLE_LOG_ANSWER . ' WHERE answer_id=' . $ma['answer_id'] . ' AND logansw_answer_id=answer_id AND logansw_testlog_id=testlog_id AND testlog_testuser_id=testuser_id AND testuser_test_id=' . $test_id . ' AND testlog_question_id=' . $mr['question_id'] . " AND ((answer_isright='0' AND logansw_selected=0) OR (answer_isright='1' AND logansw_selected=1) OR (answer_position IS NOT NULL AND logansw_position IS NOT NULL AND answer_position=logansw_position))");
+                        $wrong_answers = F_count_rows(K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_ANSWERS . ', ' . K_TABLE_LOG_ANSWER . ' WHERE answer_id=' . $ma['answer_id'] . ' AND logansw_answer_id=answer_id AND logansw_testlog_id=testlog_id AND testlog_testuser_id=testuser_id AND testuser_test_id=' . $test_id . ' AND testlog_question_id=' . $mr['question_id'] . " AND ((answer_isright='0' AND logansw_selected=1) OR (answer_isright='1' AND logansw_selected=0) OR (answer_position IS NOT NULL AND answer_position!=logansw_position))");
+                    }
+
                     $unanswered = F_count_rows(K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_ANSWERS . ', ' . K_TABLE_LOG_ANSWER . ' WHERE answer_id=' . $ma['answer_id'] . ' AND logansw_answer_id=answer_id AND logansw_testlog_id=testlog_id AND testlog_testuser_id=testuser_id AND testuser_test_id=' . $test_id . ' AND testlog_question_id=' . $mr['question_id'] . ' AND logansw_selected=-1');
 
                     $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<recurrence>' . $num_answers . '</recurrence>' . K_NEWLINE;
@@ -205,20 +215,25 @@ function F_xml_export_question_stats($test_id)
                     }
 
                     $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<recurrence_percent>' . F_formatXMLPercentage($perc) . '</recurrence_percent>' . K_NEWLINE;
-                    $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<correct>' . $right_answers . '</correct>' . K_NEWLINE;
-                    $perc = 0;
-                    if ($num_answers > 0) {
-                        $perc = ($right_answers / $num_answers);
+                    if ($show_keys) {
+                        // the correct/wrong counts of a single answer are derived from the
+                        // answer key, so they are only exported to the question author
+                        $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<correct>' . $right_answers . '</correct>' . K_NEWLINE;
+                        $perc = 0;
+                        if ($num_answers > 0) {
+                            $perc = ($right_answers / $num_answers);
+                        }
+
+                        $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<correct_percent>' . F_formatXMLPercentage($perc) . '</correct_percent>' . K_NEWLINE;
+                        $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<wrong>' . $wrong_answers . '</wrong>' . K_NEWLINE;
+                        $perc = 0;
+                        if ($num_answers > 0) {
+                            $perc = round($wrong_answers / $num_answers);
+                        }
+
+                        $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<wrong_percent>' . F_formatXMLPercentage($perc) . '</wrong_percent>' . K_NEWLINE;
                     }
 
-                    $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<correct_percent>' . F_formatXMLPercentage($perc) . '</correct_percent>' . K_NEWLINE;
-                    $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<wrong>' . $wrong_answers . '</wrong>' . K_NEWLINE;
-                    $perc = 0;
-                    if ($num_answers > 0) {
-                        $perc = round($wrong_answers / $num_answers);
-                    }
-
-                    $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<wrong_percent>' . F_formatXMLPercentage($perc) . '</wrong_percent>' . K_NEWLINE;
                     $xml .= K_TAB . K_TAB . K_TAB . K_TAB . '<unanswered>' . $unanswered . '</unanswered>' . K_NEWLINE;
                     $perc = 0;
                     if ($num_answers > 0) {

@@ -40,7 +40,7 @@ require_once('../../shared/code/tce_authorization.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
 require_once('../../shared/code/tce_functions_test.php');
 require_once('../../shared/code/tce_functions_test_stats.php');
-require_once('../code/tce_functions_statistics.php');
+require_once('../../shared/code/tce_functions_statistics.php');
 require_once('tce_functions_user_select.php');
 
 if (isset($_REQUEST['user_id']) && $_REQUEST['user_id'] > 0) {

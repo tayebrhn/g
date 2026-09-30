@@ -35,6 +35,13 @@ Full spec: `PERMISSIONS.md` (authoritative, keep in sync). Five axes: **page acc
 ## Emailed results token
 - `F_getResultsToken()` / `F_checkResultsToken()` (password-hash over `r<testuser>|<test>|<user>|<ts>|K_RANDOM_SECURITY`; TTL `K_RESULTS_LINK_TTL` default 30 days). The PDF is fetched server-side from admin `tce_pdf_results.php` (`$pageperm 0` when `email` param present) and **attached** to the mail; noindex/no-store headers on the token path. Public `tce_pdf_results.php` has no pagelevel (0) and binds the token to the session user.
 
+## Answer keys in the result reports (added 2026-09-24)
+- `F_canSeeAnswerKeys($subject_id)` (shared/code/tce_functions_authorization.php), memoized per subject per request: the correct answers and the question/answer explanations inside a result report belong to the **question author** = owner of the question's SUBJECT (`F_isAuthorizedUser(K_TABLE_SUBJECTS, 'subject_id', $subject_id, 'subject_user_id')`), a group peer, or a `K_PERM_GLOBAL_VIEW` holder. Anonymous sessions (`session_user_id <= 1`, incl. the emailed-results token path) and unknown subjects fail closed.
+- Switch `K_RESTRICT_ANSWER_KEYS` (shared/config(.default)/tce_config.php, default true; undefined = restricted). When false, whoever can open the report sees the key (legacy).
+- Renderers that consult it and hide the marks when false: `F_printUserTestStat()` (test_stats; admin `tce_show_result_user.php` + public `tce_show_result_user.php`), the inline loop in `public/code/tce_test_results.php`, `TCPDFEX::printUserTestDetails()` (PDF + emailed attachment), and the per-answer `<correct>/<wrong>` counters of `admin/code/tce_xml_question_stats.php`. Hidden mode shows only the candidate's selections (neutral `onbox`/`offbox`), no star, no correct ordering position, no explanations. XML/JSON result exports carry no keys (already aggregate-only).
+- Out of scope (authoring/OMR, test-owner gated): `tce_pdf_testgen.php` still embeds the key as hidden white text for OMR grading.
+- Regression test: `php test/answer_key_visibility.php` and `... disabled` (source assertions require the renderers to call the helper).
+
 ## Known limitations
 - Group sharing symmetric, all-or-nothing; results belong to the test, not the group; anonymous-owned (user_id 1) content visible only to GLOBAL_VIEW; a non-ADMIN editor cannot strip capabilities it does not hold (preserved instead).
 

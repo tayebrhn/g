@@ -112,6 +112,18 @@ define("K_ENABLE_QUESTION_EXPLANATION", true);
 define("K_ENABLE_ANSWER_EXPLANATION", true);
 
 /**
+ * If true, the correct answers (the answer key) inside the result reports
+ * are only visible to the question author: the owner of the subject the
+ * question belongs to, the users sharing a group with that owner, and the
+ * K_PERM_GLOBAL_VIEW users. Everyone else - including the test-takers
+ * looking at their own report, and the recipients of the e-mailed reports -
+ * only sees their own selected answers. Set to false to restore the
+ * legacy behaviour where every report displayed the correct answers.
+ * See PERMISSIONS.md section 5.
+ */
+define("K_RESTRICT_ANSWER_KEYS", true);
+
+/**
  * If true display test description before executing the test.
  */
 define("K_DISPLAY_TEST_DESCRIPTION", true);

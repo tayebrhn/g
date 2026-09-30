@@ -122,6 +122,64 @@ function F_getTestStat($test_id, $group_id = 0, $user_id = 0, $startdate = 0, $e
 }
 
 /**
+ * Returns the statistics of a single question across all the executions of a
+ * test: how many test-users answered it right, wrong, left it unanswered or
+ * undisplayed, and how many free-text answers are still unrated.
+ * The "right" and "wrong" counts follow the same rule used by the test
+ * scoring: an answer is right when its score is more than half of the
+ * maximum score of the question.
+ * @param $test_id (int) test ID
+ * @param $question_id (int) question ID
+ * @return array containing the num, right, wrong, unanswered, undisplayed and unrated counters
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ */
+function F_getQuestionTestStat($test_id, $question_id)
+{
+    require_once('../config/tce_config.php');
+    require_once('../../shared/code/tce_functions_test.php');
+    global $db, $l;
+    $test_id = (int) $test_id;
+    $question_id = (int) $question_id;
+    $data = [
+        'num' => 0,
+        'right' => 0,
+        'wrong' => 0,
+        'unanswered' => 0,
+        'undisplayed' => 0,
+        'unrated' => 0,
+    ];
+
+    $testdata = F_getTestData($test_id);
+
+    // question difficulty determines the right/wrong threshold
+    $question_difficulty = 1;
+    $sqlq = 'SELECT question_difficulty FROM ' . K_TABLE_QUESTIONS . ' WHERE question_id=' . $question_id . ' LIMIT 1';
+    if ($rq = F_db_query($sqlq, $db)) {
+        if ($mq = F_db_fetch_array($rq)) {
+            $question_difficulty = (int) $mq['question_difficulty'];
+        }
+    } else {
+        F_display_db_error();
+    }
+
+    $question_half_score = ($testdata['test_score_right'] * $question_difficulty) / 2;
+
+    $sqltot = K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS;
+    $sqlw = 'WHERE testlog_testuser_id=testuser_id
+			AND testuser_test_id=' . $test_id . '
+			AND testlog_question_id=' . $question_id . '';
+    $data['num'] = F_count_rows($sqltot, $sqlw);
+    $data['right'] = F_count_rows($sqltot, $sqlw . ' AND testlog_score>' . $question_half_score . '');
+    $data['wrong'] = F_count_rows($sqltot, $sqlw . ' AND testlog_score<=' . $question_half_score . '');
+    $data['unanswered'] = F_count_rows($sqltot, $sqlw . ' AND testlog_change_time IS NULL');
+    $data['undisplayed'] = F_count_rows($sqltot, $sqlw . ' AND testlog_display_time IS NULL');
+    $data['unrated'] = F_count_rows($sqltot, $sqlw . ' AND testlog_score IS NULL');
+
+    return $data;
+}
+
+/**
  * Returns raw statistic array for the selected test.
  * @param $test_id (int) test ID.
  * @param $group_id (int) group ID - if greater than zero, filter stats for the specified user group.
@@ -975,6 +1033,8 @@ function F_printUserTestStat($testuser_id)
         $ret .= '<ol class="question">' . K_NEWLINE;
         while ($m = F_db_fetch_array($r)) {
             $ret .= '<li>' . K_NEWLINE;
+            // the answer key is only visible to the question author (see F_canSeeAnswerKeys)
+            $show_keys = F_canSeeAnswerKeys((int) $m['subject_id']);
             // display question stats
             $ret .= '<strong>[' . $m['testlog_score'] . ']' . K_NEWLINE;
             $ret .= ' (';
@@ -1007,7 +1067,7 @@ function F_printUserTestStat($testuser_id)
             $ret .= '<br />' . K_NEWLINE;
             // display question description
             $ret .= F_decode_tcecode($m['question_description']) . K_NEWLINE;
-            if (K_ENABLE_QUESTION_EXPLANATION && ! empty($m['question_explanation'])) {
+            if ($show_keys && K_ENABLE_QUESTION_EXPLANATION && ! empty($m['question_explanation'])) {
                 $ret .= '<br /><span class="explanation">' . $l['w_explanation'] . ':</span><br />' . F_decode_tcecode($m['question_explanation']) . '' . K_NEWLINE;
             }
 
@@ -1030,16 +1090,22 @@ function F_printUserTestStat($testuser_id)
                         if ($m['question_type'] == 4) {
                             // ORDER
                             if ($ma['logansw_position'] > 0) {
-                                if ($ma['logansw_position'] == $ma['answer_position']) {
+                                if ($show_keys && $ma['logansw_position'] == $ma['answer_position']) {
                                     $ret .= '<acronym title="' . $l['h_answer_right'] . '" class="okbox">' . $ma['logansw_position'] . '</acronym>';
-                                } else {
+                                } elseif ($show_keys) {
                                     $ret .= '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">' . $ma['logansw_position'] . '</acronym>';
+                                } else {
+                                    // only the position selected by the user, without revealing the correct one
+                                    $ret .= '<acronym title="' . $l['w_position'] . '" class="onbox">' . $ma['logansw_position'] . '</acronym>';
                                 }
                             } else {
                                 $ret .= '<acronym title="' . $l['m_unanswered'] . '" class="offbox">&nbsp;</acronym>';
                             }
                         } elseif ($ma['logansw_selected'] > 0) {
-                            if (F_getBoolean($ma['answer_isright'])) {
+                            if (! $show_keys) {
+                                // only the selection made by the user
+                                $ret .= '<acronym title="-" class="onbox">x</acronym>';
+                            } elseif (F_getBoolean($ma['answer_isright'])) {
                                 $ret .= '<acronym title="' . $l['h_answer_right'] . '" class="okbox">&#10003;</acronym>';
                             } else {
                                 $ret .= '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">&#10007;</acronym>';
@@ -1048,7 +1114,10 @@ function F_printUserTestStat($testuser_id)
                             // MCSA
                             $ret .= '<acronym title="-" class="offbox">&nbsp;</acronym>';
                         } elseif ($ma['logansw_selected'] == 0) {
-                            if (F_getBoolean($ma['answer_isright'])) {
+                            if (! $show_keys) {
+                                // not selected: no indication of the correct answer
+                                $ret .= '<acronym title="-" class="offbox">&nbsp;</acronym>';
+                            } elseif (F_getBoolean($ma['answer_isright'])) {
                                 $ret .= '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">&#10007;</acronym>';
                             } else {
                                 $ret .= '<acronym title="' . $l['h_answer_right'] . '" class="okbox">&nbsp;</acronym>';
@@ -1059,16 +1128,21 @@ function F_printUserTestStat($testuser_id)
 
                         $ret .= '&nbsp;';
                         if ($m['question_type'] == 4) {
-                            $ret .= '<acronym title="' . $l['w_position'] . '" class="onbox">' . $ma['answer_position'] . '</acronym>';
-                        } elseif (F_getBoolean($ma['answer_isright'])) {
+                            if ($show_keys) {
+                                $ret .= '<acronym title="' . $l['w_position'] . '" class="onbox">' . $ma['answer_position'] . '</acronym>';
+                            } else {
+                                // the correct position is part of the answer key
+                                $ret .= '<acronym title="-" class="offbox">&nbsp;</acronym>';
+                            }
+                        } elseif ($show_keys && F_getBoolean($ma['answer_isright'])) {
                             $ret .= '<acronym title="' . $l['w_answers_right'] . '" class="onbox">&#9733;</acronym>';
                         } else {
-                            $ret .= '<acronym title="' . $l['w_answers_wrong'] . '" class="offbox">&nbsp;</acronym>';
+                            $ret .= '<acronym title="-" class="offbox">&nbsp;</acronym>';
                         }
 
                         $ret .= ' ';
                         $ret .= F_decode_tcecode($ma['answer_description']);
-                        if (K_ENABLE_ANSWER_EXPLANATION && ! empty($ma['answer_explanation'])) {
+                        if ($show_keys && K_ENABLE_ANSWER_EXPLANATION && ! empty($ma['answer_explanation'])) {
                             $ret .= '<br /><span class="explanation">' . $l['w_explanation'] . ':</span><br />' . F_decode_tcecode($ma['answer_explanation']) . '' . K_NEWLINE;
                         }
 

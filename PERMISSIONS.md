@@ -149,11 +149,44 @@ it does not own:
 | Seeing all groups' content, results, users, groups and files | `F_isAuthorizedUser()`, `F_isAuthorizedEditorForUser/Group()`, `F_user_can(K_PERM_GLOBAL_VIEW)` | owner, or a shared group, or `K_PERM_GLOBAL_VIEW` |
 | Modifying a record | `F_isAuthorizedToModify()` | owner, or a shared group, or `K_PERM_ADMIN` |
 | Modifying a user / a group | `F_isAuthorizedToModifyUser()`, `F_isAuthorizedToModifyGroup()` | self/own group, or lower rank with a shared group, or `K_PERM_ADMIN` |
+| Seeing the **answer key** inside a result report | `F_canSeeAnswerKeys()` | owner of the subject the question belongs to, or a shared group, or `K_PERM_GLOBAL_VIEW` |
 | Reassigning a record's owner; the file-manager root; system update; granting any capability | `K_PERM_ADMIN` | that capability only |
 
 The modify helpers share the owner and group-sharing rules with the view
 predicate, but replace the global-view bypass with the `K_PERM_ADMIN`
 capability.
+
+### Answer keys in the result reports
+
+Being allowed to **read** a result report does not imply being allowed to read
+the **correct answers**. `F_canSeeAnswerKeys($subject_id)` (in
+`shared/code/tce_functions_authorization.php`) decides whether the correct
+answers (and the question/answer explanations) of a question are rendered:
+they belong to the question author, defined as the **owner of the subject the
+question belongs to**, a user **sharing a group** with that owner, or a
+`K_PERM_GLOBAL_VIEW` user. Everyone else - an operator who owns only the test,
+and also the test-taker reading their own report - sees the question, the
+answer options and **their own selections**, but no right/wrong mark, no
+correct ordering position and no explanation.
+
+* The rule is applied by every result renderer: the detailed HTML report
+  (`F_printUserTestStat()`, used by the admin report and by the public
+  "my results" page), the public results page
+  (`public/code/tce_test_results.php`), the PDF report and its e-mailed
+  attachment (`TCPDFEX::printUserTestDetails()`), and the per-answer counters
+  of the question-statistics export (`tce_xml_question_stats.php`).
+* Anonymous sessions never see the key: the e-mailed-results capability-token
+  path (below) renders the report for an anonymous session, so the key is
+  hidden there as well.
+* The result is cached per subject for the lifetime of the request.
+* Set `K_RESTRICT_ANSWER_KEYS` to `false` (in `shared/config/tce_config.php`)
+  to restore the legacy behaviour, in which every report displayed the correct
+  answers to whoever could open it. When the constant is missing the
+  restriction is on.
+* The printable paper-test generator (`tce_pdf_testgen.php`) still embeds the
+  answer key as hidden text in the generated PDF (it is the working copy used
+  to grade the scanned OMR sheets, and it is restricted to the test owner);
+  it is part of the authoring pipeline, not a result report.
 
 ### Consequences per data type
 
@@ -161,6 +194,7 @@ capability.
 | --- | --- |
 | Modules, subjects, questions, answers, tests | owned by you or by a user sharing a group with you |
 | Test results | a user without `K_PERM_GLOBAL_VIEW` can only request results for users who executed a test the user is authorized to see (`F_isAuthorizedResultUser()`); the data itself is filtered by the tests the user may see |
+| Correct answers inside a result report | only the question author (`F_canSeeAnswerKeys()`), see above |
 | Test-takers' results in the UI | the user and group filters list only the users within the current user's scope (rank + shared groups) |
 | Users and groups | identity administrators see all; otherwise only lower-rank users sharing a group (`F_isAuthorizedEditorForUser()`), and only the user's own groups |
 | Online users | only the users the current user is allowed to manage |
@@ -322,6 +356,14 @@ See `UPGRADE.TXT` for the full notes.
   `K_PERM_ADMIN`.
 * An editor without `K_PERM_ADMIN` cannot strip a capability it does not hold:
   those bits are preserved on the edited account (and its own mask is frozen).
+* **The answer key follows the question author, not the test owner.** An
+  operator who owns a test assembled from another author's questions can read
+  the whole report but not the correct answers
+  (see `F_canSeeAnswerKeys()` in section 5). Set `K_RESTRICT_ANSWER_KEYS` to
+  `false` to restore the previous behaviour.
+* **The printed paper test still embeds the key** as hidden text
+  (`tce_pdf_testgen.php`), because it doubles as the OMR grading key; it is
+  restricted to the test owner.
 
 ## 12. Verifying
 
@@ -332,6 +374,8 @@ php test/menu_authorization.php
 php test/authorization_tiers.php
 php test/modify_authority.php
 php test/capability_matrix.php
+php test/answer_key_visibility.php
+php test/answer_key_visibility.php disabled
 php test/online_users_tracker_rows.php
 ```
 
@@ -339,8 +383,9 @@ They check the menu visibility per capability mask and per legacy level, that
 the capabilities are distinct bits that never include one another, that the
 visibility/read-only/modify helpers agree with the masks, that the content
 editors keep their read-only guard, that only `K_PERM_ADMIN` modifies other
-users' records, that every admin page declares `$pageperm`, and that the
-emailed-results token validates only within its time to live, with the
-database functions stubbed. `test/README.md` lists the equivalent browser
-checks to run against a non-production database with accounts at each
-capability combination.
+users' records, that the answer key is hidden from non-authors and anonymous
+sessions (and visible when `K_RESTRICT_ANSWER_KEYS` is off), that every admin
+page declares `$pageperm`, and that the emailed-results token validates only
+within its time to live, with the database functions stubbed. `test/README.md`
+lists the equivalent browser checks to run against a non-production database
+with accounts at each capability combination.

@@ -56,6 +56,10 @@ if (! defined('K_TABLE_USERGROUP')) {
     define('K_TABLE_USERGROUP', K_TABLE_PREFIX . 'usrgroups');
 }
 
+if (! defined('K_TABLE_SUBJECTS')) {
+    define('K_TABLE_SUBJECTS', K_TABLE_PREFIX . 'subjects');
+}
+
 if (! defined('K_AUTH_VIEW_CONTENT')) {
     define('K_AUTH_VIEW_CONTENT', 2);
 }

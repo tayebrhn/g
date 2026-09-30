@@ -387,6 +387,51 @@ function F_getAuthorizedUsers($user_id)
 }
 
 /**
+ * Returns true when the current user may see the correct answers (the answer
+ * key) of the questions of the specified subject, even inside the result
+ * reports. The key belongs to the question author: it is visible only to the
+ * owner of the subject the questions belong to, to the users sharing at
+ * least one group with that owner, and to the K_PERM_GLOBAL_VIEW users.
+ * Everyone else - including the test-takers reading their own report and
+ * the anonymous recipients of the e-mailed reports (capability token) -
+ * only sees their own selected answers.
+ * Set K_RESTRICT_ANSWER_KEYS to false to restore the legacy behaviour in
+ * which every report displayed the correct answers to whoever could open it.
+ * The result is cached per subject for the lifetime of the request.
+ * @author Nicola Asuni
+ * @since 2026-09-24
+ * @param $subject_id (int) ID of the subject that owns the questions
+ * @return boolean true when the current user may see the answer key
+ */
+function F_canSeeAnswerKeys($subject_id)
+{
+    static $cache = [];
+    $subject_id = (int) $subject_id;
+    if ($subject_id <= 0) {
+        // unknown subject: fail closed
+        return false;
+    }
+
+    if (! isset($cache[$subject_id])) {
+        if (defined('K_RESTRICT_ANSWER_KEYS') && ! K_RESTRICT_ANSWER_KEYS) {
+            // the restriction is disabled: whoever may open the report sees the key
+            $cache[$subject_id] = true;
+        } elseif (empty($_SESSION['session_user_id']) || (int) $_SESSION['session_user_id'] <= 1) {
+            // anonymous sessions (including the emailed-results capability token
+            // path) never see the key, even when the subject is owned by the
+            // anonymous user
+            $cache[$subject_id] = false;
+        } else {
+            // the question author: the owner of the subject, the users sharing
+            // a group with that owner, or the global-view users
+            $cache[$subject_id] = F_isAuthorizedUser(K_TABLE_SUBJECTS, 'subject_id', $subject_id, 'subject_user_id');
+        }
+    }
+
+    return $cache[$subject_id];
+}
+
+/**
  * Returns the string signed by the emailed-results capability token.
  * @param $testuser_id (int) test-user ID
  * @param $test_id (int) test ID

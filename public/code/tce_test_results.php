@@ -62,9 +62,27 @@ if (! F_getBoolean($testdata['test_results_to_users'])) {
 $test_basic_score = $testdata['test_score_right'];
 //lock user's test
 F_lockUserTest($test_id, $_SESSION['session_user_id']);
+
+// get the latest test-user record of this candidate for this test
+$testuser_id = 0;
+$sqltu = 'SELECT testuser_id
+	FROM ' . K_TABLE_TEST_USER . '
+	WHERE testuser_test_id=' . $test_id . '
+		AND testuser_user_id=' . $user_id . '
+	ORDER BY testuser_id DESC
+	LIMIT 1';
+if ($rtu = F_db_query($sqltu, $db)) {
+    if ($mtu = F_db_fetch_array($rtu)) {
+        $testuser_id = (int) $mtu['testuser_id'];
+    }
+} else {
+    F_display_db_error();
+}
+
 // get user's test stats
-$usrtestdata = F_getUserTestStat($test_id, $user_id, 0, true);
+$usrtestdata = F_getUserTestStat($test_id, $user_id, $testuser_id, true);
 $userdata = F_getUserData($user_id);
+$teststat = F_getTestStat($test_id, 0, $user_id, 0, 0, $testuser_id, true);
 
 
 echo '<div class="container">' . K_NEWLINE;
@@ -78,41 +96,48 @@ $test_all = '<strong>' . htmlspecialchars($testdata['test_name'], ENT_NOQUOTES, 
 $test_all .= htmlspecialchars($testdata['test_description'], ENT_NOQUOTES, $l['a_meta_charset']);
 echo getFormDescriptionLine($l['w_test'] . ':', $l['w_test'], $test_all);
 
-echo getFormDescriptionLine($l['w_time_begin'] . ':', $l['h_time_begin'], $usrtestdata['test_start_time']);
-echo getFormDescriptionLine($l['w_time_end'] . ':', $l['h_time_end'], $usrtestdata['test_end_time']);
+echo getFormDescriptionLine($l['w_time_begin'] . ':', $l['h_time_begin'], ($usrtestdata['user_test_start_time'] ?? ''));
+echo getFormDescriptionLine($l['w_time_end'] . ':', $l['h_time_end'], ($usrtestdata['user_test_end_time'] ?? ''));
 
-if (! isset($usrtestdata['test_end_time']) || $usrtestdata['test_end_time'] <= 0) {
+if (! isset($usrtestdata['user_test_end_time']) || $usrtestdata['user_test_end_time'] <= 0) {
     $time_diff = $testdata['test_duration_time'] * 60;
 } else {
-    $time_diff = strtotime($usrtestdata['test_end_time']) - strtotime($usrtestdata['test_start_time']); //sec
+    $time_diff = strtotime($usrtestdata['user_test_end_time']) - strtotime($usrtestdata['user_test_start_time']); //sec
 }
 
 $time_diff = gmdate('H:i:s', $time_diff);
 echo getFormDescriptionLine($l['w_test_time'] . ':', $l['w_test_time'], $time_diff);
 
 $passmsg = '';
-if ($usrtestdata['score_threshold'] > 0) {
-    if ($usrtestdata['score'] >= $usrtestdata['score_threshold']) {
+if (($usrtestdata['test_score_threshold'] ?? 0) > 0) {
+    if (($usrtestdata['user_score'] ?? 0) >= $usrtestdata['test_score_threshold']) {
         $passmsg = ' - ' . $l['w_passed'];
     } else {
         $passmsg = ' - ' . $l['w_not_passed'];
     }
 }
 
-$score_all = $usrtestdata['score'] . ' / ' . $usrtestdata['max_score'] . ' (' . round(100 * $usrtestdata['score'] / $usrtestdata['max_score']) . '%)' . $passmsg;
+if (($usrtestdata['test_max_score'] ?? 0) > 0) {
+    $score_all = ($usrtestdata['user_score'] ?? 0) . ' / ' . $usrtestdata['test_max_score'] . ' (' . round(100 * ($usrtestdata['user_score'] ?? 0) / $usrtestdata['test_max_score']) . '%)' . $passmsg;
+} else {
+    $score_all = ($usrtestdata['user_score'] ?? 0) . $passmsg;
+}
 echo getFormDescriptionLine($l['w_score'] . ':', $l['h_score_total'], $score_all);
 
-$score_right_all = $usrtestdata['right'] . ' / ' . $usrtestdata['all'] . ' (' . round(100 * $usrtestdata['right'] / $usrtestdata['all']) . '%)';
+if (isset($teststat['qstats']['recurrence']) && $teststat['qstats']['recurrence'] > 0) {
+    $score_right_all = $teststat['qstats']['right'] . ' / ' . $teststat['qstats']['recurrence'] . ' (' . $teststat['qstats']['right_perc'] . '%)';
+} else {
+    $score_right_all = '';
+}
 echo getFormDescriptionLine($l['w_answers_right'] . ':', $l['h_answers_right'], $score_right_all);
 
-echo getFormDescriptionLine($l['w_comment'] . ':', $l['h_testcomment'], F_decode_tcecode($usrtestdata['comment']));
+echo getFormDescriptionLine($l['w_comment'] . ':', $l['h_testcomment'], F_decode_tcecode(($usrtestdata['user_comment'] ?? '')));
 
 if (F_getBoolean($testdata['test_report_to_users'])) {
     echo '<div class="rowl">' . K_NEWLINE;
 
     $topicresults = []; // per-topic results
-    $testuser_id = $usrtestdata['testuser_id'];
-    if (isset($testuser_id) && ! empty($testuser_id)) {
+    if (! empty($testuser_id)) {
         // display user questions
         $sql = 'SELECT *
 			FROM ' . K_TABLE_QUESTIONS . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_SUBJECTS . ', ' . K_TABLE_MODULES . '
@@ -192,6 +217,8 @@ if (F_getBoolean($testdata['test_report_to_users'])) {
                 $topicresults[$m['module_id']]['subjects'][$m['subject_id']]['maxscore'] += $question_max_score;
 
                 echo '<li>' . K_NEWLINE;
+                // the answer key is only visible to the question author (see F_canSeeAnswerKeys)
+                $show_keys = F_canSeeAnswerKeys((int) $m['subject_id']);
                 // display question stats
                 echo '<strong>[' . $m['testlog_score'] . ']' . K_NEWLINE;
                 echo ' (';
@@ -224,7 +251,7 @@ if (F_getBoolean($testdata['test_report_to_users'])) {
                 echo '<br />' . K_NEWLINE;
                 // display question description
                 echo F_decode_tcecode($m['question_description']) . K_NEWLINE;
-                if (K_ENABLE_QUESTION_EXPLANATION && ! empty($m['question_explanation'])) {
+                if ($show_keys && K_ENABLE_QUESTION_EXPLANATION && ! empty($m['question_explanation'])) {
                     echo '<br /><span class="explanation">' . $l['w_explanation'] . ':</span><br />' . F_decode_tcecode($m['question_explanation']) . '' . K_NEWLINE;
                 }
 
@@ -247,16 +274,22 @@ if (F_getBoolean($testdata['test_report_to_users'])) {
                             if ($m['question_type'] == 4) {
                                 // ORDER
                                 if ($ma['logansw_position'] > 0) {
-                                    if ($ma['logansw_position'] == $ma['answer_position']) {
+                                    if ($show_keys && $ma['logansw_position'] == $ma['answer_position']) {
                                         echo '<acronym title="' . $l['h_answer_right'] . '" class="okbox">' . $ma['logansw_position'] . '</acronym>';
-                                    } else {
+                                    } elseif ($show_keys) {
                                         echo '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">' . $ma['logansw_position'] . '</acronym>';
+                                    } else {
+                                        // only the position selected by the user, without revealing the correct one
+                                        echo '<acronym title="' . $l['w_position'] . '" class="onbox">' . $ma['logansw_position'] . '</acronym>';
                                     }
                                 } else {
                                     echo '<acronym title="' . $l['m_unanswered'] . '" class="offbox">&nbsp;</acronym>';
                                 }
                             } elseif ($ma['logansw_selected'] > 0) {
-                                if (F_getBoolean($ma['answer_isright'])) {
+                                if (! $show_keys) {
+                                    // only the selection made by the user
+                                    echo '<acronym title="-" class="onbox">x</acronym>';
+                                } elseif (F_getBoolean($ma['answer_isright'])) {
                                     echo '<acronym title="' . $l['h_answer_right'] . '" class="okbox">x</acronym>';
                                 } else {
                                     echo '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">x</acronym>';
@@ -265,7 +298,10 @@ if (F_getBoolean($testdata['test_report_to_users'])) {
                                 // MCSA
                                 echo '<acronym title="-" class="offbox">&nbsp;</acronym>';
                             } elseif ($ma['logansw_selected'] == 0) {
-                                if (F_getBoolean($ma['answer_isright'])) {
+                                if (! $show_keys) {
+                                    // not selected: no indication of the correct answer
+                                    echo '<acronym title="-" class="offbox">&nbsp;</acronym>';
+                                } elseif (F_getBoolean($ma['answer_isright'])) {
                                     echo '<acronym title="' . $l['h_answer_wrong'] . '" class="nobox">&nbsp;</acronym>';
                                 } else {
                                     echo '<acronym title="' . $l['h_answer_right'] . '" class="okbox">&nbsp;</acronym>';
@@ -276,16 +312,21 @@ if (F_getBoolean($testdata['test_report_to_users'])) {
 
                             echo '&nbsp;';
                             if ($m['question_type'] == 4) {
-                                echo '<acronym title="' . $l['w_position'] . '" class="onbox">' . $ma['answer_position'] . '</acronym>';
-                            } elseif (F_getBoolean($ma['answer_isright'])) {
+                                if ($show_keys) {
+                                    echo '<acronym title="' . $l['w_position'] . '" class="onbox">' . $ma['answer_position'] . '</acronym>';
+                                } else {
+                                    // the correct position is part of the answer key
+                                    echo '<acronym title="-" class="offbox">&nbsp;</acronym>';
+                                }
+                            } elseif ($show_keys && F_getBoolean($ma['answer_isright'])) {
                                 echo '<acronym title="' . $l['w_answers_right'] . '" class="onbox">&reg;</acronym>';
                             } else {
-                                echo '<acronym title="' . $l['w_answers_wrong'] . '" class="offbox">&nbsp;</acronym>';
+                                echo '<acronym title="-" class="offbox">&nbsp;</acronym>';
                             }
 
                             echo ' ';
                             echo F_decode_tcecode($ma['answer_description']);
-                            if (K_ENABLE_ANSWER_EXPLANATION && ! empty($ma['answer_explanation'])) {
+                            if ($show_keys && K_ENABLE_ANSWER_EXPLANATION && ! empty($ma['answer_explanation'])) {
                                 echo '<br /><span class="explanation">' . $l['w_explanation'] . ':</span><br />' . F_decode_tcecode($ma['answer_explanation']) . '' . K_NEWLINE;
                             }
 

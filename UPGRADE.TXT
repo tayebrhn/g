@@ -144,3 +144,28 @@ element; TSV files keep their format and imported users get the mask derived
 from their rank.
 
 ------------------------------------------------------------
+ANSWER-KEY VISIBILITY (version 17)
+------------------------------------------------------------
+
+The correct answers (the answer key) inside the result reports are no longer
+shown to whoever can read the report: they are now restricted to the question
+author, defined as the owner of the subject the question belongs to, a user
+sharing a group with that owner, or a global-view user. Test-takers reading
+their own report, and an operator who owns only the test (assembled from
+other authors' questions), only see their own selected answers.
+
+This applies to the detailed HTML report, the public "my results" page, the
+PDF report and its e-mailed attachment, and the per-answer counters of the
+question-statistics XML/JSON export. The question and answer explanations are
+gated with the same rule. The static answer-sheet/paper-test generator
+(tce_pdf_testgen.php) is unaffected: it belongs to the authoring pipeline and
+still embeds the key as hidden text for OMR grading.
+
+The behaviour is controlled by K_RESTRICT_ANSWER_KEYS in
+shared/config/tce_config.php (default true; when the constant is missing the
+restriction is on). Set it to false to restore the previous behaviour in
+which every report displayed the correct answers. See PERMISSIONS.md
+section 5.
+
+------------------------------------------------------------
+

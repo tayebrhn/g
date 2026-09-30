@@ -775,6 +775,8 @@ class TCPDFEX extends TCPDF
             $itemcount = 1;
 
             while ($m = F_db_fetch_array($r)) {
+                // the answer key is only visible to the question author (see F_canSeeAnswerKeys)
+                $show_keys = F_canSeeAnswerKeys((int) $m['subject_id']);
                 $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $itemcount . ' ' . $qtype[($m['question_type'] - 1)], 1, 0, 'R', 0);
                 $this->Cell($tce_data_cell_width, $this->tce_data_cell_height, $m['testlog_score'], 1, 0, 'C', 0);
                 $this->Cell($tce_data_cell_width, $this->tce_data_cell_height, getIpAsString($m['testlog_user_ip']), 1, 0, 'C', 0);
@@ -808,7 +810,7 @@ class TCPDFEX extends TCPDF
                 $this->Cell($tce_data_cell_width, $this->tce_data_cell_height, $reaction_time, 1, 1, 'C', 0);
 
                 $this->writeHTMLCell(0, $this->tce_data_cell_height, (PDF_MARGIN_LEFT + $tce_data_cell_width_third), $this->GetY(), F_decode_tcecode($m['question_description']), 1, 1);
-                if (K_ENABLE_QUESTION_EXPLANATION && ! empty($m['question_explanation'])) {
+                if ($show_keys && K_ENABLE_QUESTION_EXPLANATION && ! empty($m['question_explanation'])) {
                     $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, '', 0, 0, 'C', 0);
                     $this->SetFont('', 'BIU');
                     $this->Cell(0, $this->tce_data_cell_height, $l['w_explanation'], 'LTR', 1, '', 0, '', 0);
@@ -830,10 +832,13 @@ class TCPDFEX extends TCPDF
                             $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, '', 0, 0, 'C', 0);
                             if ($m['question_type'] == 4) {
                                 if ($ma['logansw_position'] > 0) {
-                                    if ($ma['logansw_position'] == $ma['answer_position']) {
+                                    if ($show_keys && $ma['logansw_position'] == $ma['answer_position']) {
                                         $posfill = 1;
                                         $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $ma['logansw_position'], 1, 0, 'C', 1);
+                                    } elseif ($show_keys) {
+                                        $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $ma['logansw_position'], 1, 0, 'C', 0);
                                     } else {
+                                        // only the position selected by the user, without revealing the correct one
                                         $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $ma['logansw_position'], 1, 0, 'C', 0);
                                     }
                                 } else {
@@ -841,7 +846,10 @@ class TCPDFEX extends TCPDF
                                 }
                             } elseif ($ma['logansw_selected'] > 0) {
                                 // selected
-                                if (F_getBoolean($ma['answer_isright'])) {
+                                if (! $show_keys) {
+                                    // only the selection made by the user
+                                    $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, 'x', 1, 0, 'C', 0);
+                                } elseif (F_getBoolean($ma['answer_isright'])) {
                                     $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, '+', 1, 0, 'C', 1);
                                 } else {
                                     $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, '-', 1, 0, 'C', 1);
@@ -851,7 +859,10 @@ class TCPDFEX extends TCPDF
                                 $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, ' ', 1, 0, 'C', 0);
                             } elseif ($ma['logansw_selected'] == 0) {
                                 // unselected
-                                if (F_getBoolean($ma['answer_isright'])) {
+                                if (! $show_keys) {
+                                    // no indication of the correct answer
+                                    $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, ' ', 1, 0, 'C', 0);
+                                } elseif (F_getBoolean($ma['answer_isright'])) {
                                     $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, '-', 1, 0, 'C', 0);
                                 } else {
                                     $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, '+', 1, 0, 'C', 0);
@@ -862,15 +873,20 @@ class TCPDFEX extends TCPDF
                             }
 
                             if ($m['question_type'] == 4) {
-                                $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $ma['answer_position'], 1, 0, 'C', $posfill);
-                            } elseif (F_getBoolean($ma['answer_isright'])) {
+                                if ($show_keys) {
+                                    $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $ma['answer_position'], 1, 0, 'C', $posfill);
+                                } else {
+                                    // the correct position is part of the answer key
+                                    $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, ' ', 1, 0, 'C', 0);
+                                }
+                            } elseif ($show_keys && F_getBoolean($ma['answer_isright'])) {
                                 $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $idx, 1, 0, 'C', 1);
                             } else {
                                 $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $idx, 1, 0, 'C', 0);
                             }
 
                             $this->writeHTMLCell(0, $this->tce_data_cell_height, (PDF_MARGIN_LEFT + $tce_data_cell_width), $this->GetY(), F_decode_tcecode($ma['answer_description']), 'LRTB', 1);
-                            if (K_ENABLE_ANSWER_EXPLANATION && ! empty($ma['answer_explanation'])) {
+                            if ($show_keys && K_ENABLE_ANSWER_EXPLANATION && ! empty($ma['answer_explanation'])) {
                                 $this->Cell((3 * $tce_data_cell_width_third), $this->tce_data_cell_height, '', 0, 0, 'C', 0);
                                 $this->SetFont('', 'BIU');
                                 $this->Cell(0, $this->tce_data_cell_height, $l['w_explanation'], 'LTR', 1, '', 0, '', 0);
