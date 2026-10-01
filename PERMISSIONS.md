@@ -219,6 +219,10 @@ and the user editors require their own capabilities.
 
 Capability required for each admin page.
 
+**`K_PERM_ALL` (any administrative account)**
+
+`index.php` (landing dashboard; section launchers displayed conditionally based on capabilities)
+
 **`K_PERM_VIEW_CONTENT`**
 
 `tce_menu_modules.php`, `tce_edit_module.php`, `tce_edit_subject.php`,
@@ -231,7 +235,7 @@ Capability required for each admin page.
 
 **`K_PERM_OPERATOR`**
 
-`index.php`, `tce_menu_tests.php`, `tce_edit_test.php`, `tce_select_tests.php`,
+`tce_menu_tests.php`, `tce_edit_test.php`, `tce_select_tests.php`,
 `tce_select_tests_popup.php`, `tce_pdf_testgen.php`, `tce_edit_rating.php`,
 `tce_show_result_user.php`, `tce_show_result_allusers.php`,
 `tce_tsv_result_allusers.php`, `tce_xml_results.php`,

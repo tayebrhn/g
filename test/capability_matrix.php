@@ -106,9 +106,10 @@ $known_capabilities = [
     'K_PERM_MANAGE_IDENTITY',
     'K_PERM_BACKUP',
     'K_PERM_ADMIN',
+    'K_PERM_ALL',
 ];
 $pages = [
-    'index.php' => 'K_PERM_OPERATOR',
+    'index.php' => 'K_PERM_ALL',
     'tce_colorpicker.php' => 'K_PERM_VIEW_CONTENT',
     'tce_edit_answer.php' => 'K_PERM_VIEW_CONTENT',
     'tce_edit_backup.php' => 'K_PERM_BACKUP',

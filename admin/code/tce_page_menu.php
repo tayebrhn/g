@@ -39,7 +39,7 @@ $menu = [
         'link' => 'index.php',
         'title' => $l['h_index'],
         'name' => $l['w_index'],
-        'perm' => K_PERM_OPERATOR,
+        'perm' => K_PERM_ALL,
         'key' => '',
         'enabled' => true,
     ],

@@ -119,6 +119,29 @@ foreach ($legacy_expected as $level => $expectedCounts) {
     );
 }
 
+// --- top-level admin menu: index.php must be visible to all capability holders ---
+$top_menu_sessions = [
+    'OPERATOR only' => [['session_user_id' => 2, 'session_user_level' => 5, 'session_user_perms' => K_PERM_OPERATOR], true],
+    'MANAGE_IDENTITY only' => [['session_user_id' => 2, 'session_user_level' => 6, 'session_user_perms' => K_PERM_MANAGE_IDENTITY], true],
+    'VIEW_CONTENT only' => [['session_user_id' => 2, 'session_user_level' => 2, 'session_user_perms' => K_PERM_VIEW_CONTENT], true],
+    'EDIT_CONTENT only' => [['session_user_id' => 2, 'session_user_level' => 3, 'session_user_perms' => K_PERM_EDIT_CONTENT], true],
+    'GLOBAL_VIEW only' => [['session_user_id' => 2, 'session_user_level' => 9, 'session_user_perms' => K_PERM_GLOBAL_VIEW], true],
+    'BACKUP only' => [['session_user_id' => 2, 'session_user_level' => 9, 'session_user_perms' => K_PERM_BACKUP], true],
+    'ADMIN without content capabilities' => [['session_user_id' => 2, 'session_user_level' => 10, 'session_user_perms' => K_PERM_ADMIN], true],
+    'all capabilities' => [['session_user_id' => 2, 'session_user_level' => 10, 'session_user_perms' => K_PERM_ALL], true],
+    'anonymous user' => [['session_user_level' => 0], false],
+    'test-taker level 1 (no capabilities)' => [['session_user_id' => 2, 'session_user_level' => 1, 'session_user_perms' => 0], false],
+];
+
+foreach ($top_menu_sessions as $label => [$session, $should_see_index]) {
+    $_SESSION = $session;
+    $output = F_menu_link('index.php', $menu['index.php'], 0);
+    $sees_index = (is_string($output) && strpos($output, '<li>') !== false);
+    if ($sees_index !== $should_see_index) {
+        $failures[] = sprintf('%s: expected index.php visibility %s, received %s.', $label, $should_see_index ? 'true' : 'false', $sees_index ? 'true' : 'false');
+    }
+}
+
 if ($failures !== []) {
     fwrite(STDERR, implode(PHP_EOL, $failures) . PHP_EOL);
     exit(1);
