@@ -38,7 +38,7 @@ if ($_SESSION['session_user_level'] > 0) {
     echo '<span title="' . $l['h_user_info'] . '">' . $l['w_user'] . ': ' . $_SESSION['session_user_name'] . '</span>';
     // display logout link
     echo ' <a href="tce_logout.php" class="logoutbutton" title="' . $l['h_logout_link'] . '" onclick="return confirm(\'' . $l['w_logout'] . ' ?\')">' . $l['w_logout'] . '</a>' . K_NEWLINE;
-} else {
+} elseif (empty($GLOBALS['is_login_page']) && basename($_SERVER['SCRIPT_NAME']) != 'tce_login.php') {
     // display login link
     echo ' <a href="tce_login.php" class="loginbutton" title="' . $l['h_login_button'] . '">' . $l['w_login'] . '</a>' . K_NEWLINE;
 }

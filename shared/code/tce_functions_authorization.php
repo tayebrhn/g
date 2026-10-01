@@ -97,6 +97,7 @@ function F_login_form()
 {
     global $l, $thispage_title;
     global $xuser_name, $xuser_password;
+    $GLOBALS['is_login_page'] = true;
     require_once('../config/tce_config.php');
     // HTTP-Basic authentication
     require_once('../../shared/config/tce_httpbasic.php');

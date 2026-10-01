@@ -58,7 +58,8 @@ function F_menu_link($link, $data, $level = 0)
     }
 
     $str = '<li>';
-    if ($link != basename($_SERVER['SCRIPT_NAME'])) {
+    $is_current_page = ($link == basename($_SERVER['SCRIPT_NAME'])) || (! empty($GLOBALS['is_login_page']) && $link == 'tce_login.php');
+    if (! $is_current_page) {
         $str .= '<a href="' . $data['link'] . '" title="' . $data['title'] . '"';
         if (! empty($data['key'])) {
             $str .= ' accesskey="' . $data['key'] . '"';
