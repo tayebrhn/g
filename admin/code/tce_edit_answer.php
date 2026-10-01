@@ -130,23 +130,107 @@ $qtype = ['S', 'M', 'T', 'O']; // question types
 
 // check user's authorization
 if ($answer_id > 0) {
-    $sql = 'SELECT subject_module_id,question_subject_id,answer_question_id
+    $sql = 'SELECT subject_module_id, question_subject_id, answer_question_id
 		FROM ' . K_TABLE_SUBJECTS . ', ' . K_TABLE_QUESTIONS . ', ' . K_TABLE_ANSWERS . '
 		WHERE subject_id=question_subject_id
 			AND question_id=answer_question_id
 			AND answer_id=' . $answer_id . '
 		LIMIT 1';
     if ($r = F_db_query($sql, $db)) {
-        // check user's authorization for parent module
-        if (($m = F_db_fetch_array($r)) && (! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $m['subject_module_id'], 'module_user_id') && ! F_isAuthorizedUser(K_TABLE_SUBJECTS, 'subject_id', $m['question_subject_id'], 'subject_user_id'))) {
-            F_print_error('ERROR', $l['m_authorization_denied'], true);
+        if ($m = F_db_fetch_array($r)) {
+            $subject_module_id = (int) $m['subject_module_id'];
+            $question_subject_id = (int) $m['question_subject_id'];
+            $answer_question_id = (int) $m['answer_question_id'];
+            // check user's authorization for parent module
+            if (! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id') && ! F_isAuthorizedUser(K_TABLE_SUBJECTS, 'subject_id', $question_subject_id, 'subject_user_id')) {
+                F_print_error('ERROR', $l['m_authorization_denied'], true);
+            }
         }
     } else {
         F_display_db_error();
     }
+} else {
+    $answer_id = 0;
+    if ($changemodule > 0) {
+        $question_subject_id = 0;
+        $answer_question_id = 0;
+    } elseif ($changesubject > 0) {
+        $answer_question_id = 0;
+    } elseif ($answer_question_id > 0) {
+        // synchronize subject_module_id and question_subject_id if answer_question_id is provided to prevent cross-parameter spoofing
+        $sql = 'SELECT subject_module_id, question_subject_id
+            FROM ' . K_TABLE_SUBJECTS . ', ' . K_TABLE_QUESTIONS . '
+            WHERE subject_id=question_subject_id
+                AND question_id=' . $answer_question_id . '
+            LIMIT 1';
+        if ($r = F_db_query($sql, $db)) {
+            if ($m = F_db_fetch_array($r)) {
+                $subject_module_id = (int) $m['subject_module_id'];
+                $question_subject_id = (int) $m['question_subject_id'];
+            }
+        } else {
+            F_display_db_error();
+        }
+    } elseif ($question_subject_id > 0) {
+        // synchronize subject_module_id if question_subject_id is provided
+        $sql = 'SELECT subject_module_id FROM ' . K_TABLE_SUBJECTS . ' WHERE subject_id=' . $question_subject_id . ' LIMIT 1';
+        if ($r = F_db_query($sql, $db)) {
+            if ($m = F_db_fetch_array($r)) {
+                $subject_module_id = (int) $m['subject_module_id'];
+            }
+        } else {
+            F_display_db_error();
+        }
+    }
+    // select default module (if not specified)
+    if ($subject_module_id <= 0) {
+        $sql = F_select_modules_sql() . ' LIMIT 1';
+        if ($r = F_db_query($sql, $db)) {
+            $subject_module_id = ($m = F_db_fetch_array($r)) ? (int) $m['module_id'] : 0;
+        } else {
+            F_display_db_error();
+        }
+    }
+    // select default subject (if not specified or module changed)
+    if ($changemodule > 0 || $question_subject_id <= 0) {
+        $sql = F_select_subjects_sql('subject_module_id=' . $subject_module_id . '') . ' LIMIT 1';
+        if ($r = F_db_query($sql, $db)) {
+            $question_subject_id = ($m = F_db_fetch_array($r)) ? (int) $m['subject_id'] : 0;
+        } else {
+            F_display_db_error();
+        }
+    }
+    // select default question (if not specified or subject/module changed)
+    if ($changesubject > 0 || $changemodule > 0 || $answer_question_id <= 0) {
+        $sql = 'SELECT question_id
+            FROM ' . K_TABLE_QUESTIONS . '
+            WHERE question_subject_id=' . $question_subject_id . '
+            ORDER BY ';
+        if (K_DATABASE_TYPE == 'ORACLE') {
+            $sql .= 'CAST(question_description as varchar2(100))';
+        } else {
+            $sql .= 'question_description LIMIT 1';
+        }
+
+        if ($r = F_db_query($sql, $db)) {
+            $answer_question_id = ($m = F_db_fetch_array($r)) ? (int) $m['question_id'] : 0;
+        } else {
+            F_display_db_error();
+        }
+    }
+    // check user's visibility authorization for parent module and subject
+    if ($subject_module_id > 0 && ! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id') && ($question_subject_id <= 0 || ! F_isAuthorizedUser(K_TABLE_SUBJECTS, 'subject_id', $question_subject_id, 'subject_user_id'))) {
+        F_print_error('ERROR', $l['m_authorization_denied'], true);
+    }
 }
 
-if (F_is_readonly_content() || ($answer_id > 0 && ! F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id') && ! F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $question_subject_id, 'subject_user_id'))) {
+$can_modify = false;
+if ($question_subject_id > 0) {
+    $can_modify = F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')
+        || F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $question_subject_id, 'subject_user_id');
+}
+
+if (F_is_readonly_content() || ! $can_modify) {
     // read-only access: disable any modification
     $record_readonly = true;
     $menu_mode = '';
@@ -394,6 +478,11 @@ switch ($menu_mode) {
     }
 
     case 'add':{ // Add
+        if ($answer_question_id <= 0 || (! F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id') && ! F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $question_subject_id, 'subject_user_id'))) {
+            F_print_error('ERROR', $l['m_authorization_denied']);
+            break;
+        }
+
         if ($formstatus = F_check_form_fields()) {
             // check if alternate key is unique
             if (K_DATABASE_TYPE == 'ORACLE') {
@@ -481,45 +570,6 @@ switch ($menu_mode) {
         break;
     }
 } //end of switch
-
-// select default module/subject (if not specified)
-if ($subject_module_id <= 0) {
-    $sql = F_select_modules_sql() . ' LIMIT 1';
-    if ($r = F_db_query($sql, $db)) {
-        $subject_module_id = ($m = F_db_fetch_array($r)) ? $m['module_id'] : 0;
-    } else {
-        F_display_db_error();
-    }
-}
-
-// select default subject
-if ($changemodule > 0 || $question_subject_id <= 0) {
-    $sql = F_select_subjects_sql('subject_module_id=' . $subject_module_id . '') . ' LIMIT 1';
-    if ($r = F_db_query($sql, $db)) {
-        $question_subject_id = ($m = F_db_fetch_array($r)) ? $m['subject_id'] : 0;
-    } else {
-        F_display_db_error();
-    }
-}
-
-// select default question
-if ($changesubject > 0 || $changemodule > 0 || $answer_question_id <= 0) {
-    $sql = 'SELECT question_id
-		FROM ' . K_TABLE_QUESTIONS . '
-		WHERE question_subject_id=' . $question_subject_id . '
-		ORDER BY ';
-    if (K_DATABASE_TYPE == 'ORACLE') {
-        $sql .= 'CAST(question_description as varchar2(100))';
-    } else {
-        $sql .= 'question_description LIMIT 1';
-    }
-
-    if ($r = F_db_query($sql, $db)) {
-        $answer_question_id = ($m = F_db_fetch_array($r)) ? $m['question_id'] : 0;
-    } else {
-        F_display_db_error();
-    }
-}
 
 // --- Initialize variables
 if ($formstatus && $menu_mode != 'clear') {

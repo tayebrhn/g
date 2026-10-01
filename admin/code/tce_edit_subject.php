@@ -92,9 +92,29 @@ if ($subject_id > 0) {
     }
 } else {
     $subject_id = 0;
+    // select default module (if not specified)
+    if ($subject_module_id <= 0) {
+        $sql = F_select_modules_sql() . ' LIMIT 1';
+        if ($r = F_db_query($sql, $db)) {
+            $subject_module_id = ($m = F_db_fetch_array($r)) ? (int) $m['module_id'] : 0;
+        } else {
+            F_display_db_error();
+        }
+    }
+    if ($subject_module_id > 0 && ! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')) {
+        F_print_error('ERROR', $l['m_authorization_denied'], true);
+    }
 }
 
-if (F_is_readonly_content() || ($subject_id > 0 && ! F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id') && ! F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $subject_id, 'subject_user_id'))) {
+$can_modify = false;
+if ($subject_id > 0) {
+    $can_modify = F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')
+        || F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $subject_id, 'subject_user_id');
+} elseif ($subject_module_id > 0) {
+    $can_modify = F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id');
+}
+
+if (F_is_readonly_content() || ! $can_modify) {
     // read-only access: disable any modification
     $record_readonly = true;
     $menu_mode = '';
@@ -214,6 +234,11 @@ switch ($menu_mode) {
     }
 
     case 'add':{ // Add
+        if ($subject_module_id <= 0 || ! F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')) {
+            F_print_error('ERROR', $l['m_authorization_denied']);
+            break;
+        }
+
         if ($formstatus = F_check_form_fields()) {
             // check if name is unique
             if (! F_check_unique(K_TABLE_SUBJECTS, "subject_name='" . F_escape_sql($db, $subject_name) . "' AND subject_module_id=" . $subject_module_id . '')) {
@@ -257,16 +282,6 @@ switch ($menu_mode) {
         break;
     }
 } //end of switch
-
-// select default module (if not specified)
-if ($subject_module_id <= 0) {
-    $sql = F_select_modules_sql() . ' LIMIT 1';
-    if ($r = F_db_query($sql, $db)) {
-        $subject_module_id = ($m = F_db_fetch_array($r)) ? $m['module_id'] : 0;
-    } else {
-        F_display_db_error();
-    }
-}
 
 // --- Initialize variables
 if ($formstatus && $menu_mode != 'clear') {
