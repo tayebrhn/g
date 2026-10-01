@@ -416,21 +416,38 @@ switch ($menu_mode) {
             break;
         }
 
-        // for all selected subjects
-        for ($i = 0; $i < $subjcount; ++$i) {
-            if (!empty($_POST["selectsubject" . $i])) {
-                $sql =
-                    "DELETE FROM " .
-                    K_TABLE_TEST_SUBJSET .
-                    " WHERE tsubset_test_id=" .
-                    $test_id .
-                    " AND tsubset_id=" .
-                    $_POST["selectsubject" . $i] .
-                    "";
-                if (!($r = F_db_query($sql, $db))) {
-                    F_display_db_error(false);
-                } else {
-                    F_print_error("MESSAGE", $l["m_deleted"]);
+        if (isset($_POST["deletesubset_id"]) && (int) $_POST["deletesubset_id"] > 0) {
+            $del_subset_id = (int) $_POST["deletesubset_id"];
+            $sql =
+                "DELETE FROM " .
+                K_TABLE_TEST_SUBJSET .
+                " WHERE tsubset_test_id=" .
+                $test_id .
+                " AND tsubset_id=" .
+                $del_subset_id .
+                "";
+            if (!($r = F_db_query($sql, $db))) {
+                F_display_db_error(false);
+            } else {
+                F_print_error("MESSAGE", $l["m_deleted"]);
+            }
+        } else {
+            // for all selected subjects
+            for ($i = 0; $i < $subjcount; ++$i) {
+                if (!empty($_POST["selectsubject" . $i])) {
+                    $sql =
+                        "DELETE FROM " .
+                        K_TABLE_TEST_SUBJSET .
+                        " WHERE tsubset_test_id=" .
+                        $test_id .
+                        " AND tsubset_id=" .
+                        $_POST["selectsubject" . $i] .
+                        "";
+                    if (!($r = F_db_query($sql, $db))) {
+                        F_display_db_error(false);
+                    } else {
+                        F_print_error("MESSAGE", $l["m_deleted"]);
+                    }
                 }
             }
         }
@@ -1945,148 +1962,126 @@ if (isset($test_id) && $test_id > 0) {
     echo '<span class="formw">' . $test_fieldset_name . "</span>" . K_NEWLINE;
     echo "</div>" . K_NEWLINE;
 
+    // Fetch modules and subjects data
+    $sql_mods = F_select_module_subjects_sql("module_enabled='1' AND subject_enabled='1'");
+    $modules_list = [];
+    $module_subjects = [];
+    $subjects_data = [];
+    if ($r_mods = F_db_query($sql_mods, $db)) {
+        while ($m_row = F_db_fetch_array($r_mods)) {
+            $m_id = (int) $m_row['module_id'];
+            $s_id = (int) $m_row['subject_id'];
+            $modules_list[$m_id] = $m_row['module_name'];
+            if (!isset($module_subjects[$m_id])) {
+                $module_subjects[$m_id] = [];
+            }
+            $module_subjects[$m_id][] = $s_id;
+            $subjects_data[$s_id] = [
+                'module_id' => $m_id,
+                'module_name' => $m_row['module_name'],
+                'subject_id' => $s_id,
+                'subject_name' => $m_row['subject_name'],
+            ];
+        }
+    }
+
+    // Pre-aggregate question counts in a single efficient query
+    $topic_questions_stat = [];
+    $sql_counts = 'SELECT question_subject_id, question_type, question_difficulty, COUNT(*) as numquestions
+        FROM ' . K_TABLE_QUESTIONS . '
+        WHERE question_enabled=\'1\'
+        GROUP BY question_subject_id, question_type, question_difficulty';
+    if ($rc = F_db_query($sql_counts, $db)) {
+        while ($mc = F_db_fetch_array($rc)) {
+            $sid = (int) $mc['question_subject_id'];
+            $qt = (int) $mc['question_type'];
+            $qd = (int) $mc['question_difficulty'];
+            $cnt = (int) $mc['numquestions'];
+            if (!isset($topic_questions_stat[$sid])) {
+                $topic_questions_stat[$sid] = [
+                    'total' => 0,
+                    'by_type' => [],
+                    'by_diff' => [],
+                    'matrix' => [],
+                ];
+            }
+            $topic_questions_stat[$sid]['total'] += $cnt;
+            if (!isset($topic_questions_stat[$sid]['by_type'][$qt])) {
+                $topic_questions_stat[$sid]['by_type'][$qt] = 0;
+            }
+            $topic_questions_stat[$sid]['by_type'][$qt] += $cnt;
+
+            if (!isset($topic_questions_stat[$sid]['by_diff'][$qd])) {
+                $topic_questions_stat[$sid]['by_diff'][$qd] = 0;
+            }
+            $topic_questions_stat[$sid]['by_diff'][$qd] += $cnt;
+
+            $topic_questions_stat[$sid]['matrix'][$qt . '_' . $qd] = $cnt;
+        }
+    }
+
+    // Module filter dropdown and topic search
+    echo '<div class="row">' . K_NEWLINE;
+    echo '<span class="label"><label for="filter_module_id">' . $l['w_module'] . '</label></span>' . K_NEWLINE;
+    echo '<span class="formw">' . K_NEWLINE;
+    echo '<select name="filter_module_id" id="filter_module_id" onchange="FJ_filter_topics_by_module(this.value);" title="' . $l['h_module_name'] . '" style="min-width:180px;">' . K_NEWLINE;
+    echo '<option value="0">*** ' . $l['w_all'] . ' ***</option>' . K_NEWLINE;
+    foreach ($modules_list as $m_id => $m_name) {
+        echo '<option value="' . $m_id . '">' . htmlspecialchars($m_name, ENT_NOQUOTES, $l['a_meta_charset']) . '</option>' . K_NEWLINE;
+    }
+    echo '</select>' . K_NEWLINE;
+    echo '<span style="margin-left:12px;">' . K_NEWLINE;
+    echo '<input type="text" id="filter_topic_search" placeholder="' . htmlspecialchars($l['w_search'] ?? 'Search topics...', ENT_COMPAT, $l['a_meta_charset']) . '" oninput="FJ_filter_topics_search(this.value);" style="width:180px; padding:3px 6px; font-size:90%;" />' . K_NEWLINE;
+    echo '</span>' . K_NEWLINE;
+    echo '</span>' . K_NEWLINE;
+    echo '</div>' . K_NEWLINE;
+
     echo '<div class="row">' . K_NEWLINE;
     echo '<span class="label">' . K_NEWLINE;
     echo '<label for="subject_id">' . $l["w_subjects"] . "</label>" . K_NEWLINE;
     echo "</span>" . K_NEWLINE;
     echo '<span class="formw">' . K_NEWLINE;
-    echo '<select name="subject_id[]" id="subject_id" size="10" multiple="multiple" title="' .
+    echo '<select name="subject_id[]" id="subject_id" size="8" multiple="multiple" onchange="FJ_update_availability();" title="' .
         $l["h_subjects"] .
         '">' .
         K_NEWLINE;
-    // select subject_id
-    $sql = F_select_module_subjects_sql(
-        "module_enabled='1' AND subject_enabled='1'",
-    );
-    if ($r = F_db_query($sql, $db)) {
-        $prev_module_id = 0;
-        while ($m = F_db_fetch_array($r)) {
-            if ($m["module_id"] != $prev_module_id) {
-                $prev_module_id = $m["module_id"];
-                echo '<option value="#' .
-                    $m["module_id"] .
-                    '" style="background-color:#DDEEFF;font-weight:bold">* ' .
-                    htmlspecialchars(
-                        $m["module_name"],
-                        ENT_NOQUOTES,
-                        $l["a_meta_charset"],
-                    ) .
-                    "</option>" .
-                    K_NEWLINE;
-            }
-
-            echo '<option value="' . $m["subject_id"] . '"';
-            if (in_array($m["subject_id"], $subject_id)) {
-                echo ' selected="selected"';
-            }
-
-            echo ">&nbsp;&nbsp;&nbsp;" .
-                htmlspecialchars(
-                    $m["subject_name"],
-                    ENT_NOQUOTES,
-                    $l["a_meta_charset"],
-                ) .
-                " [";
-            // count available questions for each type
-            $qstat = "";
-            $sqln =
-                'SELECT question_type, question_difficulty, COUNT(*) as numquestions
-				FROM ' .
-                K_TABLE_QUESTIONS .
-                '
-				WHERE question_subject_id=' .
-                $m["subject_id"] .
-                '
-					AND question_enabled=\'1\'
-				GROUP BY question_type, question_difficulty';
-            if ($rn = F_db_query($sqln, $db)) {
-                while ($mn = F_db_fetch_array($rn)) {
-                    $qstat .=
-                        " " .
-                        $mn["numquestions"] .
-                        $qtype[$mn["question_type"] - 1] .
-                        $mn["question_difficulty"];
-                    // count min and max alternative answers
-                    $amin = 999999;
-                    $amax = 0;
-                    $sqla =
-                        'SELECT question_id, COUNT(*) as numanswers
-						FROM ' .
-                        K_TABLE_QUESTIONS .
-                        "," .
-                        K_TABLE_ANSWERS .
-                        '
-						WHERE answer_question_id=question_id
-							AND question_subject_id=' .
-                        $m["subject_id"] .
-                        '
-							AND question_type=' .
-                        $mn["question_type"] .
-                        '
-							AND question_difficulty=' .
-                        $mn["question_difficulty"] .
-                        '
-							AND question_enabled=\'1\'
-							AND answer_enabled=\'1\'
-						GROUP BY question_id';
-                    if ($ra = F_db_query($sqla, $db)) {
-                        while ($ma = F_db_fetch_array($ra)) {
-                            if ($ma["numanswers"] < $amin) {
-                                $amin = $ma["numanswers"];
-                            }
-
-                            if ($ma["numanswers"] > $amax) {
-                                $amax = $ma["numanswers"];
-                            }
-                        }
-                    } else {
-                        F_display_db_error();
-                    }
-
-                    if ($amin === 999999) {
-                        $amin = 0;
-                    }
-
-                    // display minimum alternative answers
-                    $qstat .= ":" . $amin;
-                    if ($amax > $amin) {
-                        $qstat .= "-" . $amax;
-                    }
-                }
-            } else {
-                F_display_db_error();
-            }
-
-            echo $qstat . " ]</option>" . K_NEWLINE;
+    foreach ($module_subjects as $m_id => $s_ids) {
+        $m_name = $modules_list[$m_id] ?? ('Module ' . $m_id);
+        $m_selected = in_array('#' . $m_id, $subject_id) ? ' selected="selected"' : '';
+        echo '<option value="#' . $m_id . '" data-module-id="' . $m_id . '" class="opt_module_header" style="background-color:#DDEEFF;font-weight:bold;"' . $m_selected . '>* [All topics in: ' . htmlspecialchars($m_name, ENT_NOQUOTES, $l['a_meta_charset']) . ']</option>' . K_NEWLINE;
+        foreach ($s_ids as $s_id) {
+            $s_row = $subjects_data[$s_id];
+            $s_name = $s_row['subject_name'];
+            $q_count = $topic_questions_stat[$s_id]['total'] ?? 0;
+            $s_selected = in_array((string)$s_id, $subject_id) ? ' selected="selected"' : '';
+            echo '<option value="' . $s_id . '" data-module-id="' . $m_id . '" class="opt_topic_item"' . $s_selected . '>&nbsp;&nbsp;&nbsp;' .
+                htmlspecialchars($s_name, ENT_NOQUOTES, $l['a_meta_charset']) .
+                ' (' . $q_count . ' ' . $l['w_questions'] . ')</option>' . K_NEWLINE;
         }
-    } else {
-        echo "</select></span></div>" . K_NEWLINE;
-        F_display_db_error();
     }
-
     echo "</select>" . K_NEWLINE;
     echo "</span>" . K_NEWLINE;
     echo "</div>" . K_NEWLINE;
 
-    echo getFormRowTextInput(
-        "tsubset_quantity",
-        $l["w_num_questions"],
-        $l["h_num_questions"],
-        "",
-        $tsubset_quantity,
-        '^([0-9]*)$',
-        20,
-        false,
-        false,
-        false,
-    );
+    echo '<div class="row">' . K_NEWLINE;
+    echo '<span class="label">' . K_NEWLINE;
+    echo '<label for="tsubset_quantity">' . $l["w_num_questions"] . "</label>" . K_NEWLINE;
+    echo "</span>" . K_NEWLINE;
+    echo '<span class="formw">' . K_NEWLINE;
+    echo '<input type="text" name="tsubset_quantity" id="tsubset_quantity" value="' . $tsubset_quantity . '" size="5" maxlength="20" class="numeric" />' . K_NEWLINE;
+    echo '<span id="tsubset_availability_badge" class="labeldesc" style="display:inline-block; margin-left:10px; font-weight:bold; color:#1c4626; background:#eff7f1; padding:3px 8px; border-radius:4px; border:1px solid #c9e2cd;">';
+    echo 'Available: <strong id="tsubset_avail_count">0</strong> matching questions';
+    echo '</span>' . K_NEWLINE;
+    echo '<a href="#" id="btn_use_all_available" onclick="FJ_use_all_available(); return false;" style="margin-left:8px; font-size:85%; text-decoration:underline;">[use all available]</a>' . K_NEWLINE;
+    echo "</span>" . K_NEWLINE;
+    echo "</div>" . K_NEWLINE;
 
     echo '<div class="row">' . K_NEWLINE;
     echo '<span class="label">' . K_NEWLINE;
     echo '<label for="tsubset_type">' . $l["w_type"] . "</label>" . K_NEWLINE;
     echo "</span>" . K_NEWLINE;
     echo '<span class="formw">' . K_NEWLINE;
-    echo '<select name="tsubset_type" id="tsubset_type" size="0" title="' .
+    echo '<select name="tsubset_type" id="tsubset_type" size="0" onchange="FJ_update_availability();" title="' .
         $l["h_question_type"] .
         '">' .
         K_NEWLINE;
@@ -2132,7 +2127,7 @@ if (isset($test_id) && $test_id > 0) {
         K_NEWLINE;
     echo "</span>" . K_NEWLINE;
     echo '<span class="formw">' . K_NEWLINE;
-    echo '<select name="tsubset_difficulty" id="tsubset_difficulty" size="0" title="' .
+    echo '<select name="tsubset_difficulty" id="tsubset_difficulty" size="0" onchange="FJ_update_availability();" title="' .
         $l["h_question_difficulty"] .
         '">' .
         K_NEWLINE;
@@ -2176,140 +2171,105 @@ if (isset($test_id) && $test_id > 0) {
     echo '<div class="rowl" title="' . $l["h_subjects"] . '">' . K_NEWLINE;
     echo "<br />" . K_NEWLINE;
     echo '<div class="preview">' . K_NEWLINE;
-    $subjlist = "";
-    $sql =
-        "SELECT * FROM " .
-        K_TABLE_TEST_SUBJSET .
-        '
-		WHERE tsubset_test_id=\'' .
-        $test_id .
-        '\'
-		ORDER BY tsubset_id';
+    $sql = "SELECT * FROM " . K_TABLE_TEST_SUBJSET . ' WHERE tsubset_test_id=\'' . $test_id . '\' ORDER BY tsubset_id';
     if ($r = F_db_query($sql, $db)) {
         $subjcount = 0;
+        $total_subset_questions = 0;
+        $test_max_score_new = 0;
+        $rows_html = '';
         while ($m = F_db_fetch_array($r)) {
-            $subjlist .= "<li>";
-            $subjects_list = "";
-            $sqls =
-                'SELECT subject_id,subject_name
-				FROM ' .
-                K_TABLE_SUBJECTS .
-                ", " .
-                K_TABLE_SUBJECT_SET .
-                '
-				WHERE subject_id=subjset_subject_id
-					AND subjset_tsubset_id=\'' .
-                $m["tsubset_id"] .
-                '\'
-				ORDER BY subject_name';
+            $subjects_list = '';
+            $sqls = 'SELECT subject_id, subject_name FROM ' . K_TABLE_SUBJECTS . ', ' . K_TABLE_SUBJECT_SET . ' WHERE subject_id=subjset_subject_id AND subjset_tsubset_id=\'' . $m['tsubset_id'] . '\' ORDER BY subject_name';
             if ($rs = F_db_query($sqls, $db)) {
                 while ($ms = F_db_fetch_array($rs)) {
-                    $subjects_list .=
-                        '<a href="tce_edit_subject.php?subject_id=' .
-                        $ms["subject_id"] .
-                        '" title="' .
-                        $l["t_subjects_editor"] .
-                        '">' .
-                        htmlspecialchars(
-                            $ms["subject_name"],
-                            ENT_NOQUOTES,
-                            $l["a_meta_charset"],
-                        ) .
-                        "</a>, ";
+                    $subjects_list .= '<a href="tce_edit_subject.php?subject_id=' . $ms['subject_id'] . '" title="' . $l['t_subjects_editor'] . '">' . htmlspecialchars($ms['subject_name'], ENT_NOQUOTES, $l['a_meta_charset']) . '</a>, ';
                 }
             } else {
                 F_display_db_error();
             }
+            $subjects_list = rtrim($subjects_list, ', ');
 
-            // remove last comma + space
-            $subjlist .= substr($subjects_list, 0, -2);
-            $subjlist .= "<br />" . K_NEWLINE;
-            $subjlist .=
-                '<input type="checkbox" name="selectsubject' .
-                $subjcount .
-                '" id="selectsubject' .
-                $subjcount .
-                '" value="' .
-                $m["tsubset_id"] .
-                '" title="' .
-                $l["w_select"] .
-                '" />';
-            ++$subjcount;
-            $subjlist .=
-                '<acronym class="offbox" title="' .
-                $l["h_num_questions"] .
-                '">' .
-                $m["tsubset_quantity"] .
-                "</acronym> ";
-            $subjlist .=
-                '<acronym class="offbox" title="' .
-                $l["h_question_type"] .
-                '">';
-            if ($m["tsubset_type"] > 0) {
-                $subjlist .= $qtype[$m["tsubset_type"] - 1];
-            } else {
-                // all question types
-                $subjlist .= "*";
+            $type_label = $l['w_all'];
+            if ($m['tsubset_type'] == 1) {
+                $type_label = $l['w_single_answer'];
+            } elseif ($m['tsubset_type'] == 2) {
+                $type_label = $l['w_multiple_answers'];
+            } elseif ($m['tsubset_type'] == 3) {
+                $type_label = $l['w_free_answer'];
+            } elseif ($m['tsubset_type'] == 4) {
+                $type_label = $l['w_ordering_answer'];
             }
 
-            $subjlist .= "</acronym> ";
-            $subjlist .=
-                '<acronym class="offbox" title="' .
-                $l["h_question_difficulty"] .
-                '">' .
-                $m["tsubset_difficulty"] .
-                "</acronym> ";
-            $subjlist .=
-                '<acronym class="offbox" title="' .
-                $l["h_num_answers"] .
-                '">' .
-                $m["tsubset_answers"] .
-                "</acronym> ";
-            $subjlist .= "</li>" . K_NEWLINE;
+            $subset_score = $test_score_right * $m['tsubset_difficulty'] * $m['tsubset_quantity'];
+            $test_max_score_new += $subset_score;
+            $total_subset_questions += (int) $m['tsubset_quantity'];
 
-            // update test_max_score
-            $test_max_score_new +=
-                $test_score_right *
-                $m["tsubset_difficulty"] *
-                $m["tsubset_quantity"];
-            if (
-                isset($test_max_score) &&
-                $test_max_score_new !== $test_max_score
-            ) {
-                $test_max_score = $test_max_score_new;
-                // update max score on test table
-                $sqlup =
-                    "UPDATE " .
-                    K_TABLE_TESTS .
-                    " SET test_max_score=" .
-                    $test_max_score .
-                    " WHERE test_id=" .
-                    $test_id .
-                    "";
-                if (!($rup = F_db_query($sqlup, $db))) {
-                    F_display_db_error(false);
-                }
+            $rows_html .= '<tr>' . K_NEWLINE;
+            $rows_html .= '<td style="text-align:center;"><input type="checkbox" name="selectsubject' . $subjcount . '" id="selectsubject' . $subjcount . '" value="' . $m['tsubset_id'] . '" class="subset_checkbox" title="' . $l['w_select'] . '" /></td>' . K_NEWLINE;
+            $rows_html .= '<td>' . $subjects_list . '</td>' . K_NEWLINE;
+            $rows_html .= '<td>' . htmlspecialchars($type_label, ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
+            $rows_html .= '<td style="text-align:center;">' . $m['tsubset_difficulty'] . '</td>' . K_NEWLINE;
+            $rows_html .= '<td style="text-align:center;"><strong>' . $m['tsubset_quantity'] . '</strong></td>' . K_NEWLINE;
+            $rows_html .= '<td style="text-align:center;">' . $m['tsubset_answers'] . '</td>' . K_NEWLINE;
+            $rows_html .= '<td style="text-align:right;">' . sprintf('%.2f', $subset_score) . '</td>' . K_NEWLINE;
+            $rows_html .= '<td style="text-align:center;"><button type="button" class="btn_delete_subset" onclick="FJ_delete_single_subset(' . $m['tsubset_id'] . ');" style="background:#dc3545; color:#fff; border:none; border-radius:3px; padding:2px 8px; cursor:pointer; font-size:85%;" title="' . $l['w_delete'] . '">[x] ' . $l['w_delete'] . '</button></td>' . K_NEWLINE;
+            $rows_html .= '</tr>' . K_NEWLINE;
+
+            ++$subjcount;
+        }
+
+        // update test_max_score if changed
+        if (isset($test_max_score) && $test_max_score_new !== $test_max_score) {
+            $test_max_score = $test_max_score_new;
+            $sqlup = 'UPDATE ' . K_TABLE_TESTS . ' SET test_max_score=' . $test_max_score . ' WHERE test_id=' . $test_id;
+            if (!($rup = F_db_query($sqlup, $db))) {
+                F_display_db_error(false);
             }
         }
 
         if ($subjcount > 0) {
-            echo "<ul>" . K_NEWLINE . $subjlist . "</ul>" . K_NEWLINE;
-            echo '<input type="hidden" name="subjcount" id="subjcount" value="' .
-                $subjcount .
-                '" />';
-            F_submit_button("deletesubject", $l["w_delete"], $l["h_delete"]);
-            echo "<br />" . K_NEWLINE;
+            echo '<table class="userselect subsets_table" style="margin-top:10px; width:100%; border-collapse:collapse;">' . K_NEWLINE;
+            echo '<thead>' . K_NEWLINE;
+            echo '<tr>' . K_NEWLINE;
+            echo '<th style="width:30px; text-align:center;"><input type="checkbox" id="select_all_subsets" onclick="FJ_toggle_all_subsets(this);" title="' . $l['w_select'] . '" /></th>' . K_NEWLINE;
+            echo '<th>' . $l['w_subjects'] . '</th>' . K_NEWLINE;
+            echo '<th>' . $l['w_type'] . '</th>' . K_NEWLINE;
+            echo '<th style="text-align:center;">' . $l['w_question_difficulty'] . '</th>' . K_NEWLINE;
+            echo '<th style="text-align:center;">' . $l['w_questions'] . '</th>' . K_NEWLINE;
+            echo '<th style="text-align:center;">' . $l['w_num_answers'] . '</th>' . K_NEWLINE;
+            echo '<th style="text-align:right;">' . $l['w_score'] . '</th>' . K_NEWLINE;
+            echo '<th style="text-align:center; width:90px;">' . $l['w_action'] . '</th>' . K_NEWLINE;
+            echo '</tr>' . K_NEWLINE;
+            echo '</thead>' . K_NEWLINE;
+            echo '<tbody>' . K_NEWLINE . $rows_html . '</tbody>' . K_NEWLINE;
+            echo '<tfoot>' . K_NEWLINE;
+            echo '<tr style="font-weight:bold; background:#eff7f1;">' . K_NEWLINE;
+            echo '<td colspan="4" style="text-align:right;">Total:</td>' . K_NEWLINE;
+            echo '<td style="text-align:center;">' . $total_subset_questions . '</td>' . K_NEWLINE;
+            echo '<td>&nbsp;</td>' . K_NEWLINE;
+            echo '<td style="text-align:right;">' . sprintf('%.2f', $test_max_score_new) . '</td>' . K_NEWLINE;
+            echo '<td>&nbsp;</td>' . K_NEWLINE;
+            echo '</tr>' . K_NEWLINE;
+            echo '</tfoot>' . K_NEWLINE;
+            echo '</table>' . K_NEWLINE;
+
+            echo '<input type="hidden" name="subjcount" id="subjcount" value="' . $subjcount . '" />' . K_NEWLINE;
+            echo '<input type="hidden" name="deletesubset_id" id="deletesubset_id" value="0" />' . K_NEWLINE;
+            echo '<div style="margin-top:8px;">' . K_NEWLINE;
+            F_submit_button('deletesubject', $l['w_delete'], $l['h_delete']);
+            echo '</div>' . K_NEWLINE;
+        } else {
+            echo '<p style="color:#666; font-style:italic;">No question subsets have been added to this exam yet.</p>' . K_NEWLINE;
+            echo '<input type="hidden" name="subjcount" id="subjcount" value="0" />' . K_NEWLINE;
+            echo '<input type="hidden" name="deletesubset_id" id="deletesubset_id" value="0" />' . K_NEWLINE;
         }
     } else {
         F_display_db_error();
     }
 
-    echo "&nbsp;" . K_NEWLINE;
-
-    echo $l["w_max_score"] . ": " . $test_max_score_new;
-    echo '<input type="hidden" name="test_max_score" id="test_max_score" value="' .
-        $test_max_score_new .
-        '" />';
+    echo '&nbsp;' . K_NEWLINE;
+    echo $l['w_max_score'] . ': ' . $test_max_score_new;
+    echo '<input type="hidden" name="test_max_score" id="test_max_score" value="' . $test_max_score_new . '" />';
 
     echo "</div>" . K_NEWLINE;
     echo "<br /><br />" . K_NEWLINE;
@@ -2379,17 +2339,189 @@ echo "JF_check_random_boxes();" . K_NEWLINE;
 echo "//]]>" . K_NEWLINE;
 echo "</script>" . K_NEWLINE;
 
-// initialize SlimSelect on multiselect elements
+// initialize SlimSelect and question availability controls
+$json_topic_questions = isset($topic_questions_stat) ? json_encode($topic_questions_stat) : '{}';
+$json_module_subjects = isset($module_subjects) ? json_encode($module_subjects) : '{}';
+
 echo '<script type="text/javascript">' . K_NEWLINE;
 echo "//<![CDATA[" . K_NEWLINE;
+echo 'var topicQuestionMap = ' . $json_topic_questions . ';' . K_NEWLINE;
+echo 'var moduleSubjectsMap = ' . $json_module_subjects . ';' . K_NEWLINE;
+echo 'window.slimSelectSubject = null;' . K_NEWLINE;
+
+echo 'function FJ_filter_topics_by_module(moduleId) {' . K_NEWLINE;
+echo ' moduleId = parseInt(moduleId);' . K_NEWLINE;
+echo ' var sel = document.getElementById("subject_id");' . K_NEWLINE;
+echo ' if (!sel) return;' . K_NEWLINE;
+echo ' var allOptions = sel.querySelectorAll("option");' . K_NEWLINE;
+echo ' for (var i = 0; i < allOptions.length; i++) {' . K_NEWLINE;
+echo '  var opt = allOptions[i];' . K_NEWLINE;
+echo '  var optModId = parseInt(opt.getAttribute("data-module-id") || 0);' . K_NEWLINE;
+echo '  if (moduleId === 0 || optModId === moduleId) {' . K_NEWLINE;
+echo '   opt.style.display = "";' . K_NEWLINE;
+echo '   opt.disabled = false;' . K_NEWLINE;
+echo '  } else {' . K_NEWLINE;
+echo '   opt.style.display = "none";' . K_NEWLINE;
+echo '   opt.disabled = true;' . K_NEWLINE;
+echo '   opt.selected = false;' . K_NEWLINE;
+echo '  }' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo ' if (window.slimSelectSubject && typeof window.slimSelectSubject.setData === "function") {' . K_NEWLINE;
+echo '  var data = [];' . K_NEWLINE;
+echo '  for (var i = 0; i < allOptions.length; i++) {' . K_NEWLINE;
+echo '   var opt = allOptions[i];' . K_NEWLINE;
+echo '   var optModId = parseInt(opt.getAttribute("data-module-id") || 0);' . K_NEWLINE;
+echo '   if (moduleId === 0 || optModId === moduleId) {' . K_NEWLINE;
+echo '    data.push({ text: opt.text, value: opt.value, selected: opt.selected, disabled: false });' . K_NEWLINE;
+echo '   }' . K_NEWLINE;
+echo '  }' . K_NEWLINE;
+echo '  window.slimSelectSubject.setData(data);' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo ' FJ_update_availability();' . K_NEWLINE;
+echo '}' . K_NEWLINE;
+
+echo 'function FJ_filter_topics_search(term) {' . K_NEWLINE;
+echo ' term = (term || "").toLowerCase().trim();' . K_NEWLINE;
+echo ' var sel = document.getElementById("subject_id");' . K_NEWLINE;
+echo ' if (!sel) return;' . K_NEWLINE;
+echo ' var modId = parseInt((document.getElementById("filter_module_id") || {}).value || 0);' . K_NEWLINE;
+echo ' var allOptions = sel.querySelectorAll("option");' . K_NEWLINE;
+echo ' for (var i = 0; i < allOptions.length; i++) {' . K_NEWLINE;
+echo '  var opt = allOptions[i];' . K_NEWLINE;
+echo '  var optModId = parseInt(opt.getAttribute("data-module-id") || 0);' . K_NEWLINE;
+echo '  var matchMod = (modId === 0 || optModId === modId);' . K_NEWLINE;
+echo '  var matchText = (term === "" || opt.text.toLowerCase().indexOf(term) !== -1);' . K_NEWLINE;
+echo '  if (matchMod && matchText) {' . K_NEWLINE;
+echo '   opt.style.display = "";' . K_NEWLINE;
+echo '   opt.disabled = false;' . K_NEWLINE;
+echo '  } else {' . K_NEWLINE;
+echo '   opt.style.display = "none";' . K_NEWLINE;
+echo '   opt.disabled = true;' . K_NEWLINE;
+echo '  }' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo ' if (window.slimSelectSubject && typeof window.slimSelectSubject.setData === "function") {' . K_NEWLINE;
+echo '  var data = [];' . K_NEWLINE;
+echo '  for (var i = 0; i < allOptions.length; i++) {' . K_NEWLINE;
+echo '   var opt = allOptions[i];' . K_NEWLINE;
+echo '   var optModId = parseInt(opt.getAttribute("data-module-id") || 0);' . K_NEWLINE;
+echo '   var matchMod = (modId === 0 || optModId === modId);' . K_NEWLINE;
+echo '   var matchText = (term === "" || opt.text.toLowerCase().indexOf(term) !== -1);' . K_NEWLINE;
+echo '   if (matchMod && matchText) {' . K_NEWLINE;
+echo '    data.push({ text: opt.text, value: opt.value, selected: opt.selected, disabled: false });' . K_NEWLINE;
+echo '   }' . K_NEWLINE;
+echo '  }' . K_NEWLINE;
+echo '  window.slimSelectSubject.setData(data);' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo ' FJ_update_availability();' . K_NEWLINE;
+echo '}' . K_NEWLINE;
+
+echo 'function FJ_count_subject_matches(sid, qType, qDiff) {' . K_NEWLINE;
+echo ' if (!window.topicQuestionMap || !window.topicQuestionMap[sid]) return 0;' . K_NEWLINE;
+echo ' var matrix = window.topicQuestionMap[sid].matrix || {};' . K_NEWLINE;
+echo ' if (qType === 0) {' . K_NEWLINE;
+echo '  var sum = 0;' . K_NEWLINE;
+echo '  for (var t = 1; t <= 4; t++) {' . K_NEWLINE;
+echo '   var k = t + "_" + qDiff;' . K_NEWLINE;
+echo '   if (matrix[k]) sum += parseInt(matrix[k]);' . K_NEWLINE;
+echo '  }' . K_NEWLINE;
+echo '  return sum;' . K_NEWLINE;
+echo ' } else {' . K_NEWLINE;
+echo '  var k = qType + "_" + qDiff;' . K_NEWLINE;
+echo '  return parseInt(matrix[k] || 0);' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo '}' . K_NEWLINE;
+
+echo 'function FJ_update_availability() {' . K_NEWLINE;
+echo ' var sel = document.getElementById("subject_id");' . K_NEWLINE;
+echo ' var badge = document.getElementById("tsubset_avail_count");' . K_NEWLINE;
+echo ' var badgeBox = document.getElementById("tsubset_availability_badge");' . K_NEWLINE;
+echo ' if (!sel || !badge) return;' . K_NEWLINE;
+echo ' var selectedVals = [];' . K_NEWLINE;
+echo ' for (var i = 0; i < sel.options.length; i++) {' . K_NEWLINE;
+echo '  if (sel.options[i].selected) selectedVals.push(sel.options[i].value);' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo ' var qType = parseInt((document.getElementById("tsubset_type") || {}).value || 0);' . K_NEWLINE;
+echo ' var qDiff = parseInt((document.getElementById("tsubset_difficulty") || {}).value || 0);' . K_NEWLINE;
+echo ' var totalAvail = 0;' . K_NEWLINE;
+echo ' var processedSubjects = {};' . K_NEWLINE;
+echo ' for (var i = 0; i < selectedVals.length; i++) {' . K_NEWLINE;
+echo '  var val = selectedVals[i];' . K_NEWLINE;
+echo '  if (typeof val === "string" && val.charAt(0) === "#") {' . K_NEWLINE;
+echo '   var modId = parseInt(val.substring(1));' . K_NEWLINE;
+echo '   if (window.moduleSubjectsMap && window.moduleSubjectsMap[modId]) {' . K_NEWLINE;
+echo '    var sList = window.moduleSubjectsMap[modId];' . K_NEWLINE;
+echo '    for (var j = 0; j < sList.length; j++) {' . K_NEWLINE;
+echo '     var sid = sList[j];' . K_NEWLINE;
+echo '     if (!processedSubjects[sid]) {' . K_NEWLINE;
+echo '      processedSubjects[sid] = true;' . K_NEWLINE;
+echo '      totalAvail += FJ_count_subject_matches(sid, qType, qDiff);' . K_NEWLINE;
+echo '     }' . K_NEWLINE;
+echo '    }' . K_NEWLINE;
+echo '   }' . K_NEWLINE;
+echo '  } else {' . K_NEWLINE;
+echo '   var sid = parseInt(val);' . K_NEWLINE;
+echo '   if (sid > 0 && !processedSubjects[sid]) {' . K_NEWLINE;
+echo '    processedSubjects[sid] = true;' . K_NEWLINE;
+echo '    totalAvail += FJ_count_subject_matches(sid, qType, qDiff);' . K_NEWLINE;
+echo '   }' . K_NEWLINE;
+echo '  }' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo ' badge.innerText = totalAvail;' . K_NEWLINE;
+echo ' if (badgeBox) {' . K_NEWLINE;
+echo '  if (totalAvail > 0) {' . K_NEWLINE;
+echo '   badgeBox.style.color = "#1c4626";' . K_NEWLINE;
+echo '   badgeBox.style.background = "#eff7f1";' . K_NEWLINE;
+echo '   badgeBox.style.borderColor = "#c9e2cd";' . K_NEWLINE;
+echo '  } else {' . K_NEWLINE;
+echo '   badgeBox.style.color = "#721c24";' . K_NEWLINE;
+echo '   badgeBox.style.background = "#f8d7da";' . K_NEWLINE;
+echo '   badgeBox.style.borderColor = "#f5c6cb";' . K_NEWLINE;
+echo '  }' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo '}' . K_NEWLINE;
+
+echo 'function FJ_use_all_available() {' . K_NEWLINE;
+echo ' var badge = document.getElementById("tsubset_avail_count");' . K_NEWLINE;
+echo ' var qtyInput = document.getElementById("tsubset_quantity");' . K_NEWLINE;
+echo ' if (badge && qtyInput) {' . K_NEWLINE;
+echo '  var count = parseInt(badge.innerText || 0);' . K_NEWLINE;
+echo '  if (count > 0) qtyInput.value = count;' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo '}' . K_NEWLINE;
+
+echo 'function FJ_delete_single_subset(id) {' . K_NEWLINE;
+echo ' if (confirm("Are you sure you want to delete this question subset?")) {' . K_NEWLINE;
+echo '  var form = document.getElementById("form_testeditor");' . K_NEWLINE;
+echo '  var delInput = document.getElementById("deletesubset_id");' . K_NEWLINE;
+echo '  if (form && delInput) {' . K_NEWLINE;
+echo '   delInput.value = id;' . K_NEWLINE;
+echo '   var hiddenAction = document.createElement("input");' . K_NEWLINE;
+echo '   hiddenAction.type = "hidden";' . K_NEWLINE;
+echo '   hiddenAction.name = "deletesubject";' . K_NEWLINE;
+echo '   hiddenAction.value = "1";' . K_NEWLINE;
+echo '   form.appendChild(hiddenAction);' . K_NEWLINE;
+echo '   form.submit();' . K_NEWLINE;
+echo '  }' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo '}' . K_NEWLINE;
+
+echo 'function FJ_toggle_all_subsets(master) {' . K_NEWLINE;
+echo ' var cbs = document.querySelectorAll(".subset_checkbox");' . K_NEWLINE;
+echo ' for (var i = 0; i < cbs.length; i++) {' . K_NEWLINE;
+echo '  cbs[i].checked = master.checked;' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo '}' . K_NEWLINE;
+
 echo 'document.addEventListener("DOMContentLoaded", function() {' . K_NEWLINE;
 echo ' if (document.getElementById("user_groups")) { new SlimSelect({ select: "#user_groups", placeholder: "' . $l["w_groups"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
 echo ' if (document.getElementById("sslcerts")) { new SlimSelect({ select: "#sslcerts", placeholder: "' . $l["w_sslcerts"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
-echo ' if (document.getElementById("subject_id")) { new SlimSelect({ select: "#subject_id", placeholder: "' . $l["w_subjects"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
+echo ' if (document.getElementById("subject_id")) {' . K_NEWLINE;
+echo '  window.slimSelectSubject = new SlimSelect({ select: "#subject_id", placeholder: "' . $l["w_subjects"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect", onChange: function() { FJ_update_availability(); } });' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
+echo ' FJ_update_availability();' . K_NEWLINE;
 echo '});' . K_NEWLINE;
 echo "//]]>" . K_NEWLINE;
 echo "</script>" . K_NEWLINE;
-
 require_once "../code/tce_page_footer.php";
 
 //============================================================+
