@@ -41,7 +41,7 @@ require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
 require_once('../../shared/code/tce_functions_auth_sql.php');
 
-$type = ! isset($type) || empty($type) ? 1 : (int) $type;
+$type = isset($_REQUEST['type']) ? (int) $_REQUEST['type'] : 1;
 
 if ((isset($menu_mode) && $menu_mode == 'upload') && $_FILES['userfile']['name']) {
     require_once('../code/tce_functions_upload.php');

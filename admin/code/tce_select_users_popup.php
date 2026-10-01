@@ -41,32 +41,13 @@ require_once('../code/tce_page_header_popup.php');
 require_once('../../shared/code/tce_functions_form.php');
 require_once('tce_functions_user_select.php');
 
-if (! isset($order_field)) {
-    $order_field = 'user_lastname,user_firstname';
-}
-
-if (! isset($orderdir)) {
-    $orderdir = 0;
-}
-
-if (! isset($firstrow)) {
-    $firstrow = 0;
-}
-
-if (! isset($rowsperpage)) {
-    $rowsperpage = K_MAX_ROWS_PER_PAGE;
-}
-
-if (! isset($searchterms)) {
-    $searchterms = '';
-}
-
-$cid = isset($cid) ? preg_replace('/[^a-z0-9_]/', '', $cid) : '';
-
-// ID of the calling form field
-$uids = isset($uids) ? preg_replace('/[^x0-9]/', '', $uids) : '';
-
-// selected user IDs
+$order_field = isset($_REQUEST['order_field']) ? $_REQUEST['order_field'] : 'user_lastname,user_firstname';
+$orderdir = isset($_REQUEST['orderdir']) ? (int) $_REQUEST['orderdir'] : 0;
+$firstrow = isset($_REQUEST['firstrow']) ? (int) $_REQUEST['firstrow'] : 0;
+$rowsperpage = isset($_REQUEST['rowsperpage']) ? (int) $_REQUEST['rowsperpage'] : K_MAX_ROWS_PER_PAGE;
+$searchterms = isset($_REQUEST['searchterms']) ? $_REQUEST['searchterms'] : '';
+$cid = isset($_REQUEST['cid']) ? preg_replace('/[^a-z0-9_]/', '', $_REQUEST['cid']) : '';
+$uids = isset($_REQUEST['uids']) ? preg_replace('/[^x0-9]/', '', $_REQUEST['uids']) : '';
 $group_id = isset($_REQUEST['group_id']) ? (int) $_REQUEST['group_id'] : 0;
 
 if (! F_isAuthorizedEditorForGroup($group_id)) {

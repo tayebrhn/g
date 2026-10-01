@@ -43,23 +43,19 @@ require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_otp.php');
 require_once('tce_functions_user_select.php');
 
-if (isset($_REQUEST['user_id'])) {
-    $user_id = (int) $_REQUEST['user_id'];
-    if (! F_isAuthorizedEditorForUser($user_id)) {
-        F_print_error('ERROR', $l['m_authorization_denied'], true);
-    }
+$user_id = isset($_REQUEST['user_id']) ? (int) $_REQUEST['user_id'] : 0;
+if ($user_id > 0 && ! F_isAuthorizedEditorForUser($user_id)) {
+    F_print_error('ERROR', $l['m_authorization_denied'], true);
 }
 
-if (isset($_REQUEST['group_id'])) {
-    $group_id = (int) $_REQUEST['group_id'];
-    if (! F_isAuthorizedEditorForGroup($group_id)) {
-        F_print_error('ERROR', $l['m_authorization_denied'], true);
-    }
+$group_id = isset($_REQUEST['group_id']) ? (int) $_REQUEST['group_id'] : 0;
+if ($group_id > 0 && ! F_isAuthorizedEditorForGroup($group_id)) {
+    F_print_error('ERROR', $l['m_authorization_denied'], true);
 }
 
 // a global viewer who does not administer the account or the group may only read it
-$record_readonly = (isset($user_id) && $user_id > 0 && ! F_isAuthorizedToModifyUser($user_id))
-    || (isset($group_id) && $group_id > 0 && ! F_isAuthorizedToModifyGroup($group_id));
+$record_readonly = ($user_id > 0 && ! F_isAuthorizedToModifyUser($user_id))
+    || ($group_id > 0 && ! F_isAuthorizedToModifyGroup($group_id));
 if ($record_readonly) {
     $menu_mode = '';
 }
@@ -73,17 +69,35 @@ if (isset($_REQUEST['user_groups'])) {
     $user_groups = [];
 }
 
+$user_name = isset($_REQUEST['user_name']) ? utrim($_REQUEST['user_name']) : '';
+$user_email = isset($_REQUEST['user_email']) ? utrim($_REQUEST['user_email']) : '';
+$user_password = isset($_REQUEST['user_password']) ? $_REQUEST['user_password'] : '';
+$newpassword = isset($_REQUEST['newpassword']) ? $_REQUEST['newpassword'] : '';
+$newpassword_repeat = isset($_REQUEST['newpassword_repeat']) ? $_REQUEST['newpassword_repeat'] : '';
+$user_regnumber = isset($_REQUEST['user_regnumber']) ? utrim($_REQUEST['user_regnumber']) : '';
+$user_firstname = isset($_REQUEST['user_firstname']) ? utrim($_REQUEST['user_firstname']) : '';
+$user_lastname = isset($_REQUEST['user_lastname']) ? utrim($_REQUEST['user_lastname']) : '';
+$user_birthdate = isset($_REQUEST['user_birthdate']) ? utrim($_REQUEST['user_birthdate']) : '';
+$user_birthplace = isset($_REQUEST['user_birthplace']) ? utrim($_REQUEST['user_birthplace']) : '';
+$user_ssn = isset($_REQUEST['user_ssn']) ? utrim($_REQUEST['user_ssn']) : '';
+$user_otpkey = isset($_REQUEST['user_otpkey']) ? utrim($_REQUEST['user_otpkey']) : '';
+$forcedelete = isset($_REQUEST['forcedelete']) ? $_REQUEST['forcedelete'] : '';
+$user_ip = isset($_REQUEST['user_ip']) ? $_REQUEST['user_ip'] : getNormalizedIP($_SERVER['REMOTE_ADDR']);
+$user_regdate = isset($_REQUEST['user_regdate']) ? $_REQUEST['user_regdate'] : date(K_TIMESTAMP_FORMAT);
+
 if (isset($_REQUEST['user_level'])) {
     $user_level = (int) $_REQUEST['user_level'];
     if (! F_user_can(K_PERM_ADMIN)) {
         if ($user_id == $_SESSION['session_user_id']) {
             // you cannot change your own level
-            $user_level = $_SESSION['session_user_level'];
+            $user_level = (int) $_SESSION['session_user_level'];
         } else {
             // you cannot create a user with a level equal or higher than yours
-            $user_level = min(max(0, ($_SESSION['session_user_level'] - 1)), $user_level);
+            $user_level = min(max(0, ((int) $_SESSION['session_user_level'] - 1)), $user_level);
         }
     }
+} else {
+    $user_level = 1;
 }
 
 // capability mask (tce_users.user_perms)
@@ -135,6 +149,15 @@ switch ($menu_mode) { // process submitted data
             break;
         }
 
+        if (empty($user_name) && $user_id > 0) {
+            $sql_u = 'SELECT user_name FROM ' . K_TABLE_USERS . ' WHERE user_id=' . $user_id . ' LIMIT 1';
+            if ($r_u = F_db_query($sql_u, $db)) {
+                if ($m_u = F_db_fetch_array($r_u)) {
+                    $user_name = $m_u['user_name'];
+                }
+            }
+        }
+
         F_print_error('WARNING', $l['m_delete_confirm']);
         ?>
         <div class="confirmbox">
@@ -161,7 +184,7 @@ switch ($menu_mode) { // process submitted data
             break;
         }
 
-        if ($forcedelete == $l['w_delete']) { //check if delete button has been pushed (redundant check)
+        if ($forcedelete == $l['w_delete'] || isset($_POST['forcedelete'])) { //check if delete button has been pushed
             if ($user_id == 1) { //can't delete anonymous user
                 F_print_error('WARNING', $l['m_delete_anonymous']);
             } else {
@@ -262,7 +285,7 @@ switch ($menu_mode) { // process submitted data
             // remove old groups
             $old_user_groups = F_get_user_groups($user_id);
             foreach ($old_user_groups as $group_id) {
-                if (F_isAuthorizedEditorForGroup($group_id)) {
+                if (F_isAuthorizedToModifyGroup($group_id)) {
                     // delete previous groups
                     $sql = 'DELETE FROM ' . K_TABLE_USERGROUP . '
 						WHERE usrgrp_user_id=' . $user_id . ' AND usrgrp_group_id=' . $group_id . '';
@@ -275,7 +298,7 @@ switch ($menu_mode) { // process submitted data
             // update user's groups
             if (! empty($user_groups)) {
                 foreach ($user_groups as $group_id) {
-                    if (F_isAuthorizedEditorForGroup($group_id)) {
+                    if (F_isAuthorizedToModifyGroup($group_id)) {
                         $sql = 'INSERT INTO ' . K_TABLE_USERGROUP . ' (
 							usrgrp_user_id,
 							usrgrp_group_id
@@ -297,7 +320,7 @@ switch ($menu_mode) { // process submitted data
     case 'add':{ // Add user
         if ($formstatus = F_check_form_fields()) { // check submittef form fields
             // check if name is unique
-            if (! F_check_unique(K_TABLE_USERS, "user_name='" . $user_name . "'")) {
+            if (! F_check_unique(K_TABLE_USERS, "user_name='" . F_escape_sql($db, $user_name) . "'")) {
                 F_print_error('WARNING', $l['m_duplicate_name']);
                 $formstatus = false;
                 
@@ -382,7 +405,7 @@ switch ($menu_mode) { // process submitted data
             // add user's groups
             if (! empty($user_groups)) {
                 foreach ($user_groups as $group_id) {
-                    if (F_isAuthorizedEditorForGroup($group_id)) {
+                    if (F_isAuthorizedToModifyGroup($group_id)) {
                         $sql = 'INSERT INTO ' . K_TABLE_USERGROUP . ' (
 							usrgrp_user_id,
 							usrgrp_group_id

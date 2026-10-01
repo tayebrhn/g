@@ -58,6 +58,7 @@ if (isset($_REQUEST['group_id'])) {
 $group_name = $_REQUEST['group_name'] ?? '';
 $group_name_sl = stripslashes($group_name);
 $group_name_db = F_escape_sql($db, $group_name);
+$forcedelete = $_REQUEST['forcedelete'] ?? '';
 
 // comma separated list of required fields
 $_REQUEST['ff_required'] = 'group_name';
@@ -99,7 +100,7 @@ switch ($menu_mode) { // process submitted data
             break;
         }
 
-        if ($forcedelete == $l['w_delete']) { //check if delete button has been pushed (redundant check)
+        if ($forcedelete == $l['w_delete'] || isset($_POST['forcedelete'])) { //check if delete button has been pushed
             $sql = 'DELETE FROM ' . K_TABLE_GROUPS . ' WHERE group_id=' . $group_id . '';
             if (! $r = F_db_query($sql, $db)) {
                 F_display_db_error(false);

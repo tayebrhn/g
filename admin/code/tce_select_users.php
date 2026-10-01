@@ -42,20 +42,15 @@ require_once('../../shared/code/tce_functions_form.php');
 require_once('tce_functions_user_select.php');
 
 // set default values
-$new_group_id = isset($new_group_id) ? (int) $new_group_id : 0;
+$new_group_id = isset($_REQUEST['new_group_id']) ? (int) $_REQUEST['new_group_id'] : 0;
+$from_group_id = isset($_REQUEST['from_group_id']) ? (int) $_REQUEST['from_group_id'] : 0;
+$to_group_id = isset($_REQUEST['to_group_id']) ? (int) $_REQUEST['to_group_id'] : 0;
 $group_id = isset($_REQUEST['group_id']) ? (int) $_REQUEST['group_id'] : 0;
-$orderdir = isset($orderdir) ? (int) $orderdir : 0;
-$firstrow = isset($firstrow) ? (int) $firstrow : 0;
-$rowsperpage = isset($rowsperpage) ? (int) $rowsperpage : K_MAX_ROWS_PER_PAGE;
-
-if (! isset($order_field)) {
-    $order_field = 'user_lastname,user_firstname';
-}
-
-if (! isset($searchterms)) {
-    $searchterms = '';
-}
-
+$orderdir = isset($_REQUEST['orderdir']) ? (int) $_REQUEST['orderdir'] : 0;
+$firstrow = isset($_REQUEST['firstrow']) ? (int) $_REQUEST['firstrow'] : 0;
+$rowsperpage = isset($_REQUEST['rowsperpage']) ? (int) $_REQUEST['rowsperpage'] : K_MAX_ROWS_PER_PAGE;
+$order_field = isset($_REQUEST['order_field']) ? $_REQUEST['order_field'] : 'user_lastname,user_firstname';
+$searchterms = isset($_REQUEST['searchterms']) ? $_REQUEST['searchterms'] : '';
 
 if (! F_isAuthorizedEditorForGroup($group_id)) {
     F_print_error('ERROR', $l['m_authorization_denied'], true);
@@ -118,12 +113,16 @@ echo getFormNoscriptSelect();
 
 echo '<div class="row"><hr /></div>' . K_NEWLINE;
 
-if (isset($_POST['addgroup'])) {
+if (isset($_POST['delete'])) {
+    $menu_mode = 'delete';
+} elseif (isset($_POST['addgroup'])) {
     $menu_mode = 'addgroup';
 } elseif (isset($_POST['delgroup'])) {
     $menu_mode = 'delgroup';
 } elseif (isset($_POST['move'])) {
     $menu_mode = 'move';
+} else {
+    $menu_mode = '';
 }
 
 if (isset($menu_mode) && ! empty($menu_mode)) {
@@ -132,8 +131,8 @@ if (isset($menu_mode) && ! empty($menu_mode)) {
     for ($i = $istart; $i <= $iend; ++$i) {
         // for each selected user
         $keyname = 'userid' . $i;
-        if (isset(${$keyname})) {
-            $user_id = (int) ${$keyname};
+        if (isset($_POST[$keyname])) {
+            $user_id = (int) $_POST[$keyname];
             switch ($menu_mode) {
                 case 'delete': {
                     if (F_user_can(K_PERM_MANAGE_IDENTITY) && $user_id > 1 && $user_id != $_SESSION['session_user_id'] && F_isAuthorizedToModifyUser($user_id)) {
