@@ -57,13 +57,18 @@ from the database at every request, so grants, demotions and account removals
 take effect immediately; sessions created before the upgrade derive the mask
 from their level through `F_cumulative_perms_for_level()`.
 
-### Capability labels
+### Capability labels and descriptions
 
 `F_getCapabilityLabel($perm)` (in `shared/code/tce_auth_caps.php`) returns the
 capability name for the editor checkboxes, using the `w_cap_*` language keys
-when defined and otherwise falling back to the built-in English names, so the
-label is always available even in installations whose language resources
-predate the capabilities.
+when defined and otherwise falling back to the built-in English names.
+
+`F_getCapabilityDescription($perm)` returns the explanatory description
+for each capability, using `h_cap_*` language keys with built-in English
+fallbacks. The user editor renders these descriptions as both hover tooltips
+(`title="..."`) and inline secondary guidance (`<span class="labeldesc">`),
+explicitly distinguishing global identity management (`K_PERM_MANAGE_IDENTITY`)
+from cross-group test, question, and result visibility (`K_PERM_GLOBAL_VIEW`).
 
 ## 3. The ranks
 

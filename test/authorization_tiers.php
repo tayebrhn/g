@@ -152,6 +152,9 @@ foreach (F_getCapabilityNames() as $cap_mask => $cap_info) {
     if (F_getCapabilityLabel($cap_mask) === '') {
         $failures[] = 'Missing capability label for mask ' . $cap_mask . '.';
     }
+    if (F_getCapabilityDescription($cap_mask) === '') {
+        $failures[] = 'Missing capability description for mask ' . $cap_mask . '.';
+    }
 }
 
 // The content editors must open at the view capability and refuse

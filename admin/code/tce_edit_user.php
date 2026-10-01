@@ -605,12 +605,13 @@ $cap_header .= ' <span style="font-size:80%;font-weight:normal;">(<a href="#" id
 echo getFormRowVertDiv($cap_header);
 foreach (F_getCapabilityNames() as $cap_mask => [$cap_key, $cap_label]) {
     $cap_name = (isset($l[$cap_key]) && $l[$cap_key] !== '') ? $l[$cap_key] : $cap_label;
+    $cap_desc = F_getCapabilityDescription($cap_mask);
     $cap_checked = (($user_perms & $cap_mask) !== 0);
     $cap_disabled = (! F_user_can(K_PERM_ADMIN) && ! F_user_can_any($cap_mask));
     echo '<div class="row">' . K_NEWLINE;
-    echo '<span class="label"><label for="user_perms_' . $cap_mask . '">' . htmlspecialchars($cap_name, ENT_COMPAT, $l['a_meta_charset']) . '</label></span>' . K_NEWLINE;
+    echo '<span class="label"><label for="user_perms_' . $cap_mask . '" title="' . htmlspecialchars($cap_desc, ENT_COMPAT, $l['a_meta_charset']) . '">' . htmlspecialchars($cap_name, ENT_COMPAT, $l['a_meta_charset']) . '</label></span>' . K_NEWLINE;
     echo '<span class="formw">' . K_NEWLINE;
-    echo '<input type="checkbox" name="user_perms[]" id="user_perms_' . $cap_mask . '" value="' . $cap_mask . '"';
+    echo '<input type="checkbox" name="user_perms[]" id="user_perms_' . $cap_mask . '" value="' . $cap_mask . '" title="' . htmlspecialchars($cap_desc, ENT_COMPAT, $l['a_meta_charset']) . '"';
     if ($cap_checked) {
         echo ' checked="checked"';
     }
@@ -621,7 +622,11 @@ foreach (F_getCapabilityNames() as $cap_mask => [$cap_key, $cap_label]) {
         echo ' disabled="disabled" class="disabled"';
     }
 
-    echo ' />' . K_NEWLINE;
+    echo ' />';
+    if (! empty($cap_desc)) {
+        echo ' <span class="labeldesc">' . htmlspecialchars($cap_desc, ENT_NOQUOTES, $l['a_meta_charset']) . '</span>';
+    }
+    echo K_NEWLINE;
     echo '</span>' . K_NEWLINE;
     echo '</div>' . K_NEWLINE;
 }

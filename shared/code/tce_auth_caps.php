@@ -220,6 +220,48 @@ function F_getCapabilityLabel($perm)
     return (string) $perm;
 }
 
+/**
+ * Returns the list of capability help descriptions for the user editor and tables.
+ * Each entry maps the capability bitmask to its language key and the
+ * built-in English description used when the key is missing or empty.
+ * @return array capability bitmask => [language key, built-in description]
+ * @author Nicola Asuni
+ * @since 2026-10-01
+ */
+function F_getCapabilityDescriptions()
+{
+    return [
+        K_PERM_VIEW_CONTENT => ['h_cap_view_content', 'open content editors in read-only mode'],
+        K_PERM_EDIT_CONTENT => ['h_cap_edit_content', 'create and edit modules, topics, questions, and answers in own groups'],
+        K_PERM_OPERATOR => ['h_cap_operator', 'manage tests, grade answers, and view exam results in own groups'],
+        K_PERM_MANAGE_IDENTITY => ['h_cap_manage_identity', 'create, edit, and assign users and groups globally across all groups'],
+        K_PERM_GLOBAL_VIEW => ['h_cap_global_view', 'view all tests, questions, and exam results across every group; reveal answer keys in reports'],
+        K_PERM_BACKUP => ['h_cap_backup', 'create, download, and restore system database and configuration backups'],
+        K_PERM_ADMIN => ['h_cap_admin', 'full system administration, configuration, owner reassignment, and capability delegation'],
+    ];
+}
+
+/**
+ * Returns the human-readable description of the specified capability.
+ * The description is taken from language resources when defined and
+ * otherwise falls back to the built-in English text.
+ * @param $perm (int) capability bitmask (single capability)
+ * @return string capability description
+ * @author Nicola Asuni
+ * @since 2026-10-01
+ */
+function F_getCapabilityDescription($perm)
+{
+    global $l;
+    foreach (F_getCapabilityDescriptions() as $mask => [$key, $default]) {
+        if ($mask === (int) $perm) {
+            return (isset($l[$key]) && $l[$key] !== '') ? $l[$key] : $default;
+        }
+    }
+
+    return '';
+}
+
 //============================================================+
 // END OF FILE
 //============================================================+

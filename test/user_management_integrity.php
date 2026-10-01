@@ -428,6 +428,36 @@ assert_equals(
 );
 assert_equals(K_PERM_ALL, F_cumulative_perms_for_level(10), 'Level 10 preset must be K_PERM_ALL.');
 
+// Test 6.6: Verify capability tooltips and inline labeldesc descriptions in tce_edit_user.php
+assert_true(
+    strpos($edit_user_src, '$cap_desc = F_getCapabilityDescription($cap_mask);') !== false,
+    'tce_edit_user.php must retrieve F_getCapabilityDescription for each capability.'
+);
+assert_true(
+    strpos($edit_user_src, 'title="\' . htmlspecialchars($cap_desc') !== false,
+    'tce_edit_user.php must include title tooltip attribute for capability labels and inputs.'
+);
+assert_true(
+    strpos($edit_user_src, '<span class="labeldesc">\' . htmlspecialchars($cap_desc') !== false,
+    'tce_edit_user.php must render inline description using standard labeldesc CSS class.'
+);
+
+// Test 6.7: Verify distinct description semantics between MANAGE_IDENTITY and GLOBAL_VIEW
+$desc_identity = F_getCapabilityDescription(K_PERM_MANAGE_IDENTITY);
+$desc_global = F_getCapabilityDescription(K_PERM_GLOBAL_VIEW);
+assert_true(
+    stripos($desc_identity, 'users and groups') !== false,
+    'MANAGE_IDENTITY description must explicitly mention managing users and groups.'
+);
+assert_true(
+    stripos($desc_global, 'tests') !== false || stripos($desc_global, 'results') !== false,
+    'GLOBAL_VIEW description must clarify access to tests, questions, and exam results.'
+);
+assert_true(
+    $desc_identity !== $desc_global,
+    'MANAGE_IDENTITY and GLOBAL_VIEW descriptions must be distinct.'
+);
+
 // ---------------------------------------------------------------------------
 // Summary
 // ---------------------------------------------------------------------------
