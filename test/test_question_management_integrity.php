@@ -146,6 +146,35 @@ assert_true(
     'JavaScript block must provide all interactive filter, calculation, and deletion functions.'
 );
 
+// Test 2.6: Form input reset after successful question addition
+assert_true(
+    strpos($edit_test_src, '$subject_id = [];') !== false
+    && strpos($edit_test_src, '$tsubset_quantity = 1;') !== false
+    && strpos($edit_test_src, 'unset($_POST[\'addquestion\'], $_REQUEST[\'addquestion\']);') !== false,
+    'case addquestion must reset form fields and clear request variables on success.'
+);
+
+// Test 2.7: Server-side idempotency guard (subset_token)
+assert_true(
+    strpos($edit_test_src, '$_SESSION["last_subset_token"] === $_POST["subset_token"]') !== false
+    && strpos($edit_test_src, '$_SESSION["last_subset_token"] = $_POST["subset_token"];') !== false,
+    'case addquestion must guard against duplicate submissions via subset_token.'
+);
+
+// Test 2.8: Hidden subset_token rendered in form
+assert_true(
+    strpos($edit_test_src, 'id="subset_token"') !== false
+    && strpos($edit_test_src, 'name="subset_token"') !== false,
+    'Question addition form must output a unique hidden subset_token.'
+);
+
+// Test 2.9: Client-side history replaceState to prevent browser POST resubmission on refresh
+assert_true(
+    strpos($edit_test_src, 'window.history.replaceState') !== false
+    && strpos($edit_test_src, 'cleanUrl') !== false,
+    'Client-side script must invoke window.history.replaceState to prevent POST resubmission on refresh.'
+);
+
 // ===========================================================================
 // Section 3: Functional Scoring & Matrix Calculation Logic
 // ===========================================================================

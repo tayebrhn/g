@@ -469,6 +469,20 @@ switch ($menu_mode) {
             break;
         }
 
+        // prevent duplicate submission on page refresh or double click
+        if (isset($_POST["subset_token"]) && !empty($_POST["subset_token"])) {
+            if (isset($_SESSION["last_subset_token"]) && $_SESSION["last_subset_token"] === $_POST["subset_token"]) {
+                // duplicate submission prevented
+                $subject_id = [];
+                $tsubset_type = 0;
+                $tsubset_difficulty = 1;
+                $tsubset_quantity = 1;
+                $tsubset_answers = 2;
+                break;
+            }
+            $_SESSION["last_subset_token"] = $_POST["subset_token"];
+        }
+
         if (
             ($formstatus = F_check_form_fields()) &&
             (isset($subject_id) &&
@@ -683,6 +697,19 @@ switch ($menu_mode) {
                             F_display_db_error(false);
                         }
                     }
+                    F_print_error("MESSAGE", $l["m_updated"]);
+                    // reset question addition fields so form inputs are cleared
+                    $subject_id = [];
+                    $tsubset_type = 0;
+                    $tsubset_difficulty = 1;
+                    $tsubset_quantity = 1;
+                    $tsubset_answers = 2;
+                    unset($_POST['addquestion'], $_REQUEST['addquestion']);
+                    unset($_POST['subject_id'], $_REQUEST['subject_id']);
+                    unset($_POST['tsubset_quantity'], $_REQUEST['tsubset_quantity']);
+                    unset($_POST['tsubset_answers'], $_REQUEST['tsubset_answers']);
+                    unset($_POST['tsubset_type'], $_REQUEST['tsubset_type']);
+                    unset($_POST['tsubset_difficulty'], $_REQUEST['tsubset_difficulty']);
                 }
             }
         }
@@ -2160,6 +2187,7 @@ if (isset($test_id) && $test_id > 0) {
     echo '<div class="row">' . K_NEWLINE;
     echo '<span class="label">&nbsp;</span>' . K_NEWLINE;
     echo '<span class="formw">' . K_NEWLINE;
+    echo '<input type="hidden" name="subset_token" id="subset_token" value="' . md5(uniqid((string) mt_rand(), true)) . '" />' . K_NEWLINE;
     F_submit_button(
         "addquestion",
         $l["w_add_questions"],
@@ -2519,6 +2547,11 @@ echo ' if (document.getElementById("subject_id")) {' . K_NEWLINE;
 echo '  window.slimSelectSubject = new SlimSelect({ select: "#subject_id", placeholder: "' . $l["w_subjects"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect", onChange: function() { FJ_update_availability(); } });' . K_NEWLINE;
 echo ' }' . K_NEWLINE;
 echo ' FJ_update_availability();' . K_NEWLINE;
+echo ' if (window.history && window.history.replaceState) {' . K_NEWLINE;
+echo '  var cleanTestId = parseInt((document.getElementById("test_id") || {}).value || 0);' . K_NEWLINE;
+echo '  var cleanUrl = window.location.pathname + (cleanTestId > 0 ? "?test_id=" + cleanTestId : "");' . K_NEWLINE;
+echo '  window.history.replaceState(null, "", cleanUrl);' . K_NEWLINE;
+echo ' }' . K_NEWLINE;
 echo '});' . K_NEWLINE;
 echo "//]]>" . K_NEWLINE;
 echo "</script>" . K_NEWLINE;
