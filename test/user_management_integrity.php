@@ -367,6 +367,59 @@ assert_true($can_mod_g1, 'Editor can modify membership of their own group (Group
 assert_false($can_mod_g2, 'Global view editor without K_PERM_ADMIN cannot modify unowned group (Group 2).');
 
 // ---------------------------------------------------------------------------
+// 6. Level & Capability Smart Auto-Sync Verification
+// ---------------------------------------------------------------------------
+
+// Test 6.1: tce_edit_user.php contains levelPermsMap and FJ_sync_level_capabilities
+assert_true(
+    strpos($edit_user_src, 'var levelPermsMap =') !== false
+    && strpos($edit_user_src, 'function FJ_sync_level_capabilities()') !== false,
+    'tce_edit_user.php must define levelPermsMap and FJ_sync_level_capabilities for UI auto-sync.'
+);
+
+// Test 6.2: tce_edit_user.php attaches change and click listeners
+assert_true(
+    strpos($edit_user_src, 'lvlSelect.addEventListener("change", FJ_sync_level_capabilities)') !== false
+    && strpos($edit_user_src, 'btnPreset.addEventListener("click"') !== false,
+    'tce_edit_user.php must attach change listener to #user_level and click listener to #btn_apply_level_preset.'
+);
+
+// Test 6.3: Auto-sync respects disabled checkboxes
+assert_true(
+    strpos($edit_user_src, 'if (!cb.disabled)') !== false,
+    'FJ_sync_level_capabilities must respect disabled checkboxes so unheld permissions are not manipulated.'
+);
+
+// Test 6.4: Server-side fallback on user creation when user_perms is omitted
+assert_true(
+    strpos($edit_user_src, 'if (! $user_perms_submitted) {') !== false
+    && strpos($edit_user_src, '$user_perms = F_cumulative_perms_for_level($user_level);') !== false,
+    'tce_edit_user.php must provide server-side fallback defaulting user_perms to F_cumulative_perms_for_level on add.'
+);
+
+// Test 6.5: Verify standard capability presets across all user levels
+assert_equals(0, F_cumulative_perms_for_level(0), 'Level 0 preset must be 0.');
+assert_equals(0, F_cumulative_perms_for_level(1), 'Level 1 preset must be 0.');
+assert_equals(K_PERM_VIEW_CONTENT, F_cumulative_perms_for_level(2), 'Level 2 preset must be VIEW_CONTENT.');
+assert_equals(K_PERM_VIEW_CONTENT | K_PERM_EDIT_CONTENT, F_cumulative_perms_for_level(3), 'Level 3 preset must be VIEW_CONTENT | EDIT_CONTENT.');
+assert_equals(K_PERM_VIEW_CONTENT | K_PERM_EDIT_CONTENT | K_PERM_OPERATOR, F_cumulative_perms_for_level(5), 'Level 5 preset must be VIEW_CONTENT | EDIT_CONTENT | OPERATOR.');
+assert_equals(
+    K_PERM_VIEW_CONTENT | K_PERM_EDIT_CONTENT | K_PERM_OPERATOR | K_PERM_MANAGE_IDENTITY,
+    F_cumulative_perms_for_level(6),
+    'Level 6 preset must include MANAGE_IDENTITY.'
+);
+assert_true(
+    (F_cumulative_perms_for_level(6) & K_PERM_MANAGE_IDENTITY) !== 0,
+    'Level 6 preset must grant K_PERM_MANAGE_IDENTITY to identity administrators.'
+);
+assert_equals(
+    K_PERM_VIEW_CONTENT | K_PERM_EDIT_CONTENT | K_PERM_OPERATOR | K_PERM_MANAGE_IDENTITY | K_PERM_GLOBAL_VIEW | K_PERM_BACKUP,
+    F_cumulative_perms_for_level(9),
+    'Level 9 preset must include GLOBAL_VIEW and BACKUP.'
+);
+assert_equals(K_PERM_ALL, F_cumulative_perms_for_level(10), 'Level 10 preset must be K_PERM_ALL.');
+
+// ---------------------------------------------------------------------------
 // Summary
 // ---------------------------------------------------------------------------
 

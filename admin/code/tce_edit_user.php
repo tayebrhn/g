@@ -318,6 +318,12 @@ switch ($menu_mode) { // process submitted data
     }
 
     case 'add':{ // Add user
+        if (! $user_perms_submitted) {
+            $user_perms = F_cumulative_perms_for_level($user_level);
+            if (! F_user_can(K_PERM_ADMIN)) {
+                $user_perms &= F_user_perms();
+            }
+        }
         if ($formstatus = F_check_form_fields()) { // check submittef form fields
             // check if name is unique
             if (! F_check_unique(K_TABLE_USERS, "user_name='" . F_escape_sql($db, $user_name) . "'")) {
@@ -591,7 +597,10 @@ echo getFormRowSelectBox('user_level', $l['w_level'], $l['h_level'], '', $user_l
 
 // capability checkboxes: a full administrator may grant every capability,
 // while any other editor may only grant the capabilities it holds itself
-echo getFormRowVertDiv((isset($l['w_capabilities']) && $l['w_capabilities'] !== '') ? $l['w_capabilities'] : 'capabilities');
+$cap_title = (isset($l['w_capabilities']) && $l['w_capabilities'] !== '') ? $l['w_capabilities'] : 'capabilities';
+$cap_header = htmlspecialchars($cap_title, ENT_NOQUOTES, $l['a_meta_charset']);
+$cap_header .= ' <span style="font-size:80%;font-weight:normal;">(<a href="#" id="btn_apply_level_preset" title="' . htmlspecialchars($l['h_level'] ?? 'Apply standard preset for this level', ENT_COMPAT, $l['a_meta_charset']) . '" style="text-decoration:underline;">apply level preset</a>)</span>';
+echo getFormRowVertDiv($cap_header);
 foreach (F_getCapabilityNames() as $cap_mask => [$cap_key, $cap_label]) {
     $cap_name = (isset($l[$cap_key]) && $l[$cap_key] !== '') ? $l[$cap_key] : $cap_label;
     $cap_checked = (($user_perms & $cap_mask) !== 0);
@@ -706,13 +715,44 @@ echo '</div>' . K_NEWLINE;
 echo '<div class="pagehelp">' . $l['hp_edit_user'] . '</div>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
 
+$level_perms_map = [];
+for ($lvl = 0; $lvl <= 10; ++$lvl) {
+    $level_perms_map[$lvl] = F_cumulative_perms_for_level($lvl);
+}
+
 echo '<script type="text/javascript">' . K_NEWLINE;
-echo "//<![CDATA[" . K_NEWLINE;
+echo '//<![CDATA[' . K_NEWLINE;
+echo 'var levelPermsMap = ' . json_encode($level_perms_map) . ';' . K_NEWLINE;
+echo 'function FJ_sync_level_capabilities() {' . K_NEWLINE;
+echo '    var lvlSelect = document.getElementById("user_level");' . K_NEWLINE;
+echo '    if (!lvlSelect) { return; }' . K_NEWLINE;
+echo '    var selectedLevel = parseInt(lvlSelect.value, 10);' . K_NEWLINE;
+echo '    var targetMask = (levelPermsMap[selectedLevel] !== undefined) ? levelPermsMap[selectedLevel] : 0;' . K_NEWLINE;
+echo '    var capCheckboxes = document.querySelectorAll("input[name=\'user_perms[]\']");' . K_NEWLINE;
+echo '    for (var i = 0; i < capCheckboxes.length; i++) {' . K_NEWLINE;
+echo '        var cb = capCheckboxes[i];' . K_NEWLINE;
+echo '        if (!cb.disabled) {' . K_NEWLINE;
+echo '            var mask = parseInt(cb.value, 10);' . K_NEWLINE;
+echo '            cb.checked = ((targetMask & mask) !== 0);' . K_NEWLINE;
+echo '        }' . K_NEWLINE;
+echo '    }' . K_NEWLINE;
+echo '}' . K_NEWLINE;
 echo 'document.addEventListener("DOMContentLoaded", function() {' . K_NEWLINE;
-echo ' if (document.getElementById("user_groups")) { new SlimSelect({ select: "#user_groups", placeholder: "' . $l["w_groups"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
+echo '    if (document.getElementById("user_groups")) { new SlimSelect({ select: "#user_groups", placeholder: "' . $l["w_groups"] . '", search: true, selectAllText: "Select All", deselectLabel: "Deselect" }); }' . K_NEWLINE;
+echo '    var lvlSelect = document.getElementById("user_level");' . K_NEWLINE;
+echo '    if (lvlSelect) {' . K_NEWLINE;
+echo '        lvlSelect.addEventListener("change", FJ_sync_level_capabilities);' . K_NEWLINE;
+echo '    }' . K_NEWLINE;
+echo '    var btnPreset = document.getElementById("btn_apply_level_preset");' . K_NEWLINE;
+echo '    if (btnPreset) {' . K_NEWLINE;
+echo '        btnPreset.addEventListener("click", function(e) {' . K_NEWLINE;
+echo '            e.preventDefault();' . K_NEWLINE;
+echo '            FJ_sync_level_capabilities();' . K_NEWLINE;
+echo '        });' . K_NEWLINE;
+echo '    }' . K_NEWLINE;
 echo '});' . K_NEWLINE;
-echo "//]]>" . K_NEWLINE;
-echo "</script>" . K_NEWLINE;
+echo '//]]>' . K_NEWLINE;
+echo '</script>' . K_NEWLINE;
 
 require_once('../code/tce_page_footer.php');
 
