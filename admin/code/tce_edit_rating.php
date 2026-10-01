@@ -41,26 +41,46 @@ require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
 require_once('../../shared/code/tce_functions_auth_sql.php');
 
-if (isset($selectcategory)) {
-    $changecategory = 1;
+$test_id = isset($_REQUEST['test_id']) ? (int) $_REQUEST['test_id'] : 0;
+$testlog_id = isset($_REQUEST['testlog_id']) ? (int) $_REQUEST['testlog_id'] : 0;
+$testlog_score = isset($_REQUEST['testlog_score']) ? $_REQUEST['testlog_score'] : null;
+$testlog_comment = isset($_REQUEST['testlog_comment']) ? $_REQUEST['testlog_comment'] : '';
+$changecategory = isset($_REQUEST['changecategory']) ? (int) $_REQUEST['changecategory'] : (isset($_REQUEST['selectcategory']) ? 1 : 0);
+$display_user_info = isset($_REQUEST['display_user_info']) ? (int) $_REQUEST['display_user_info'] : 0;
+$display_all = isset($_REQUEST['display_all']) ? (int) $_REQUEST['display_all'] : 0;
+$sqlordermode = isset($_REQUEST['sqlordermode']) ? (int) $_REQUEST['sqlordermode'] : 0;
+
+// synchronize and verify parent test when testlog_id is provided
+if ($testlog_id > 0) {
+    $sql_parent = 'SELECT testuser_test_id FROM ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_TEST_USER . ' WHERE testlog_testuser_id=testuser_id AND testlog_id=' . $testlog_id . ' LIMIT 1';
+    if ($r_parent = F_db_query($sql_parent, $db)) {
+        if ($m_parent = F_db_fetch_array($r_parent)) {
+            $real_test_id = (int) $m_parent['testuser_test_id'];
+            if ($test_id > 0 && $test_id != $real_test_id) {
+                F_print_error('ERROR', $l['m_authorization_denied'], true);
+            }
+            $test_id = $real_test_id;
+        } else {
+            $testlog_id = 0;
+        }
+    }
 }
 
-if (isset($testlog_id)) {
-    $testlog_id = (int) $testlog_id;
+// default test_id if not specified
+if ($test_id <= 0) {
+    $sql_default = F_select_executed_tests_sql() . ' LIMIT 1';
+    if ($r_default = F_db_query($sql_default, $db)) {
+        if ($m_default = F_db_fetch_array($r_default)) {
+            $test_id = (int) $m_default['test_id'];
+        }
+    }
 }
 
-if (! isset($testlog_comment)) {
-    $testlog_comment = '';
-}
-
-if (isset($_REQUEST['test_id']) && $_REQUEST['test_id'] > 0) {
-    $test_id = (int) $_REQUEST['test_id'];
-    // check user's authorization
+// check user's authorization
+if ($test_id > 0) {
     if (! F_isAuthorizedUser(K_TABLE_TESTS, 'test_id', $test_id, 'test_user_id')) {
         F_print_error('ERROR', $l['m_authorization_denied'], true);
     }
-} else {
-    $test_id = 0;
 }
 
 // comma separated list of required fields
@@ -68,17 +88,23 @@ $_REQUEST['ff_required'] = 'testlog_score';
 $_REQUEST['ff_required_labels'] = htmlspecialchars($l['w_score'], ENT_COMPAT, $l['a_meta_charset']);
 
 // a global viewer who does not own the test may only read its results
-$record_readonly = $test_id > 0 && ! F_isAuthorizedToModify(K_TABLE_TESTS, 'test_id', $test_id, 'test_user_id');
+$record_readonly = F_is_readonly_content() || ($test_id <= 0 || ! F_isAuthorizedToModify(K_TABLE_TESTS, 'test_id', $test_id, 'test_user_id'));
 if ($record_readonly) {
     $menu_mode = '';
 }
 
 switch ($menu_mode) {
     case 'update': { // Update
-        if (($formstatus = F_check_form_fields()) && (isset($testlog_score) && isset($max_score))) {
+        if (($formstatus = F_check_form_fields()) && ($testlog_score !== null && $testlog_score !== '')) {
             // score cannot be greater than max_score
             $testlog_score = (float) $testlog_score;
-            $max_score = (float) $max_score;
+            $max_score = isset($_REQUEST['max_score']) ? (float) $_REQUEST['max_score'] : 0;
+            $sql_max = 'SELECT test_score_right, question_difficulty FROM ' . K_TABLE_TESTS . ', ' . K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_QUESTIONS . ' WHERE testuser_test_id=test_id AND testlog_testuser_id=testuser_id AND testlog_question_id=question_id AND testlog_id=' . (int) $testlog_id . ' LIMIT 1';
+            if ($r_max = F_db_query($sql_max, $db)) {
+                if ($m_max = F_db_fetch_array($r_max)) {
+                    $max_score = round(($m_max['test_score_right'] * $m_max['question_difficulty']), 3);
+                }
+            }
             if ($testlog_score > $max_score) {
                 F_print_error('WARNING', $l['m_score_higher_than_max']);
                 break;
@@ -93,7 +119,7 @@ switch ($menu_mode) {
             } else {
                 F_print_error('MESSAGE', $l['m_updated']);
                 $testlog_score = '';
-                $testlog_id = '';
+                $testlog_id = 0;
                 $testlog_comment = '';
             }
         }
@@ -107,24 +133,9 @@ switch ($menu_mode) {
 
 // --- Initialize variables
 
-// flag to display/hide user info
-if (! isset($display_user_info)) {
-    $display_user_info = 0;
-}
-
-// flag to select only unrated answers
-if (! isset($display_all)) {
-    $display_all = 0;
-}
-
 $sqlfilter = '';
 if (empty($display_all)) {
     $sqlfilter = ' AND testlog_score IS NULL';
-}
-
-// set ordering mode
-if (! isset($sqlordermode)) {
-    $sqlordermode = 0;
 }
 
 switch ($sqlordermode) {
@@ -146,7 +157,7 @@ switch ($sqlordermode) {
     }
 }
 
-if (! isset($test_id) || $test_id === 0) {
+if ($test_id <= 0) {
     // select one executed test
     $sql = F_select_executed_tests_sql() . ' LIMIT 1';
     if ($r = F_db_query($sql, $db)) {
@@ -175,6 +186,7 @@ if (isset($changecategory) && $changecategory > 0 || ! isset($testlog_id) || emp
 		WHERE testuser_test_id=test_id
 			AND testlog_testuser_id=testuser_id
 			AND testlog_question_id=question_id
+			AND testuser_test_id=' . $test_id . '
 			AND testlog_id=' . $testlog_id . '
 		LIMIT 1';
 }

@@ -42,6 +42,9 @@ $thispage_title = $l['t_backup_editor'];
 
 require_once('../../shared/code/tce_functions_form.php');
 
+$backup_file = isset($_REQUEST['backup_file']) ? $_REQUEST['backup_file'] : '';
+$forcerestore = isset($_REQUEST['forcerestore']) ? $_REQUEST['forcerestore'] : '';
+
 if (isset($_POST['backup'])) {
     $menu_mode = 'backup';
 } elseif (isset($_POST['restore'])) {
@@ -50,6 +53,8 @@ if (isset($_POST['backup'])) {
     $menu_mode = 'forcerestore';
 } elseif (isset($_POST['download'])) {
     $menu_mode = 'download';
+} else {
+    $menu_mode = '';
 }
 
 function F_isValidbackupFile($file)
@@ -60,6 +65,10 @@ function F_isValidbackupFile($file)
 // check backup filename
 if (! empty($backup_file) && ! F_isValidbackupFile($backup_file)) {
     F_print_error('ERROR', 'SECURITY ERROR', true);
+}
+
+if (F_is_readonly_content() && in_array($menu_mode, ['backup', 'restore', 'forcerestore'])) {
+    $menu_mode = '';
 }
 
 
@@ -85,7 +94,7 @@ switch ($menu_mode) { // process submitted data
     case 'forcerestore':{
          // Delete specified record
         //check if delete button has been pushed (redundant check)
-        if ($forcerestore == $l['w_restore'] && (isset($backup_file) && ! empty($backup_file))) {
+        if (($forcerestore == $l['w_restore'] || isset($_POST['forcerestore'])) && (isset($backup_file) && ! empty($backup_file))) {
             // create a backup of the current database data
             switch (K_DATABASE_TYPE) {
                 case 'POSTGRESQL': {
@@ -224,8 +233,10 @@ echo '<div class="row"><hr /></div>' . K_NEWLINE;
 
 echo '<div class="row">' . K_NEWLINE;
 
-F_submit_button('backup', $l['w_backup'], $l['h_backup']);
-F_submit_button('restore', $l['w_restore'], $l['h_restore']);
+if (! F_is_readonly_content()) {
+    F_submit_button('backup', $l['w_backup'], $l['h_backup']);
+    F_submit_button('restore', $l['w_restore'], $l['h_restore']);
+}
 if (K_DOWNLOAD_BACKUPS) {
     F_submit_button('download', $l['w_download'], $l['h_download']);
 }

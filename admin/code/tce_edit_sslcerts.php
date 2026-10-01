@@ -40,11 +40,10 @@ require_once('../code/tce_page_header.php');
 require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_authorization.php');
 // set default values
-$ssl_enabled = ! isset($ssl_enabled) || empty($ssl_enabled) ? false : F_getBoolean($ssl_enabled);
-
-$ssl_name = isset($ssl_name) ? utrim($ssl_name) : '';
-
-$ssl_user_id = isset($ssl_user_id) ? (int) $ssl_user_id : (int) $_SESSION['session_user_id'];
+$ssl_enabled = isset($_REQUEST['ssl_enabled']) ? F_getBoolean($_REQUEST['ssl_enabled']) : false;
+$ssl_name = isset($_REQUEST['ssl_name']) ? utrim($_REQUEST['ssl_name']) : '';
+$ssl_user_id = isset($_REQUEST['ssl_user_id']) ? (int) $_REQUEST['ssl_user_id'] : (int) $_SESSION['session_user_id'];
+$forcedelete = isset($_REQUEST['forcedelete']) ? $_REQUEST['forcedelete'] : '';
 
 if (isset($_REQUEST['ssl_id']) && $_REQUEST['ssl_id'] > 0) {
     $ssl_id = (int) $_REQUEST['ssl_id'];
@@ -73,7 +72,7 @@ if (isset($_FILES['userfile']['name']) && ! empty($_FILES['userfile']['name'])) 
 }
 
 // a global viewer who does not own the certificate may only read it
-$record_readonly = $ssl_id > 0 && ! F_isAuthorizedToModify(K_TABLE_SSLCERTS, 'ssl_id', $ssl_id, 'ssl_user_id');
+$record_readonly = F_is_readonly_content() || ($ssl_id > 0 && ! F_isAuthorizedToModify(K_TABLE_SSLCERTS, 'ssl_id', $ssl_id, 'ssl_user_id'));
 if ($record_readonly) {
     $menu_mode = '';
 }
@@ -84,7 +83,7 @@ switch ($menu_mode) {
         // check if this record is used
         if (! F_check_unique(K_TABLE_TEST_SSLCERTS, 'tstssl_ssl_id=' . $ssl_id . '')) {
             //this record will be only disabled and not deleted because it's used
-            $sql = 'UPDATE ' . K_TABLE_QUESTIONS . ' SET
+            $sql = 'UPDATE ' . K_TABLE_SSLCERTS . ' SET
 				ssl_enabled=\'0\'
 				WHERE ssl_id=' . $ssl_id . '';
             if (! $r = F_db_query($sql, $db)) {
@@ -113,7 +112,7 @@ switch ($menu_mode) {
 
     case 'forcedelete':{
         
-        if ($forcedelete == $l['w_delete']) { //check if delete button has been pushed (redundant check)
+        if ($forcedelete == $l['w_delete'] || isset($_POST['forcedelete'])) { //check if delete button has been pushed
             $sql = 'DELETE FROM ' . K_TABLE_SSLCERTS . ' WHERE ssl_id=' . $ssl_id . '';
             if (! $r = F_db_query($sql, $db)) {
                 F_display_db_error(false);

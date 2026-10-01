@@ -53,31 +53,18 @@ if (K_DATABASE_TYPE == 'ORACLE') {
     $order_field .= ' question_description';
 }
 
-if (! isset($orderdir)) {
-    $orderdir = 0;
-}
+$orderdir = isset($_REQUEST['orderdir']) ? (int) $_REQUEST['orderdir'] : 0;
+$firstrow = isset($_REQUEST['firstrow']) ? (int) $_REQUEST['firstrow'] : 0;
+$rowsperpage = isset($_REQUEST['rowsperpage']) ? (int) $_REQUEST['rowsperpage'] : K_MAX_ROWS_PER_PAGE;
+$hide_answers = isset($_REQUEST['hide_answers']) ? F_getBoolean($_REQUEST['hide_answers']) : false;
+$changemodule = (isset($_REQUEST['changemodule']) && $_REQUEST['changemodule'] > 0) || isset($_REQUEST['selectmodule']) ? 1 : 0;
+$changecategory = (isset($_REQUEST['changecategory']) && $_REQUEST['changecategory'] > 0) || isset($_REQUEST['selectcategory']) ? 1 : 0;
+$subject_module_id = isset($_REQUEST['subject_module_id']) ? (int) $_REQUEST['subject_module_id'] : 0;
+$subject_id = isset($_REQUEST['subject_id']) ? (int) $_REQUEST['subject_id'] : 0;
+$menu_action = isset($_REQUEST['menu_action']) ? $_REQUEST['menu_action'] : '';
+$new_subject_id = isset($_REQUEST['new_subject_id']) ? (int) $_REQUEST['new_subject_id'] : 0;
 
-if (! isset($firstrow)) {
-    $firstrow = 0;
-}
-
-if (! isset($rowsperpage)) {
-    $rowsperpage = K_MAX_ROWS_PER_PAGE;
-}
-
-if (! isset($hide_answers)) {
-    $hide_answers = false;
-}
-
-if (isset($selectmodule)) {
-    $changemodule = 1;
-}
-
-if (isset($selectcategory)) {
-    $changecategory = 1;
-}
-
-if (isset($changemodule) && $changemodule > 0 || isset($changecategory) && $changecategory > 0) {
+if ($changemodule > 0 || $changecategory > 0) {
     $wherequery = '';
     $firstrow = 0;
     $orderdir = 0;
@@ -89,59 +76,78 @@ if (isset($changemodule) && $changemodule > 0 || isset($changecategory) && $chan
     }
 }
 
-if (isset($subject_module_id)) {
-    $subject_module_id = (int) $subject_module_id;
-} else {
-    // select default module/subject (if not specified)
+if ($subject_module_id <= 0) {
     $sql = F_select_modules_sql() . ' LIMIT 1';
     if ($r = F_db_query($sql, $db)) {
-        $subject_module_id = ($m = F_db_fetch_array($r)) ? $m['module_id'] : 0;
+        $subject_module_id = ($m = F_db_fetch_array($r)) ? (int) $m['module_id'] : 0;
     } else {
         F_display_db_error();
     }
 }
 
 // check user's authorization
-if (! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')) {
+if ($subject_module_id > 0 && ! F_isAuthorizedUser(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')) {
     F_print_error('ERROR', $l['m_authorization_denied']);
     require_once('../code/tce_page_footer.php');
     exit;
 }
 
-if (isset($subject_id)) {
-    $subject_id = (int) $subject_id;
-}
-
 // select subject
-if (isset($changemodule) && $changemodule > 0 || ! (isset($subject_id) && $subject_id > 0)) {
+if ($changemodule > 0 || $subject_id <= 0) {
     $sql = F_select_subjects_sql('subject_module_id=' . $subject_module_id . '') . ' LIMIT 1';
     if ($r = F_db_query($sql, $db)) {
-        $subject_id = ($m = F_db_fetch_array($r)) ? $m['subject_id'] : 0;
+        $subject_id = ($m = F_db_fetch_array($r)) ? (int) $m['subject_id'] : 0;
     } else {
         F_display_db_error();
     }
 }
 
-if (isset($menu_mode) && $menu_mode == 'update' && isset($menu_action) && ! empty($menu_action)) {
+$can_modify = ! F_is_readonly_content()
+    && (F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')
+        || F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $subject_id, 'subject_user_id'));
+
+if ($can_modify && isset($_POST['update']) && ! empty($menu_action)) {
     $istart = 1 + $firstrow;
     $iend = $rowsperpage + $firstrow;
     for ($i = $istart; $i <= $iend; ++$i) {
         // for each selected question
         $keyname = 'questionid' . $i;
-        if (isset(${$keyname})) {
-            $question_id = (int) ${$keyname};
+        if (isset($_POST[$keyname])) {
+            $question_id = (int) $_POST[$keyname];
             switch ($menu_action) {
                 case 'move': {
-                    if (isset($new_subject_id) && $new_subject_id > 0) {
-                        F_question_copy($question_id, $new_subject_id);
-                        F_question_delete($question_id, $subject_id);
+                    if ($new_subject_id > 0) {
+                        $target_mod_id = 0;
+                        $sql_target = 'SELECT subject_module_id FROM ' . K_TABLE_SUBJECTS . ' WHERE subject_id=' . $new_subject_id . ' LIMIT 1';
+                        if ($r_target = F_db_query($sql_target, $db)) {
+                            if ($m_target = F_db_fetch_array($r_target)) {
+                                $target_mod_id = (int) $m_target['subject_module_id'];
+                            }
+                        }
+                        if ($target_mod_id > 0 && (F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $target_mod_id, 'module_user_id') || F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $new_subject_id, 'subject_user_id'))) {
+                            F_question_copy($question_id, $new_subject_id);
+                            F_question_delete($question_id, $subject_id);
+                        } else {
+                            F_print_error('ERROR', $l['m_authorization_denied']);
+                        }
                     }
 
                     break;
                 }
                 case 'copy': {
-                    if (isset($new_subject_id) && $new_subject_id > 0) {
-                        F_question_copy($question_id, $new_subject_id);
+                    if ($new_subject_id > 0) {
+                        $target_mod_id = 0;
+                        $sql_target = 'SELECT subject_module_id FROM ' . K_TABLE_SUBJECTS . ' WHERE subject_id=' . $new_subject_id . ' LIMIT 1';
+                        if ($r_target = F_db_query($sql_target, $db)) {
+                            if ($m_target = F_db_fetch_array($r_target)) {
+                                $target_mod_id = (int) $m_target['subject_module_id'];
+                            }
+                        }
+                        if ($target_mod_id > 0 && (F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $target_mod_id, 'module_user_id') || F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $new_subject_id, 'subject_user_id'))) {
+                            F_question_copy($question_id, $new_subject_id);
+                        } else {
+                            F_print_error('ERROR', $l['m_authorization_denied']);
+                        }
                     }
 
                     break;
@@ -419,12 +425,14 @@ function F_show_select_questions($wherequery, $subject_module_id, $subject_id, $
             ++$itemcount;
             $questlist .= '<li>' . K_NEWLINE;
             $questlist .= '<strong>' . $itemcount . '.</strong> ';
-            $questlist .= '<input type="checkbox" name="questionid' . $itemcount . '" id="questionid' . $itemcount . '" value="' . $m['question_id'] . '" title="' . $l['w_select'] . '"';
-            if (isset($_REQUEST['checkall']) && $_REQUEST['checkall'] == 1) {
-                $questlist .= ' checked="checked"';
-            }
+            if ($can_modify) {
+                $questlist .= '<input type="checkbox" name="questionid' . $itemcount . '" id="questionid' . $itemcount . '" value="' . $m['question_id'] . '" title="' . $l['w_select'] . '"';
+                if (isset($_REQUEST['checkall']) && $_REQUEST['checkall'] == 1) {
+                    $questlist .= ' checked="checked"';
+                }
 
-            $questlist .= ' />';
+                $questlist .= ' />';
+            }
             // display question description
             if (F_getBoolean($m['question_enabled'])) {
                 $questlist .= '<acronym class="okbox" title="' . $l['w_enabled'] . '">&#10003;</acronym>';
@@ -555,48 +563,50 @@ function F_show_select_questions($wherequery, $subject_module_id, $subject_id, $
             echo '<ul class="question">' . K_NEWLINE;
             echo $questlist;
             echo '</ul>' . K_NEWLINE;
-            echo '<div class="row"><hr /></div>' . K_NEWLINE;
-            // check/uncheck all options
-            echo '<span dir="' . $l['a_meta_dir'] . '">';
-            echo '<input type="radio" name="checkall" id="checkall1" value="1" onclick="document.getElementById(\'form_selectquestions\').submit()" />';
-            echo '<label for="checkall1">' . $l['w_check_all'] . '</label> ';
-            echo '<input type="radio" name="checkall" id="checkall0" value="0" onclick="document.getElementById(\'form_selectquestions\').submit()" />';
-            echo '<label for="checkall0">' . $l['w_uncheck_all'] . '</label>';
-            echo '</span>' . K_NEWLINE;
-            echo '&nbsp;';
-            $arr = $l['a_meta_dir'] == 'rtl' ? '&larr;' : '&rarr;';
+            if ($can_modify) {
+                echo '<div class="row"><hr /></div>' . K_NEWLINE;
+                // check/uncheck all options
+                echo '<span dir="' . $l['a_meta_dir'] . '">';
+                echo '<input type="radio" name="checkall" id="checkall1" value="1" onclick="document.getElementById(\'form_selectquestions\').submit()" />';
+                echo '<label for="checkall1">' . $l['w_check_all'] . '</label> ';
+                echo '<input type="radio" name="checkall" id="checkall0" value="0" onclick="document.getElementById(\'form_selectquestions\').submit()" />';
+                echo '<label for="checkall0">' . $l['w_uncheck_all'] . '</label>';
+                echo '</span>' . K_NEWLINE;
+                echo '&nbsp;';
+                $arr = $l['a_meta_dir'] == 'rtl' ? '&larr;' : '&rarr;';
 
-            // action options
-            echo '<select name="menu_action" id="menu_action" size="0">' . K_NEWLINE;
-            echo '<option value="0" style="color:gray">' . $l['m_with_selected'] . '</option>' . K_NEWLINE;
-            echo '<option value="enable">' . $l['w_enable'] . '</option>' . K_NEWLINE;
-            echo '<option value="disable">' . $l['w_disable'] . '</option>' . K_NEWLINE;
-            echo '<option value="delete">' . $l['w_delete'] . '</option>' . K_NEWLINE;
-            echo '<option value="copy">' . $l['w_copy'] . ' ' . $arr . '</option>' . K_NEWLINE;
-            echo '<option value="move">' . $l['w_move'] . ' ' . $arr . '</option>' . K_NEWLINE;
-            echo '</select>' . K_NEWLINE;
-            // select new topic (for copy or move action)
-            echo '<select name="new_subject_id" id="new_subject_id" size="0" title="' . $l['h_subject'] . '">' . K_NEWLINE;
-            $sql = F_select_module_subjects_sql("module_enabled='1' AND subject_enabled='1'");
-            if ($r = F_db_query($sql, $db)) {
-                echo '<option value="0" style="color:gray">' . $l['w_subject'] . '</option>' . K_NEWLINE;
-                $prev_module_id = 0;
-                while ($m = F_db_fetch_array($r)) {
-                    if ($m['module_id'] != $prev_module_id) {
-                        $prev_module_id = $m['module_id'];
-                        echo '<option value="0" style="color:gray;font-weight:bold;" disabled="disabled">* ' . htmlspecialchars($m['module_name'], ENT_NOQUOTES, $l['a_meta_charset']) . '</option>' . K_NEWLINE;
-                    }
-
-                    echo '<option value="' . $m['subject_id'] . '">&nbsp;&nbsp;&nbsp;&nbsp;' . htmlspecialchars($m['subject_name'], ENT_NOQUOTES, $l['a_meta_charset']) . '</option>' . K_NEWLINE;
-                }
-            } else {
+                // action options
+                echo '<select name="menu_action" id="menu_action" size="0">' . K_NEWLINE;
+                echo '<option value="0" style="color:gray">' . $l['m_with_selected'] . '</option>' . K_NEWLINE;
+                echo '<option value="enable">' . $l['w_enable'] . '</option>' . K_NEWLINE;
+                echo '<option value="disable">' . $l['w_disable'] . '</option>' . K_NEWLINE;
+                echo '<option value="delete">' . $l['w_delete'] . '</option>' . K_NEWLINE;
+                echo '<option value="copy">' . $l['w_copy'] . ' ' . $arr . '</option>' . K_NEWLINE;
+                echo '<option value="move">' . $l['w_move'] . ' ' . $arr . '</option>' . K_NEWLINE;
                 echo '</select>' . K_NEWLINE;
-                F_display_db_error();
-            }
+                // select new topic (for copy or move action)
+                echo '<select name="new_subject_id" id="new_subject_id" size="0" title="' . $l['h_subject'] . '">' . K_NEWLINE;
+                $sql = F_select_module_subjects_sql("module_enabled='1' AND subject_enabled='1'");
+                if ($r = F_db_query($sql, $db)) {
+                    echo '<option value="0" style="color:gray">' . $l['w_subject'] . '</option>' . K_NEWLINE;
+                    $prev_module_id = 0;
+                    while ($m = F_db_fetch_array($r)) {
+                        if ($m['module_id'] != $prev_module_id) {
+                            $prev_module_id = $m['module_id'];
+                            echo '<option value="0" style="color:gray;font-weight:bold;" disabled="disabled">* ' . htmlspecialchars($m['module_name'], ENT_NOQUOTES, $l['a_meta_charset']) . '</option>' . K_NEWLINE;
+                        }
 
-            echo '</select>' . K_NEWLINE;
-            // submit button
-            F_submit_button("update", $l['w_update'], $l['h_update']);
+                        echo '<option value="' . $m['subject_id'] . '">&nbsp;&nbsp;&nbsp;&nbsp;' . htmlspecialchars($m['subject_name'], ENT_NOQUOTES, $l['a_meta_charset']) . '</option>' . K_NEWLINE;
+                    }
+                } else {
+                    echo '</select>' . K_NEWLINE;
+                    F_display_db_error();
+                }
+
+                echo '</select>' . K_NEWLINE;
+                // submit button
+                F_submit_button("update", $l['w_update'], $l['h_update']);
+            }
         }
 
         // ---------------------------------------------------------------
