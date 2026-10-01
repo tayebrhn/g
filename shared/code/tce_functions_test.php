@@ -1817,7 +1817,7 @@ function F_questionForm($test_id, $testlog_id, $formname)
                     $str .= '<script src="' . K_PATH_SHARED_JSCRIPTS . 'vk/vk_easy.js?vk_skin=default" type="text/javascript"></script>' . K_NEWLINE;
                 }
 
-                $str .= '<textarea cols="' . K_ANSWER_TEXTAREA_COLS . '" rows="' . K_ANSWER_TEXTAREA_ROWS . '" name="answertext" id="answertext" onchange="saveAnswer()"';
+                $str .= '<textarea cols="' . K_ANSWER_TEXTAREA_COLS . '" rows="' . K_ANSWER_TEXTAREA_ROWS . '" name="answertext" id="answertext" onchange="saveAnswer()" class="';
                 if (K_ENABLE_VIRTUAL_KEYBOARD) {
                     $str .= 'keyboardInput ';
                 }
@@ -1989,7 +1989,7 @@ function F_questionForm($test_id, $testlog_id, $formname)
             $str .= '<script type="text/javascript">' . K_NEWLINE;
             $str .= '//<![CDATA[' . K_NEWLINE;
             // script to handle keyboard events
-            $str .= 'function actionByChar(e){e=(e)?e:window.event;keynum=(e.keyCode)?e.keyCode:e.which;switch(keynum){' . K_NEWLINE;
+            $str .= 'function actionByChar(e){e=(e)?e:window.event;var target=(e.target||e.srcElement);if(target&&(target.tagName===\'TEXTAREA\'||(target.tagName===\'INPUT\'&&target.type!==\'radio\'&&target.type!==\'checkbox\'))){return;}keynum=(e.keyCode)?e.keyCode:e.which;switch(keynum){' . K_NEWLINE;
             foreach ($aswkeys as $key => $fieldid) {
                 $str .= 'case ' . $key . ":{document.getElementById('" . $fieldid . "').checked=true;var submittime=new Date();document.getElementById('reaction_time').value=submittime.getTime()-document.getElementById('display_time').value;document.getElementById('autonext').value=1;document.getElementById('" . $formname . "').submit();break;}" . K_NEWLINE;
             }

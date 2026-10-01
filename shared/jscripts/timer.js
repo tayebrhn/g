@@ -41,9 +41,10 @@ function FJ_timer() {
 		//get sign
 		var sign = '-';
 		// submit form for the last time to save user input on textbox (if any)
-		if ((diff_seconds >= -2) && (document.getElementById('testform').finish.value == 0)) {
-			document.getElementById('testform').finish.value = 1;
-			document.getElementById('testform').submit();
+		var tf = document.getElementById('testform');
+		if (tf && tf.finish && (diff_seconds >= -2) && (tf.finish.value == 0)) {
+			tf.finish.value = 1;
+			tf.submit();
 		}
 		if (diff_seconds >= 0) {
 			sign = '+';
@@ -75,7 +76,10 @@ function FJ_timer() {
 			diff_seconds = "0" + diff_seconds;
 		}
 		// display countdown string on form field
-		document.getElementById('timerform').timer.value = ''+sign+''+diff_hours+':'+diff_minutes+':'+diff_seconds+' ';
+		var timerform = document.getElementById('timerform');
+		if (timerform && timerform.timer) {
+			timerform.timer.value = ''+sign+''+diff_hours+':'+diff_minutes+':'+diff_seconds+' ';
+		}
 	} else { // --- CLOCK MODE ---
 		var localtime = new Date();
 		var today = new Date((localtime.getTime() + time_diff));
@@ -101,7 +105,10 @@ function FJ_timer() {
 			second = '0'+second;
 		}
 		// display clock string on form field
-		document.getElementById('timerform').timer.value = ''+year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second;
+		var timerform = document.getElementById('timerform');
+		if (timerform && timerform.timer) {
+			timerform.timer.value = ''+year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second;
+		}
 	}
 	return;
 }
@@ -123,7 +130,7 @@ function FJ_start_timer(countdown, remaining, msg, logout, servertime) {
 	msg_endtime = msg;
 	timeout_logout = logout;
 	// update clock
-	setInterval('FJ_timer()', 500);
+	setInterval(FJ_timer, 500);
 }
 
 // --------------------------------------------------------------------------

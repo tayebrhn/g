@@ -34,9 +34,6 @@ require_once('../config/tce_config.php');
 
 $pagelevel = K_AUTH_PUBLIC_TEST_RESULTS;
 require_once('../../shared/code/tce_authorization.php');
-
-$thispage_title = $l['t_test_results'];
-require_once('../code/tce_page_header.php');
 require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
 require_once('../../shared/code/tce_functions_test.php');
@@ -85,6 +82,9 @@ if (! F_getBoolean($teststat['testinfo']['test_results_to_users'])) {
     header('Location: index.php'); //redirect browser to public main page
     exit;
 }
+
+$thispage_title = $l['t_test_results'];
+require_once('../code/tce_page_header.php');
 
 //lock user's test
 F_lockUserTest($test_id, $_SESSION['session_user_id']);
