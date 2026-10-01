@@ -530,7 +530,7 @@ if ($user_id == 0) {
 
 echo '>+</option>' . K_NEWLINE;
 $sql = 'SELECT user_id, user_lastname, user_firstname, user_name FROM ' . K_TABLE_USERS . ' WHERE (user_id>1)';
-if (! F_has_global_view()) {
+if (! F_has_global_view() && ! F_user_can(K_PERM_MANAGE_IDENTITY)) {
     // filter for level
     $sql .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
     // filter for groups
@@ -539,6 +539,8 @@ if (! F_has_global_view()) {
 		WHERE ta.usrgrp_group_id=tb.usrgrp_group_id
 			AND ta.usrgrp_user_id=' . (int) $_SESSION['session_user_id'] . '
 			AND tb.usrgrp_user_id=user_id)';
+} elseif (! F_user_can(K_PERM_ADMIN)) {
+    $sql .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
 }
 
 $sql .= ' ORDER BY user_lastname, user_firstname, user_name';

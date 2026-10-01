@@ -351,11 +351,11 @@ assert_equals('ok', $del_sub_msg, 'Subordinate deletion status must be ok.');
 // 5. Functional Unit Tests: Group Modification Authority
 // ---------------------------------------------------------------------------
 
-// Test 5.1: Editor in Group 1 (not Group 2), without K_PERM_ADMIN
+// Test 5.1: Global view editor in Group 1 (not Group 2), without K_PERM_MANAGE_IDENTITY or K_PERM_ADMIN
 $_SESSION = [
     'session_user_id' => 20,
     'session_user_level' => 5,
-    'session_user_perms' => K_PERM_MANAGE_IDENTITY | K_PERM_GLOBAL_VIEW,
+    'session_user_perms' => K_PERM_GLOBAL_VIEW | K_PERM_OPERATOR,
 ];
 
 // F_isUserOnGroup calls F_db_fetch_array: returns row for user 20 on group 1, false on group 2
@@ -364,7 +364,16 @@ $can_mod_g1 = F_isAuthorizedToModifyGroup(1);
 $can_mod_g2 = F_isAuthorizedToModifyGroup(2);
 
 assert_true($can_mod_g1, 'Editor can modify membership of their own group (Group 1).');
-assert_false($can_mod_g2, 'Global view editor without K_PERM_ADMIN cannot modify unowned group (Group 2).');
+assert_false($can_mod_g2, 'Global view editor without K_PERM_ADMIN or K_PERM_MANAGE_IDENTITY cannot modify unowned group (Group 2).');
+
+// Test 5.2: Identity administrator with K_PERM_MANAGE_IDENTITY has global authority to modify any group
+$_SESSION = [
+    'session_user_id' => 20,
+    'session_user_level' => 6,
+    'session_user_perms' => K_PERM_MANAGE_IDENTITY,
+];
+$can_mod_id_g2 = F_isAuthorizedToModifyGroup(2);
+assert_true($can_mod_id_g2, 'Identity administrator with K_PERM_MANAGE_IDENTITY can modify unowned group (Group 2).');
 
 // ---------------------------------------------------------------------------
 // 6. Level & Capability Smart Auto-Sync Verification

@@ -70,8 +70,9 @@ predate the capabilities.
 The numeric `user_level` (0–10) no longer grants or withholds any capability.
 It is used only for precedence:
 
-* an identity administrator may only manage (see, edit, delete, list) users
-  of a **lower rank** sharing one of its groups (`F_isAuthorizedUserRecord()`);
+* an identity administrator may manage (see, edit, delete, list, assign groups) users
+  of a **lower rank** across all groups (`F_isAuthorizedUserRecord()`);
+* non-identity editors are confined to users sharing one of their groups;
 * the user lists and exports are filtered with `user_level < own`;
 * a non-`K_PERM_ADMIN` editor cannot create or promote an account to a rank
   equal to or higher than its own, and cannot change its own rank or mask;

@@ -112,7 +112,7 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
     }
 
     $wherequery .= ' (user_id>1)';
-    if (! F_has_global_view()) {
+    if (! F_has_global_view() && ! F_user_can(K_PERM_MANAGE_IDENTITY)) {
         // filter for level
         $wherequery .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
         // filter for groups
@@ -121,6 +121,8 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
 			WHERE ta.usrgrp_group_id=tb.usrgrp_group_id
 				AND ta.usrgrp_user_id=' . (int) $_SESSION['session_user_id'] . '
 				AND tb.usrgrp_user_id=user_id)';
+    } elseif (! F_user_can(K_PERM_ADMIN)) {
+        $wherequery .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
     }
 
     if (! empty($andwhere)) {
@@ -357,7 +359,7 @@ function F_show_select_user_popup($order_field, $orderdir, $firstrow, $rowsperpa
     }
 
     $wherequery .= ' (user_id>1)';
-    if (! F_has_global_view()) {
+    if (! F_has_global_view() && ! F_user_can(K_PERM_MANAGE_IDENTITY)) {
         // filter for level
         $wherequery .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
         // filter for groups
@@ -366,6 +368,8 @@ function F_show_select_user_popup($order_field, $orderdir, $firstrow, $rowsperpa
 			WHERE ta.usrgrp_group_id=tb.usrgrp_group_id
 				AND ta.usrgrp_user_id=' . (int) $_SESSION['session_user_id'] . '
 				AND tb.usrgrp_user_id=user_id)';
+    } elseif (! F_user_can(K_PERM_ADMIN)) {
+        $wherequery .= ' AND ((user_level<' . $_SESSION['session_user_level'] . ') OR (user_id=' . $_SESSION['session_user_id'] . '))';
     }
 
     if (! empty($andwhere)) {
@@ -519,8 +523,8 @@ function F_isAuthorizedEditorForGroup($group_id)
 {
     global $l, $db;
     require_once('../config/tce_config.php');
-    if (F_has_global_view() || empty($group_id)) {
-        // user has global visibility (belongs to all groups) or empty group
+    if (F_has_global_view() || F_user_can(K_PERM_MANAGE_IDENTITY) || empty($group_id)) {
+        // user has global visibility, holds identity management, or empty group
         return true;
     }
 
@@ -531,7 +535,7 @@ function F_isAuthorizedEditorForGroup($group_id)
  * Return true if the current user is authorized to modify the specified group.
  * Unlike F_isAuthorizedEditorForGroup(), which answers "may I see it?" and grants global
  * access with the K_PERM_GLOBAL_VIEW capability, this predicate requires K_PERM_ADMIN
- * to modify a group the user does not belong to.
+ * or K_PERM_MANAGE_IDENTITY to modify a group the user does not belong to.
  * @param $group_id (int) group ID
  * @return boolean true/false
  * @author Nicola Asuni
@@ -546,8 +550,8 @@ function F_isAuthorizedToModifyGroup($group_id)
         return true;
     }
 
-    if (isset($_SESSION['session_user_level']) && F_user_can(K_PERM_ADMIN)) {
-        // full administrator
+    if (isset($_SESSION['session_user_level']) && (F_user_can(K_PERM_ADMIN) || F_user_can(K_PERM_MANAGE_IDENTITY))) {
+        // full administrator or identity administrator
         return true;
     }
 
@@ -625,6 +629,11 @@ function F_isAuthorizedUserRecord($global_perm, $user_id)
         return false;
     }
 
+    // Identity administrators have global authority over subordinate users
+    if (F_user_can(K_PERM_MANAGE_IDENTITY)) {
+        return true;
+    }
+
     // the target user must belong to one of the groups of the current user
     return F_count_rows(K_TABLE_USERGROUP . ' AS ta, ' . K_TABLE_USERGROUP . ' AS tb
 		WHERE ta.usrgrp_group_id=tb.usrgrp_group_id
@@ -643,7 +652,7 @@ function F_user_group_select_sql($where = '')
 {
     global $l, $db;
     require_once('../config/tce_config.php');
-    if (F_has_global_view()) {
+    if (F_has_global_view() || F_user_can(K_PERM_MANAGE_IDENTITY)) {
         // global access to all groups
         $sql = 'SELECT * FROM ' . K_TABLE_GROUPS . '';
         if ($where !== '') {
