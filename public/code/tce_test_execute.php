@@ -117,6 +117,24 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
 
         echo '<span class="infolink">' . F_testInfoLink($test_id, $l['w_info']) . '<br /><br /></span>' . K_NEWLINE;
 
+        // Synchronize flagged questions
+        if (! isset($_SESSION['test_flags_' . $test_id]) || ! is_array($_SESSION['test_flags_' . $test_id])) {
+            $_SESSION['test_flags_' . $test_id] = [];
+        }
+        if (isset($_REQUEST['flagged_log_ids'])) {
+            $raw_flags = trim((string) $_REQUEST['flagged_log_ids']);
+            if ($raw_flags === '') {
+                $_SESSION['test_flags_' . $test_id] = [];
+            } else {
+                $parsed_flags = array_map('intval', explode(',', $raw_flags));
+                $_SESSION['test_flags_' . $test_id] = array_values(array_unique(array_filter($parsed_flags, function ($id) {
+                    return $id > 0;
+                })));
+            }
+        }
+        $flagged_ids = $_SESSION['test_flags_' . $test_id];
+        $flagged_log_ids_str = implode(',', $flagged_ids);
+
         if (! isset($_REQUEST['terminationform']) && F_isRightTestlogUser($test_id, $testlog_id)) {
             // the form has been submitted, update testlogid data
             F_updateQuestionLog($test_id, $testlog_id, $answpos, $answer_text, $reaction_time);
@@ -143,6 +161,49 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
             }
         }
 
+        // Test statistics for sticky header and review summary
+        $user_stats = F_getTestUserStats($test_id, (int) $_SESSION['session_user_id']);
+        $total_questions = $user_stats['total'];
+        $answered_questions = $user_stats['answered'];
+        $unanswered_questions = $user_stats['unanswered'];
+        $progress_percentage = $user_stats['progress_pct'];
+        $flagged_count = count($flagged_ids);
+
+        $curr_q_index = 1;
+        if ($testlog_id > 0 && isset($user_stats['questions'][$testlog_id])) {
+            $curr_q_index = $user_stats['questions'][$testlog_id]['index'];
+        } elseif (! empty($user_stats['questions'])) {
+            $first_q = reset($user_stats['questions']);
+            $curr_q_index = $first_q['index'];
+        }
+
+        // Render Sticky Exam Status Header
+        echo '<div class="exam_sticky_bar" id="exam_sticky_bar">' . K_NEWLINE;
+        echo '<div class="sticky_left">' . K_NEWLINE;
+        echo '<span class="sticky_test_name" title="' . htmlspecialchars(F_getTestName($test_id), ENT_QUOTES, $l['a_meta_charset']) . '">' . htmlspecialchars(F_getTestName($test_id), ENT_QUOTES, $l['a_meta_charset']) . '</span>' . K_NEWLINE;
+        echo '<span class="sticky_qnum">Question <strong id="sticky_curr_num">' . $curr_q_index . '</strong> of <strong>' . $total_questions . '</strong></span>' . K_NEWLINE;
+        echo '</div>' . K_NEWLINE;
+
+        echo '<div class="sticky_center">' . K_NEWLINE;
+        echo '<div class="sticky_progress_wrap">' . K_NEWLINE;
+        echo '<div class="sticky_progress_info">' . K_NEWLINE;
+        echo '<span id="sticky_progress_text">' . $answered_questions . ' / ' . $total_questions . ' Answered (' . $progress_percentage . '%)</span>' . K_NEWLINE;
+        echo '</div>' . K_NEWLINE;
+        echo '<div class="sticky_progress_bar">' . K_NEWLINE;
+        echo '<div class="sticky_progress_fill" id="sticky_progress_fill" style="width:' . $progress_percentage . '%;"></div>' . K_NEWLINE;
+        echo '</div>' . K_NEWLINE;
+        echo '</div>' . K_NEWLINE;
+        echo '</div>' . K_NEWLINE;
+
+        echo '<div class="sticky_right">' . K_NEWLINE;
+        echo '<div class="sticky_timer_box" id="sticky_timer_box" title="' . $l['w_clock_timer'] . '">' . K_NEWLINE;
+        echo '<span class="sticky_timer_icon">&#9200;</span> ' . K_NEWLINE;
+        echo '<span class="sticky_timer_display" id="sticky_timer_display">--:--:--</span>' . K_NEWLINE;
+        echo '</div>' . K_NEWLINE;
+        echo '<button type="button" class="btn_end_exam" id="btn_open_review" onclick="FJ_open_review_modal();" title="' . $l['w_terminate_exam'] . '">' . $l['w_terminate'] . ' &raquo;</button>' . K_NEWLINE;
+        echo '</div>' . K_NEWLINE;
+        echo '</div>' . K_NEWLINE;
+
         // confirmation form to terminate the test
         if (isset($_REQUEST['terminatetest']) && ! empty($_REQUEST['terminatetest'])) {
             // check if some questions were omitted (undisplayed or unanswered).
@@ -154,21 +215,76 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
 
             F_print_error('WARNING', $omitted_msg . '' . $l['m_confirm_test_termination']);
             ?>
-            <div class="confirmbox">
-            <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" enctype="multipart/form-data" id="form_test_terminate">
-            <div>
-            <input type="hidden" name="testid" id="testid" value="<?php echo $test_id; ?>" />
-            <input type="hidden" name="testlogid" id="testlogid" value="<?php echo $testlog_id; ?>" />
-            <input type="hidden" name="terminationform" id="terminationform" value="1" />
-            <input type="hidden" name="display_time" id="display_time" value="" />
-            <input type="hidden" name="reaction_time" id="reaction_time" value="" />
-            <?php
-            F_submit_button('forceterminate', $l['w_terminate'], $l['w_terminate_exam']);
-            F_submit_button('cancel', $l['w_cancel'], $l['h_cancel']);
-            echo F_getCSRFTokenField() . K_NEWLINE;
-            ?>
-            </div>
-            </form>
+            <div class="confirmbox review_confirm_wrapper">
+                <div class="review_summary_card">
+                    <h3 class="review_summary_heading">Exam Pre-Submission Review</h3>
+                    <div class="review_stats_grid">
+                        <div class="review_stat_card card_answered">
+                            <span class="stat_value"><?php echo $answered_questions; ?></span>
+                            <span class="stat_label">Answered</span>
+                        </div>
+                        <div class="review_stat_card card_unanswered">
+                            <span class="stat_value"><?php echo $unanswered_questions; ?></span>
+                            <span class="stat_label">Unanswered</span>
+                        </div>
+                        <div class="review_stat_card card_flagged">
+                            <span class="stat_value"><?php echo $flagged_count; ?></span>
+                            <span class="stat_label">Flagged</span>
+                        </div>
+                    </div>
+
+                    <?php if ($unanswered_questions > 0): ?>
+                    <div class="review_jump_section">
+                        <h4>Unanswered Questions (Click to Answer):</h4>
+                        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" enctype="multipart/form-data" class="review_jump_form">
+                        <input type="hidden" name="testid" value="<?php echo $test_id; ?>" />
+                        <input type="hidden" name="flagged_log_ids" value="<?php echo htmlspecialchars($flagged_log_ids_str); ?>" />
+                        <?php echo F_getCSRFTokenField() . K_NEWLINE; ?>
+                        <div class="review_chips_grid">
+                        <?php foreach ($user_stats['questions'] as $qlog_id => $qitem): ?>
+                            <?php if (! $qitem['answered']): ?>
+                            <button type="submit" name="jumpquestion_<?php echo $qlog_id; ?>" class="review_jump_chip chip_unanswered" title="Jump to question <?php echo $qitem['index']; ?>">Question <?php echo $qitem['index']; ?></button>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        </div>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($flagged_count > 0): ?>
+                    <div class="review_jump_section">
+                        <h4>Flagged for Review (Click to Inspect):</h4>
+                        <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" enctype="multipart/form-data" class="review_jump_form">
+                        <input type="hidden" name="testid" value="<?php echo $test_id; ?>" />
+                        <input type="hidden" name="flagged_log_ids" value="<?php echo htmlspecialchars($flagged_log_ids_str); ?>" />
+                        <?php echo F_getCSRFTokenField() . K_NEWLINE; ?>
+                        <div class="review_chips_grid">
+                        <?php foreach ($user_stats['questions'] as $qlog_id => $qitem): ?>
+                            <?php if (in_array($qlog_id, $flagged_ids)): ?>
+                            <button type="submit" name="jumpquestion_<?php echo $qlog_id; ?>" class="review_jump_chip chip_flagged" title="Jump to flagged question <?php echo $qitem['index']; ?>">&#9873; Question <?php echo $qitem['index']; ?></button>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        </div>
+                        </form>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+                <form action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" enctype="multipart/form-data" id="form_test_terminate">
+                <div>
+                <input type="hidden" name="testid" id="testid" value="<?php echo $test_id; ?>" />
+                <input type="hidden" name="testlogid" id="testlogid" value="<?php echo $testlog_id; ?>" />
+                <input type="hidden" name="terminationform" id="terminationform" value="1" />
+                <input type="hidden" name="display_time" id="display_time" value="" />
+                <input type="hidden" name="reaction_time" id="reaction_time" value="" />
+                <input type="hidden" name="flagged_log_ids" value="<?php echo htmlspecialchars($flagged_log_ids_str); ?>" />
+                <?php
+                F_submit_button('forceterminate', $l['w_terminate'], $l['w_terminate_exam']);
+                F_submit_button('cancel', $l['w_cancel'], $l['h_cancel']);
+                echo F_getCSRFTokenField() . K_NEWLINE;
+                ?>
+                </div>
+                </form>
             </div>
 <?php
         } else {
@@ -186,6 +302,7 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
             echo '<input type="hidden" name="finish" id="finish" value="' . $finish . '" />' . K_NEWLINE;
             echo '<input type="hidden" name="display_time" id="display_time" value="" />' . K_NEWLINE;
             echo '<input type="hidden" name="reaction_time" id="reaction_time" value="" />' . K_NEWLINE;
+            echo '<input type="hidden" name="flagged_log_ids" id="flagged_log_ids" value="' . htmlspecialchars($flagged_log_ids_str) . '" />' . K_NEWLINE;
 
             // textarea field for user's comment
             echo '<span class="testcomment">' . F_testComment($test_id) . '</span>' . K_NEWLINE;
@@ -197,6 +314,201 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
             echo '</div>' . K_NEWLINE;
             echo F_getCSRFTokenField() . K_NEWLINE;
             echo '</form>' . K_NEWLINE;
+
+            // Pre-Submission Review Modal
+            ?>
+            <div id="review_modal_backdrop" class="review_modal_backdrop" style="display:none;">
+                <div class="review_modal_dialog">
+                    <div class="review_modal_header">
+                        <h3 class="modal_title">Review Your Exam</h3>
+                        <button type="button" class="btn_close_modal" onclick="FJ_close_review_modal();" title="Close review">&times;</button>
+                    </div>
+                    <div class="review_modal_body">
+                        <p class="review_modal_intro">Review your answered questions, missed questions, and bookmarks before final submission.</p>
+                        <div class="review_stats_grid">
+                            <div class="review_stat_card card_answered">
+                                <span class="stat_value" id="modal_stat_answered"><?php echo $answered_questions; ?></span>
+                                <span class="stat_label">Answered</span>
+                            </div>
+                            <div class="review_stat_card card_unanswered">
+                                <span class="stat_value" id="modal_stat_unanswered"><?php echo $unanswered_questions; ?></span>
+                                <span class="stat_label">Unanswered</span>
+                            </div>
+                            <div class="review_stat_card card_flagged">
+                                <span class="stat_value" id="modal_stat_flagged"><?php echo $flagged_count; ?></span>
+                                <span class="stat_label">Flagged</span>
+                            </div>
+                        </div>
+
+                        <?php if ($unanswered_questions > 0): ?>
+                        <div class="review_jump_section">
+                            <h4>Unanswered Questions (Click to Answer):</h4>
+                            <div class="review_chips_grid">
+                            <?php foreach ($user_stats['questions'] as $qlog_id => $qitem): ?>
+                                <?php if (! $qitem['answered']): ?>
+                                <button type="button" class="review_jump_chip chip_unanswered" onclick="FJ_modal_jump(<?php echo $qlog_id; ?>);">Question <?php echo $qitem['index']; ?></button>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($flagged_count > 0): ?>
+                        <div class="review_jump_section">
+                            <h4>Flagged for Review (Click to Inspect):</h4>
+                            <div class="review_chips_grid">
+                            <?php foreach ($user_stats['questions'] as $qlog_id => $qitem): ?>
+                                <?php if (in_array($qlog_id, $flagged_ids)): ?>
+                                <button type="button" class="review_jump_chip chip_flagged" onclick="FJ_modal_jump(<?php echo $qlog_id; ?>);">&#9873; Question <?php echo $qitem['index']; ?></button>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <div class="review_modal_alert">
+                            Are you ready to submit your exam? Once submitted, you cannot change your answers.
+                        </div>
+                    </div>
+                    <div class="review_modal_footer">
+                        <button type="button" class="btn_modal_cancel" onclick="FJ_close_review_modal();">&larr; Return to Exam</button>
+                        <button type="button" class="btn_modal_submit" onclick="FJ_modal_confirm_submit();">Proceed to Submit &raquo;</button>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+            //<![CDATA[
+            function FJ_toggle_flag(testId, testlogId) {
+                testlogId = parseInt(testlogId, 10);
+                var hiddenInput = document.getElementById('flagged_log_ids');
+                var currentFlags = [];
+                if (hiddenInput && hiddenInput.value) {
+                    currentFlags = hiddenInput.value.split(',').map(function(id) { return parseInt(id, 10); }).filter(function(id) { return !isNaN(id) && id > 0; });
+                }
+                var idx = currentFlags.indexOf(testlogId);
+                var isFlagged = false;
+                if (idx >= 0) {
+                    currentFlags.splice(idx, 1);
+                    isFlagged = false;
+                } else {
+                    currentFlags.push(testlogId);
+                    isFlagged = true;
+                }
+                var flagStr = currentFlags.join(',');
+                if (hiddenInput) {
+                    hiddenInput.value = flagStr;
+                }
+                try {
+                    localStorage.setItem('tce_flags_' + testId, flagStr);
+                } catch(e) {}
+
+                var btn = document.getElementById('btn_toggle_flag');
+                if (btn) {
+                    if (isFlagged) {
+                        btn.className = 'btn_flag is_flagged';
+                        btn.innerHTML = '&#9873; <span id="flag_btn_text">Flagged</span>';
+                    } else {
+                        btn.className = 'btn_flag';
+                        btn.innerHTML = '&#9872; <span id="flag_btn_text">Mark for Review</span>';
+                    }
+                }
+
+                var chip = document.getElementById('jumpquestion_' + testlogId);
+                if (chip) {
+                    if (isFlagged) {
+                        if (chip.className.indexOf('chip_flagged') === -1) {
+                            chip.className += ' chip_flagged';
+                        }
+                        if (!chip.querySelector('.chip_flag_icon')) {
+                            var flagSpan = document.createElement('span');
+                            flagSpan.className = 'chip_flag_icon';
+                            flagSpan.innerHTML = '&#9873;';
+                            chip.appendChild(flagSpan);
+                        }
+                    } else {
+                        chip.className = chip.className.replace(/\bchip_flagged\b/g, '').trim();
+                        var flagSpan = chip.querySelector('.chip_flag_icon');
+                        if (flagSpan) {
+                            chip.removeChild(flagSpan);
+                        }
+                    }
+                }
+
+                var palFlagged = document.getElementById('pal_stat_flagged');
+                if (palFlagged) {
+                    palFlagged.textContent = currentFlags.length;
+                }
+                var modalFlagged = document.getElementById('modal_stat_flagged');
+                if (modalFlagged) {
+                    modalFlagged.textContent = currentFlags.length;
+                }
+            }
+
+            function FJ_open_review_modal() {
+                var modal = document.getElementById('review_modal_backdrop');
+                if (modal) {
+                    modal.style.display = 'flex';
+                }
+            }
+
+            function FJ_close_review_modal() {
+                var modal = document.getElementById('review_modal_backdrop');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
+
+            function FJ_modal_jump(testlogId) {
+                var tf = document.getElementById('testform');
+                if (!tf) return;
+                var inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'jumpquestion_' + testlogId;
+                inp.value = '1';
+                tf.appendChild(inp);
+                tf.submit();
+            }
+
+            function FJ_modal_confirm_submit() {
+                var tf = document.getElementById('testform');
+                if (!tf) return;
+                var inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'terminatetest';
+                inp.value = '1';
+                tf.appendChild(inp);
+                tf.submit();
+            }
+
+            (function(){
+                var testId = <?php echo (int) $test_id; ?>;
+                var inp = document.getElementById('flagged_log_ids');
+                if (inp) {
+                    try {
+                        var local = localStorage.getItem('tce_flags_' + testId);
+                        if (local !== null && (!inp.value || inp.value.trim() === '')) {
+                            inp.value = local;
+                        } else if (inp.value) {
+                            localStorage.setItem('tce_flags_' + testId, inp.value);
+                        }
+                    } catch(e) {}
+                }
+                window.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' || e.keyCode === 27) {
+                        FJ_close_review_modal();
+                    }
+                });
+                window.addEventListener('click', function(e) {
+                    var modal = document.getElementById('review_modal_backdrop');
+                    if (e.target === modal) {
+                        FJ_close_review_modal();
+                    }
+                });
+            })();
+            //]]>
+            </script>
+            <?php
         }
 
         // start the countdown if disabled

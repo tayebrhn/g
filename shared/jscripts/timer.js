@@ -60,6 +60,7 @@ function FJ_timer() {
 				}
 			}
 		}
+		var total_rem_seconds = Math.abs(diff_seconds);
 		diff_seconds = Math.abs(diff_seconds); // get absolute value
 		// split seconds in HH:mm:ss
 		var diff_hours = Math.floor(diff_seconds / 3600);
@@ -79,6 +80,20 @@ function FJ_timer() {
 		var timerform = document.getElementById('timerform');
 		if (timerform && timerform.timer) {
 			timerform.timer.value = ''+sign+''+diff_hours+':'+diff_minutes+':'+diff_seconds+' ';
+		}
+		var sticky_timer = document.getElementById('sticky_timer_display');
+		if (sticky_timer) {
+			sticky_timer.innerHTML = '' + (sign == '-' ? '' : '+') + diff_hours + ':' + diff_minutes + ':' + diff_seconds;
+		}
+		var sticky_box = document.getElementById('sticky_timer_box');
+		if (sticky_box) {
+			if (sign == '-' && total_rem_seconds <= 60) {
+				sticky_box.className = 'sticky_timer_box timer_critical';
+			} else if (sign == '-' && total_rem_seconds <= 300) {
+				sticky_box.className = 'sticky_timer_box timer_warning';
+			} else {
+				sticky_box.className = 'sticky_timer_box';
+			}
 		}
 	} else { // --- CLOCK MODE ---
 		var localtime = new Date();
@@ -108,6 +123,10 @@ function FJ_timer() {
 		var timerform = document.getElementById('timerform');
 		if (timerform && timerform.timer) {
 			timerform.timer.value = ''+year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second;
+		}
+		var sticky_timer = document.getElementById('sticky_timer_display');
+		if (sticky_timer) {
+			sticky_timer.innerHTML = '' + hour + ':' + minute + ':' + second;
 		}
 	}
 	return;

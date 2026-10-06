@@ -1853,6 +1853,7 @@ function F_questionForm($test_id, $testlog_id, $formname)
                         switch ($m['question_type']) {
                             case 1: {
                                 // MCSA - single-answer question
+                                $ans_letter = chr(65 + ($anspos - 1));
                                 $str .= '<input type="radio" name="answpos" id="answpos_' . $anspos . '" value="' . $anspos . '"';
                                 if ((int) $ma['logansw_selected'] == 1) {
                                     $str .= ' checked="checked"';
@@ -1865,7 +1866,8 @@ function F_questionForm($test_id, $testlog_id, $formname)
 
                                 $str .= ' />&nbsp;';
                                 $str .= '<label for="answpos_' . $anspos . '">';
-                                $str .= F_decode_tcecode($ma['answer_description']);
+                                $str .= '<span class="option_badge">' . $ans_letter . '</span> ';
+                                $str .= '<span class="answer_desc">' . F_decode_tcecode($ma['answer_description']) . '</span>';
                                 $str .= '</label>';
                                 if ($ma['answer_keyboard_key'] > 0) {
                                     $aswkeys[$ma['answer_keyboard_key']] = 'answpos_' . $anspos;
@@ -1919,6 +1921,7 @@ function F_questionForm($test_id, $testlog_id, $formname)
                                     $str .= F_decode_tcecode($ma['answer_description']);
                                 } else {
                                     // checkbox
+                                    $ans_letter = chr(65 + ($anspos - 1));
                                     $str .= '<input type="checkbox" name="answpos[' . $anspos . ']" id="answpos_' . $anspos . '" value="1"';
                                     if ((int) $ma['logansw_selected'] == 1) {
                                         $str .= ' checked="checked"';
@@ -1927,7 +1930,8 @@ function F_questionForm($test_id, $testlog_id, $formname)
 
                                     $str .= ' />&nbsp;';
                                     $str .= '<label for="answpos_' . $anspos . '">';
-                                    $str .= F_decode_tcecode($ma['answer_description']);
+                                    $str .= '<span class="option_badge">' . $ans_letter . '</span> ';
+                                    $str .= '<span class="answer_desc">' . F_decode_tcecode($ma['answer_description']) . '</span>';
                                     $str .= '</label>';
                                 }
 
@@ -1980,6 +1984,11 @@ function F_questionForm($test_id, $testlog_id, $formname)
                 }
 
                 $str .= '</ol>' . K_NEWLINE;
+                if ($m['question_type'] == 1) {
+                    $str .= '<div class="clear_selection_box">' . K_NEWLINE;
+                    $str .= '<a href="#" id="btn_clear_selection" onclick="FJ_clear_selection(); return false;" class="clear_selection_link" title="Deselect answer">&#x2715; ' . ($l['w_clear'] ?? 'Clear selection') . '</a>' . K_NEWLINE;
+                    $str .= '</div>' . K_NEWLINE;
+                }
             }
 
             // end multiple answers
@@ -1988,6 +1997,7 @@ function F_questionForm($test_id, $testlog_id, $formname)
             // javascript code
             $str .= '<script type="text/javascript">' . K_NEWLINE;
             $str .= '//<![CDATA[' . K_NEWLINE;
+            $str .= 'function FJ_clear_selection(){var radios=document.getElementsByName(\'answpos\');for(var i=0;i<radios.length;i++){if(radios[i].value==\'0\'){radios[i].checked=true;}else{radios[i].checked=false;}}}' . K_NEWLINE;
             // script to handle keyboard events
             $str .= 'function actionByChar(e){e=(e)?e:window.event;var target=(e.target||e.srcElement);if(target&&(target.tagName===\'TEXTAREA\'||(target.tagName===\'INPUT\'&&target.type!==\'radio\'&&target.type!==\'checkbox\'))){return;}keynum=(e.keyCode)?e.keyCode:e.which;switch(keynum){' . K_NEWLINE;
             foreach ($aswkeys as $key => $fieldid) {
@@ -2053,6 +2063,16 @@ function F_questionsMenu($testdata, $testuser_id, $testlog_id = 0, $disable = fa
     $testlog_id_prev = 0; // previous question ID
     $testlog_id_next = 0; // next question ID
     $testlog_id_last = 0; // temp variable
+    $question_timer = false;
+    $flagged_ids = $_SESSION['test_flags_' . $testdata['test_id']] ?? [];
+    if (!is_array($flagged_ids)) {
+        $flagged_ids = [];
+    }
+    $palette_items = [];
+    $palette_answered = 0;
+    $palette_unanswered = 0;
+    $palette_flagged = 0;
+
     $sql = 'SELECT question_description, question_difficulty, question_timer, testlog_id, testlog_answer_text, testlog_display_time, testlog_change_time
 		FROM ' . K_TABLE_QUESTIONS . ', ' . K_TABLE_TESTS_LOGS . '
 		WHERE question_id=testlog_question_id
@@ -2064,6 +2084,28 @@ function F_questionsMenu($testdata, $testuser_id, $testlog_id = 0, $disable = fa
         $qsel = 1;
         while ($m = F_db_fetch_array($r)) {
             ++$i;
+            $is_curr = ($m['testlog_id'] == $testlog_id);
+            $is_ans = (!empty($m['testlog_change_time']) || (!empty($m['testlog_answer_text']) && trim($m['testlog_answer_text']) !== ''));
+            $is_flag = in_array((int)$m['testlog_id'], $flagged_ids);
+            if ($is_ans) {
+                $palette_answered++;
+            } else {
+                $palette_unanswered++;
+            }
+            if ($is_flag) {
+                $palette_flagged++;
+            }
+
+            $palette_items[] = [
+                'index' => $i,
+                'testlog_id' => (int) $m['testlog_id'],
+                'description' => $m['question_description'],
+                'is_current' => $is_curr,
+                'is_answered' => $is_ans,
+                'is_flagged' => $is_flag,
+                'is_displayed' => !empty($m['testlog_display_time']),
+            ];
+
             if ($m['testlog_id'] != $testlog_id) {
                 $str .= '<li>';
                 $str .= '<input type="submit" name="jumpquestion_' . $m['testlog_id'] . '" id="jumpquestion_' . $m['testlog_id'] . '" value="&gt;" title="' . F_tcecodeToTitle($m['question_description']) . '" /> ';
@@ -2141,6 +2183,13 @@ function F_questionsMenu($testdata, $testuser_id, $testlog_id = 0, $disable = fa
         $navlink .= '<input type="submit" name="confirmanswer" id="confirmanswer" value="(' . $qsel . ') ' . $l['w_confirm'] . '" />';
     }
 
+    // Flag for review button
+    $is_curr_flagged = in_array((int) $testlog_id, $flagged_ids);
+    $flag_btn_cls = $is_curr_flagged ? 'btn_flag is_flagged' : 'btn_flag';
+    $flag_ico = $is_curr_flagged ? '&#9873;' : '&#9872;';
+    $flag_txt = $is_curr_flagged ? 'Flagged' : 'Mark for Review';
+    $navlink .= '<button type="button" id="btn_toggle_flag" class="' . $flag_btn_cls . '" onclick="FJ_toggle_flag(' . (int) $testdata['test_id'] . ', ' . (int) $testlog_id . ');" title="Flag or unflag this question to review before submitting">' . $flag_ico . ' <span id="flag_btn_text">' . $flag_txt . '</span></button>' . K_NEWLINE;
+
     // button for next question
     $qnext = '';
     if ($testlog_id_next > 0) {
@@ -2168,18 +2217,110 @@ function F_questionsMenu($testdata, $testuser_id, $testlog_id = 0, $disable = fa
     $rstr .= $navlink;
     $rstr .= '<br />' . K_NEWLINE;
     if (F_getBoolean($testdata['test_menu_enabled']) && ! $disable) {
-        // display questions menu
+        // display questions menu & modern Question Palette
         $rstr .= '<a name="questionssection" id="questionssection"></a>' . K_NEWLINE;
-        $rstr .= '<div class="tcecontentbox">' . K_NEWLINE; //fieldset
-        //$rstr .= '<legend>';
-        $rstr .= $l['w_questions'];
-        //$rstr .= '</legend>'.K_NEWLINE;
-        $rstr .= '<ol class="qlist">' . K_NEWLINE . $str . '</ol>' . K_NEWLINE;
-        $rstr .= '</div>' . K_NEWLINE; //fieldset
+        $rstr .= '<div class="tcecontentbox qpalette_box">' . K_NEWLINE;
+        $rstr .= '<div class="qpalette_header">' . K_NEWLINE;
+        $rstr .= '<span class="qpalette_title">' . $l['w_questions'] . ' (' . count($palette_items) . ')</span>' . K_NEWLINE;
+        $rstr .= '<span class="qpalette_stats">' . K_NEWLINE;
+        $rstr .= '<span class="stat_pill stat_answered">Answered: <strong id="pal_stat_answered">' . $palette_answered . '</strong></span> ' . K_NEWLINE;
+        $rstr .= '<span class="stat_pill stat_unanswered">Unanswered: <strong id="pal_stat_unanswered">' . $palette_unanswered . '</strong></span> ' . K_NEWLINE;
+        $rstr .= '<span class="stat_pill stat_flagged">Flagged: <strong id="pal_stat_flagged">' . $palette_flagged . '</strong></span>' . K_NEWLINE;
+        $rstr .= '</span>' . K_NEWLINE;
+        $rstr .= '</div>' . K_NEWLINE;
+        $rstr .= '<div class="qpalette_grid" id="qpalette_grid">' . K_NEWLINE;
+        foreach ($palette_items as $item) {
+            $chip_classes = 'qpalette_chip';
+            if ($item['is_current']) {
+                $chip_classes .= ' chip_current';
+            }
+            if ($item['is_answered']) {
+                $chip_classes .= ' chip_answered';
+            } else {
+                $chip_classes .= ' chip_unanswered';
+            }
+            if ($item['is_flagged']) {
+                $chip_classes .= ' chip_flagged';
+            }
+            $rstr .= '<button type="submit" name="jumpquestion_' . $item['testlog_id'] . '" id="jumpquestion_' . $item['testlog_id'] . '" class="' . $chip_classes . '" title="' . htmlspecialchars(F_tcecodeToTitle($item['description']), ENT_QUOTES, $l['a_meta_charset']) . '">' . K_NEWLINE;
+            $rstr .= '<span class="chip_num">' . $item['index'] . '</span>' . K_NEWLINE;
+            if ($item['is_flagged']) {
+                $rstr .= '<span class="chip_flag_icon">&#9873;</span>' . K_NEWLINE;
+            }
+            $rstr .= '</button>' . K_NEWLINE;
+        }
+        $rstr .= '</div>' . K_NEWLINE;
+        $rstr .= '<div class="qpalette_legend">' . K_NEWLINE;
+        $rstr .= '<span class="legend_item"><span class="legend_box chip_answered"></span> ' . $l['h_question_answered'] . '</span> ' . K_NEWLINE;
+        $rstr .= '<span class="legend_item"><span class="legend_box chip_unanswered"></span> ' . $l['h_question_not_answered'] . '</span> ' . K_NEWLINE;
+        $rstr .= '<span class="legend_item"><span class="legend_box chip_current"></span> ' . $l['w_position'] . '</span> ' . K_NEWLINE;
+        $rstr .= '<span class="legend_item"><span class="legend_box chip_flagged">&#9873;</span> Flagged</span>' . K_NEWLINE;
+        $rstr .= '</div>' . K_NEWLINE;
+        $rstr .= '<ol class="qlist" style="display:none;">' . K_NEWLINE . $str . '</ol>' . K_NEWLINE;
+        $rstr .= '</div>' . K_NEWLINE;
         $rstr .= '<br />' . K_NEWLINE;
     }
 
     return $rstr;
+}
+
+/**
+ * Returns summary statistics and question list for a user's test session.
+ * @param int $test_id Test ID
+ * @param int $user_id User ID (defaults to current session user)
+ * @return array Array with total, answered, unanswered, progress_pct, questions list
+ */
+function F_getTestUserStats($test_id, $user_id = 0)
+{
+    require_once('../config/tce_config.php');
+    global $db;
+    $test_id = (int) $test_id;
+    if ($user_id <= 0) {
+        $user_id = (int) ($_SESSION['session_user_id'] ?? 0);
+    }
+    $stats = [
+        'testuser_id' => 0,
+        'total' => 0,
+        'answered' => 0,
+        'unanswered' => 0,
+        'progress_pct' => 0,
+        'questions' => [],
+    ];
+    if ($test_id <= 0 || $user_id <= 0) {
+        return $stats;
+    }
+    $sql = 'SELECT testuser_id, testlog_id, testlog_order, testlog_display_time, testlog_change_time, testlog_answer_text, question_description, question_difficulty, question_timer
+        FROM ' . K_TABLE_TEST_USER . ', ' . K_TABLE_TESTS_LOGS . ', ' . K_TABLE_QUESTIONS . '
+        WHERE testlog_testuser_id=testuser_id
+            AND question_id=testlog_question_id
+            AND testuser_test_id=' . $test_id . '
+            AND testuser_user_id=' . $user_id . '
+            AND testuser_status<5
+        ORDER BY testlog_id';
+    if ($r = F_db_query($sql, $db)) {
+        $idx = 0;
+        while ($m = F_db_fetch_array($r)) {
+            $idx++;
+            $stats['testuser_id'] = (int) $m['testuser_id'];
+            $is_answered = (!empty($m['testlog_change_time']) || (!empty($m['testlog_answer_text']) && trim($m['testlog_answer_text']) !== ''));
+            if ($is_answered) {
+                $stats['answered']++;
+            }
+            $stats['questions'][$m['testlog_id']] = [
+                'index' => $idx,
+                'testlog_id' => (int) $m['testlog_id'],
+                'answered' => $is_answered,
+                'displayed' => !empty($m['testlog_display_time']),
+                'description' => $m['question_description'],
+                'difficulty' => $m['question_difficulty'],
+                'timer' => (int) $m['question_timer'],
+            ];
+        }
+        $stats['total'] = $idx;
+        $stats['unanswered'] = $stats['total'] - $stats['answered'];
+        $stats['progress_pct'] = $stats['total'] > 0 ? (int) round(($stats['answered'] / $stats['total']) * 100) : 0;
+    }
+    return $stats;
 }
 
 /**
