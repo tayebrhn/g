@@ -375,7 +375,7 @@ require_once('../code/tce_page_footer.php');
  */
 function F_show_select_questions($wherequery, $subject_module_id, $subject_id, $order_field, $orderdir, $firstrow, $rowsperpage, $hide_answers = false)
 {
-    global $l, $db;
+    global $l, $db, $can_modify;
     require_once('../config/tce_config.php');
     require_once('../../shared/code/tce_functions_page.php');
 
@@ -384,6 +384,11 @@ function F_show_select_questions($wherequery, $subject_module_id, $subject_id, $
     $orderdir = (int) $orderdir;
     $firstrow = (int) $firstrow;
     $rowsperpage = (int) $rowsperpage;
+    if (! isset($can_modify)) {
+        $can_modify = ! F_is_readonly_content()
+            && (F_isAuthorizedToModify(K_TABLE_MODULES, 'module_id', $subject_module_id, 'module_user_id')
+                || F_isAuthorizedToModify(K_TABLE_SUBJECTS, 'subject_id', $subject_id, 'subject_user_id'));
+    }
     if (empty($order_field) || ! in_array($order_field, ['question_id', 'question_subject_id', 'question_description', 'question_explanation', 'question_type', 'question_difficulty', 'question_enabled', 'question_position', 'question_timer', 'question_fullscreen', 'question_inline_answers', 'question_auto_next', 'question_enabled DESC, question_position, CAST(question_description as varchar2(100))', 'question_enabled DESC, question_position, question_description'])) {
         $order_field = 'question_description';
     }

@@ -169,6 +169,11 @@ assert_true(
     'tce_show_all_questions.php must gate bulk action toolbar behind $can_modify.'
 );
 
+assert_true(
+    strpos($show_all_src, 'global $l, $db, $can_modify;') !== false,
+    'F_show_select_questions in tce_show_all_questions.php must import $can_modify from global scope.'
+);
+
 // --- B. tce_edit_rating.php ---
 assert_true(
     strpos($rating_src, '$test_id = isset($_REQUEST[\'test_id\']) ? (int) $_REQUEST[\'test_id\'] : 0;') !== false
