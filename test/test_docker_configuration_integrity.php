@@ -128,8 +128,13 @@ assertCondition(
 $nginxContent = file_get_contents($rootDir . '/docker/nginx/default.conf');
 
 assertCondition(
-    strpos($nginxContent, 'fastcgi_pass app:9000;') !== false,
+    strpos($nginxContent, 'app:9000') !== false && strpos($nginxContent, 'fastcgi_pass') !== false,
     "Nginx config must route PHP traffic to FastCGI service 'app:9000'."
+);
+
+assertCondition(
+    strpos($nginxContent, 'resolver 127.0.0.11') !== false,
+    "Nginx config must use Docker embedded DNS resolver 127.0.0.11 for dynamic scaling."
 );
 
 assertCondition(
