@@ -10,6 +10,8 @@
 	* Check also the documentation on http://www.tcexam.org
 * Source Documentation:
 	http://www.tcexam.org
+* User Guide & Manual:
+	[USER_GUIDE.md](USER_GUIDE.md)
 * User Levels and Permissions:
 	PERMISSIONS.md
 * Support - Help:
