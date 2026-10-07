@@ -12,6 +12,8 @@
 	http://www.tcexam.org
 * User Guide & Manual:
 	[USER_GUIDE.md](USER_GUIDE.md)
+* Production Hosting & Deployment:
+	[PRODUCTION_HOSTING.md](PRODUCTION_HOSTING.md)
 * User Levels and Permissions:
 	PERMISSIONS.md
 * Support - Help:
