@@ -189,10 +189,6 @@ correct ordering position and no explanation.
   to restore the legacy behaviour, in which every report displayed the correct
   answers to whoever could open it. When the constant is missing the
   restriction is on.
-* The printable paper-test generator (`tce_pdf_testgen.php`) still embeds the
-  answer key as hidden text in the generated PDF (it is the working copy used
-  to grade the scanned OMR sheets, and it is restricted to the test owner);
-  it is part of the authoring pipeline, not a result report.
 
 ### Consequences per data type
 
@@ -242,14 +238,13 @@ Capability required for each admin page.
 **`K_PERM_OPERATOR`**
 
 `tce_menu_tests.php`, `tce_edit_test.php`, `tce_select_tests.php`,
-`tce_select_tests_popup.php`, `tce_pdf_testgen.php`, `tce_edit_rating.php`,
+`tce_select_tests_popup.php`, `tce_edit_rating.php`,
 `tce_show_result_user.php`, `tce_show_result_allusers.php`,
 `tce_tsv_result_allusers.php`, `tce_xml_results.php`,
 `tce_xml_user_results.php`, `tce_email_results.php`,
 `tce_xml_question_stats.php`, `tce_show_all_questions.php`,
 `tce_xml_questions.php`, `tce_tsv_questions.php`, `tce_pdf_all_questions.php`,
-`tce_popup_test_info.php`, `tce_edit_sslcerts.php`, `tce_show_online_users.php`,
-`tce_import_omr_answers.php`, `tce_import_omr_bulk.php`;
+`tce_popup_test_info.php`, `tce_edit_sslcerts.php`, `tce_show_online_users.php`;
 `tce_pdf_results.php` drops to "no capability required" when a valid
 emailed-results token is present
 
@@ -371,9 +366,6 @@ See `UPGRADE.TXT` for the full notes.
   the whole report but not the correct answers
   (see `F_canSeeAnswerKeys()` in section 5). Set `K_RESTRICT_ANSWER_KEYS` to
   `false` to restore the previous behaviour.
-* **The printed paper test still embeds the key** as hidden text
-  (`tce_pdf_testgen.php`), because it doubles as the OMR grading key; it is
-  restricted to the test owner.
 
 ## 12. Verifying
 

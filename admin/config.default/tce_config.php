@@ -160,15 +160,6 @@ define('K_MYSQL_QA_BIN_UNIQUITY', true);
 define('K_UTF8_NORMALIZATION_MODE', 'NONE');
 
 /**
- * Path to zbarimg executable (/usr/bin/zbarimg).
- * This application is required to decode barcodes on scanned offline test pages.
- * For installation instructions: http://zbar.sourceforge.net/
- * On Debian/Ubuntu you can easily install zbarimg using the following command:
- * "sudo apt-get install zbar-tools"
- */
-define('K_OMR_PATH_ZBARIMG', '/usr/bin/zbarimg');
-
-/**
  * Defines a serialized array of available fonts for PDF.
  */
 define('K_AVAILABLE_FONTS', serialize(array(

@@ -39,7 +39,7 @@ Full spec: `PERMISSIONS.md` (authoritative, keep in sync). Five axes: **page acc
 - `F_canSeeAnswerKeys($subject_id)` (shared/code/tce_functions_authorization.php), memoized per subject per request: the correct answers and the question/answer explanations inside a result report belong to the **question author** = owner of the question's SUBJECT (`F_isAuthorizedUser(K_TABLE_SUBJECTS, 'subject_id', $subject_id, 'subject_user_id')`), a group peer, or a `K_PERM_GLOBAL_VIEW` holder. Anonymous sessions (`session_user_id <= 1`, incl. the emailed-results token path) and unknown subjects fail closed.
 - Switch `K_RESTRICT_ANSWER_KEYS` (shared/config(.default)/tce_config.php, default true; undefined = restricted). When false, whoever can open the report sees the key (legacy).
 - Renderers that consult it and hide the marks when false: `F_printUserTestStat()` (test_stats; admin `tce_show_result_user.php` + public `tce_show_result_user.php`), the inline loop in `public/code/tce_test_results.php`, `TCPDFEX::printUserTestDetails()` (PDF + emailed attachment), and the per-answer `<correct>/<wrong>` counters of `admin/code/tce_xml_question_stats.php`. Hidden mode shows only the candidate's selections (neutral `onbox`/`offbox`), no star, no correct ordering position, no explanations. XML/JSON result exports carry no keys (already aggregate-only).
-- Out of scope (authoring/OMR, test-owner gated): `tce_pdf_testgen.php` still embeds the key as hidden white text for OMR grading.
+- Offline test generator and OMR scanning pipeline (tce_pdf_testgen.php, tce_functions_omr.php, tce_import_omr_*.php) removed.
 - Regression test: `php test/answer_key_visibility.php` and `... disabled` (source assertions require the renderers to call the helper).
 
 ## Known limitations

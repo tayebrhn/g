@@ -186,11 +186,6 @@ define('K_AUTH_ADMIN_RESULTS', K_AUTH_OPERATOR);
 define('K_AUTH_ADMIN_IMPORT', K_AUTH_ADMINISTRATOR);
 
 /**
- * Required user's level to import OMR answers.
- */
-define('K_AUTH_ADMIN_OMR_IMPORT', K_AUTH_OPERATOR);
-
-/**
  * Required user's level to import questions.
  */
 define('K_AUTH_BACKUP', K_AUTH_ADMINISTRATOR);

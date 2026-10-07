@@ -60,10 +60,8 @@ Tests are assembled from selected subjects and configured per test
   maximum score, pass threshold, and partial scoring for multiple-choice
   multiple-answer questions; single-choice rendered as radio buttons
   (`test_mcma_radio`).
-* **Test-taker aids**: question navigator/menu, comments, answer change before
-  submission, answer review.
-* **Printable paper testing**: generate test booklets and OMR answer sheets as
-  PDF (`tce_pdf_testgen.php`).
+* **Test-taker aids**: question navigator/palette, comments, answer change before
+  submission, answer review, flag for review.
 
 ## 3. Test taking (public area)
 
@@ -77,14 +75,7 @@ Tests are assembled from selected subjects and configured per test
 * Candidates can always view **their own** results and transcripts
   (`tce_test_allresults.php`, `tce_show_result_user.php`, `tce_pdf_results.php`).
 
-## 4. Paper testing with OMR
-
-* Printable OMR answer sheets generated as PDF (`tce_pdf_testgen.php`).
-* Scan and import the completed sheets: single file
-  (`tce_import_omr_answers.php`) or bulk (`tce_import_omr_bulk.php`), with
-  automatic scoring and reporting (`tce_functions_omr.php`).
-
-## 5. Results, statistics and reporting
+## 4. Results, statistics and reporting
 
 * **Per-user result page**: score, percentage, pass/fail, right/wrong/
   unanswered counts, per-question breakdown, answer text and reaction time

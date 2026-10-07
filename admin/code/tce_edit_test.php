@@ -1301,10 +1301,6 @@ switch ($menu_mode) {
 
 // --- Initialize variables
 
-if (!isset($test_num) || !empty($test_num)) {
-    $test_num = 1; // default number of PDF tests to generate
-}
-
 if ($formstatus && $menu_mode != "clear") {
     if (!isset($test_id) || $test_id === 0) {
         $test_id = 0;
@@ -2307,35 +2303,6 @@ if (isset($test_id) && $test_id > 0) {
 
     echo '<div class="row"><br /></div>' . K_NEWLINE;
 
-    if (isset($test_max_score_new) && $test_max_score_new > 0) {
-        echo '<div class="row">' . K_NEWLINE;
-        echo '<span class="label">' . K_NEWLINE;
-        echo '<label for="test_num">' .
-            $l["w_pdf_offline_test"] .
-            "</label>" .
-            K_NEWLINE;
-        echo "</span>" . K_NEWLINE;
-        echo '<span class="formw">' . K_NEWLINE;
-        echo '<input type="text" name="test_num" id="test_num" value="' .
-            $test_num .
-            '" size="4" maxlength="10" title="' .
-            $l["h_pdf_offline_test"] .
-            '" />' .
-            K_NEWLINE;
-        echo '<a href="tce_pdf_testgen.php?test_id=' .
-            $test_id .
-            "&amp;num=" .
-            $test_num .
-            '" title="' .
-            $l["h_pdf_offline_test"] .
-            '" class="xmlbutton" onclick="pdfWindow=window.open(\'tce_pdf_testgen.php?test_id=' .
-            $test_id .
-            '&amp;num=\' + document.getElementById(\'form_testeditor\').test_num.value + \'\',\'pdfWindow\',\'dependent,menubar=yes,resizable=yes,scrollbars=yes,status=yes,toolbar=yes\'); return false;">' .
-            $l["w_generate"] .
-            "</a>";
-        echo "</span>&nbsp;" . K_NEWLINE;
-        echo "</div>" . K_NEWLINE;
-    }
 }
 
 echo F_getCSRFTokenField() . K_NEWLINE;

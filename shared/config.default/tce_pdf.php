@@ -50,11 +50,6 @@ define('PDF_HEADER_LOGO', 'logo_tcexam.png');
 define('PDF_HEADER_LOGO_WIDTH', 10);
 
 /**
- * Height of area for offline user answer.
- */
-define('PDF_TEXTANSWER_HEIGHT', 40);
-
-/**
  * Page format.
  */
 define('PDF_PAGE_FORMAT', 'A4');

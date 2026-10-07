@@ -35,7 +35,7 @@
  *   1  registered user
  *   2  K_AUTH_VIEW_CONTENT     read-only access to group-shared content
  *   3  K_AUTH_EDIT_CONTENT     author modules/subjects/questions/answers/media/bulk import
- *   5  K_AUTH_OPERATOR         examiner: tests, results, rating, OMR, SSL, online users
+ *   5  K_AUTH_OPERATOR         examiner: tests, results, rating, SSL, online users
  *   6  K_AUTH_MANAGE_IDENTITY  administer users and groups
  *   9  K_AUTH_GLOBAL_VIEW      see the data of every group
  *   9  K_AUTH_SITE_ADMIN       backup

@@ -37,7 +37,7 @@
  *   K_PERM_EDIT_CONTENT      author modules, subjects, questions, answers,
  *                            multimedia files, question import
  *   K_PERM_OPERATOR          author tests, view/export results, rate answers,
- *                            import OMR, SSL certificates, online users
+ *                            SSL certificates, online users
  *   K_PERM_MANAGE_IDENTITY   administer users and groups
  *   K_PERM_GLOBAL_VIEW       see the data of every group
  *   K_PERM_BACKUP            run backups
@@ -65,7 +65,7 @@ define('K_PERM_VIEW_CONTENT', 1 << 0);
 define('K_PERM_EDIT_CONTENT', 1 << 1);
 
 /**
- * Capability to author tests, view and export results, rate free-text answers, import OMR answers, manage SSL certificates and display online users.
+ * Capability to author tests, view and export results, rate free-text answers, manage SSL certificates and display online users.
  */
 define('K_PERM_OPERATOR', 1 << 2);
 

@@ -224,6 +224,57 @@ assert_equals(2, mock_count_matches($mock_matrix, 2, 2), 'Multiple answers for d
 assert_equals(0, mock_count_matches($mock_matrix, 3, 2), 'Free answer for diff 2 must equal 0.');
 
 // ===========================================================================
+// Section 4: Offline Test Generator & OMR Removal Verification
+// ===========================================================================
+
+assert_true(
+    strpos($edit_test_src, 'w_pdf_offline_test') === false,
+    'tce_edit_test.php must not reference w_pdf_offline_test.'
+);
+
+assert_true(
+    strpos($edit_test_src, 'tce_pdf_testgen.php') === false,
+    'tce_edit_test.php must not link to tce_pdf_testgen.php.'
+);
+
+assert_true(
+    strpos($edit_test_src, '$test_num') === false,
+    'tce_edit_test.php must not reference $test_num.'
+);
+
+assert_true(
+    !file_exists(__DIR__ . '/../admin/code/tce_pdf_testgen.php'),
+    'tce_pdf_testgen.php must be deleted from admin/code/.'
+);
+
+assert_true(
+    !file_exists(__DIR__ . '/../admin/code/tce_functions_omr.php'),
+    'tce_functions_omr.php must be deleted from admin/code/.'
+);
+
+assert_true(
+    !file_exists(__DIR__ . '/../admin/code/tce_import_omr_answers.php'),
+    'tce_import_omr_answers.php must be deleted from admin/code/.'
+);
+
+assert_true(
+    !file_exists(__DIR__ . '/../admin/code/tce_import_omr_bulk.php'),
+    'tce_import_omr_bulk.php must be deleted from admin/code/.'
+);
+
+$menu_src = file_get_contents(__DIR__ . '/../admin/code/tce_page_menu.php');
+assert_true(
+    strpos($menu_src, 'tce_import_omr') === false,
+    'tce_page_menu.php must not reference tce_import_omr scripts.'
+);
+
+$admin_config_src = file_get_contents(__DIR__ . '/../admin/config.default/tce_config.php');
+assert_true(
+    strpos($admin_config_src, 'K_OMR_PATH_ZBARIMG') === false,
+    'admin/config.default/tce_config.php must not define K_OMR_PATH_ZBARIMG.'
+);
+
+// ===========================================================================
 // Summary
 // ===========================================================================
 
