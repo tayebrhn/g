@@ -34,8 +34,13 @@ $requiredFiles = [
     '.dockerignore',
     '.env.example',
     'docker/docker-entrypoint.sh',
+    'docker/bootstrap.php',
     'docker/nginx/default.conf',
     'docker/php/php-custom.ini',
+    'docker/export-offline-bundle.ps1',
+    'docker/export-offline-bundle.sh',
+    'docker/start-offline.bat',
+    'docker/start-offline.sh',
 ];
 
 foreach ($requiredFiles as $file) {
@@ -78,32 +83,38 @@ assertCondition(
 );
 
 // -------------------------------------------------------------
-// Section 3: Entrypoint Script Logic & DB Auto-Seeding
+// Section 3: Entrypoint Script & Bootstrap Logic & DB Auto-Seeding
 // -------------------------------------------------------------
 $entrypointContent = file_get_contents($rootDir . '/docker/docker-entrypoint.sh');
+$bootstrapContent = file_get_contents($rootDir . '/docker/bootstrap.php');
 
 assertCondition(
     strpos($entrypointContent, '#!/bin/sh') === 0 && strpos($entrypointContent, 'set -e') !== false,
     "Entrypoint must start with '#!/bin/sh' and enable 'set -e'."
 );
 
+assertCondition(
+    strpos($entrypointContent, 'bootstrap.php') !== false,
+    "Entrypoint must invoke bootstrap.php."
+);
+
 $requiredEnvVars = ['DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'APP_URL', 'RANDOM_SECURITY'];
 foreach ($requiredEnvVars as $env) {
     assertCondition(
-        strpos($entrypointContent, $env) !== false,
-        "Entrypoint must bind environment variable '$env'."
+        strpos($bootstrapContent, $env) !== false,
+        "Bootstrap must bind environment variable '$env'."
     );
 }
 
 assertCondition(
-    strpos($entrypointContent, 'Waiting for database connection') !== false,
-    "Entrypoint must include a database readiness polling loop."
+    strpos($bootstrapContent, 'Waiting for database connection') !== false,
+    "Bootstrap must include a database readiness polling loop."
 );
 
 assertCondition(
-    strpos($entrypointContent, 'mysql_db_structure.sql') !== false &&
-    strpos($entrypointContent, 'db_data.sql') !== false,
-    "Entrypoint must automatically seed fresh databases with structure and initial data."
+    strpos($bootstrapContent, 'mysql_db_structure.sql') !== false &&
+    strpos($bootstrapContent, 'db_data.sql') !== false,
+    "Bootstrap must automatically seed fresh databases with structure and initial data."
 );
 
 assertCondition(

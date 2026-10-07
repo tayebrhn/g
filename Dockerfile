@@ -11,6 +11,7 @@ LABEL description="TCExam Computer-Based Assessment System"
 RUN apk add --no-cache \
         bash \
         curl \
+        curl-dev \
         freetype \
         freetype-dev \
         icu-dev \
@@ -37,6 +38,7 @@ RUN apk add --no-cache \
         xml \
         zip \
     && apk del --no-cache \
+        curl-dev \
         freetype-dev \
         icu-dev \
         libjpeg-turbo-dev \

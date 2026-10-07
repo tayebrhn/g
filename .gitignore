@@ -30,3 +30,5 @@ cache/
 shared/jscripts/flatpickr/l10n
 admin/backup/
 *.docx
+*.tar
+.env
