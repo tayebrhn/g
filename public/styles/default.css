@@ -2131,6 +2131,13 @@ div.rowtitle {
 }
 
 /* --- Option Badges & Clear Selection --- */
+ol.answer:has(.option_badge),
+ol.answer li:has(.option_badge),
+ol.answer li.answer_option,
+ol.answer li.answer_review_item {
+  list-style-type: none;
+}
+
 .option_badge {
   display: inline-flex;
   align-items: center;

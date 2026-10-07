@@ -1086,7 +1086,7 @@ function F_printUserTestStat($testuser_id)
 					ORDER BY logansw_order';
                 if ($ra = F_db_query($sqla, $db)) {
                     while ($ma = F_db_fetch_array($ra)) {
-                        $ret .= '<li>';
+                        $ret .= '<li class="answer_review_item">';
                         if ($m['question_type'] == 4) {
                             // ORDER
                             if ($ma['logansw_position'] > 0) {
@@ -1141,7 +1141,11 @@ function F_printUserTestStat($testuser_id)
                         }
 
                         $ret .= ' ';
-                        $ret .= F_decode_tcecode($ma['answer_description']);
+                        if ($m['question_type'] == 1 || $m['question_type'] == 2) {
+                            $ans_letter = chr(65 + ($ma['logansw_order'] - 1));
+                            $ret .= '<span class="option_badge">' . $ans_letter . '</span> ';
+                        }
+                        $ret .= '<span class="answer_desc">' . F_decode_tcecode($ma['answer_description']) . '</span>';
                         if ($show_keys && K_ENABLE_ANSWER_EXPLANATION && ! empty($ma['answer_explanation'])) {
                             $ret .= '<br /><span class="explanation">' . $l['w_explanation'] . ':</span><br />' . F_decode_tcecode($ma['answer_explanation']) . '' . K_NEWLINE;
                         }

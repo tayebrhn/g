@@ -1849,7 +1849,7 @@ function F_questionForm($test_id, $testlog_id, $formname)
                 if ($ra = F_db_query($sqla, $db)) {
                     while ($ma = F_db_fetch_array($ra)) {
                         $anspos = $ma['logansw_order'];
-                        $str .= '<li>';
+                        $str .= '<li class="answer_option">';
                         switch ($m['question_type']) {
                             case 1: {
                                 // MCSA - single-answer question
@@ -1918,7 +1918,9 @@ function F_questionForm($test_id, $testlog_id, $formname)
                                         ];
                                     }
 
-                                    $str .= F_decode_tcecode($ma['answer_description']);
+                                    $ans_letter = chr(65 + ($anspos - 1));
+                                    $str .= '<span class="option_badge">' . $ans_letter . '</span> ';
+                                    $str .= '<span class="answer_desc">' . F_decode_tcecode($ma['answer_description']) . '</span>';
                                 } else {
                                     // checkbox
                                     $ans_letter = chr(65 + ($anspos - 1));

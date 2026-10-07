@@ -880,9 +880,11 @@ class TCPDFEX extends TCPDF
                                     $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, ' ', 1, 0, 'C', 0);
                                 }
                             } elseif ($show_keys && F_getBoolean($ma['answer_isright'])) {
-                                $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $idx, 1, 0, 'C', 1);
+                                $ans_label = ($m['question_type'] == 1 || $m['question_type'] == 2) ? chr(64 + $idx) : $idx;
+                                $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $ans_label, 1, 0, 'C', 1);
                             } else {
-                                $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $idx, 1, 0, 'C', 0);
+                                $ans_label = ($m['question_type'] == 1 || $m['question_type'] == 2) ? chr(64 + $idx) : $idx;
+                                $this->Cell($tce_data_cell_width_third, $this->tce_data_cell_height, $ans_label, 1, 0, 'C', 0);
                             }
 
                             $this->writeHTMLCell(0, $this->tce_data_cell_height, (PDF_MARGIN_LEFT + $tce_data_cell_width), $this->GetY(), F_decode_tcecode($ma['answer_description']), 'LRTB', 1);

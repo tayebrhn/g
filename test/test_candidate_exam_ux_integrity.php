@@ -74,6 +74,28 @@ assert_true(
     'FJ_clear_selection() must select the hidden unselected option (value 0).'
 );
 
+// 1.3 Suppress decimal markers when option badges are present to avoid double numbering
+assert_true(
+    strpos($css_src, 'ol.answer:has(.option_badge)') !== false
+    && strpos($css_src, 'list-style-type: none;') !== false,
+    'default.css must suppress decimal numbering when option badges are present.'
+);
+
+// 1.4 Option letter badges in test results review (tce_functions_test_stats.php)
+$stats_src = file_get_contents(__DIR__ . '/../shared/code/tce_functions_test_stats.php');
+assert_true(
+    strpos($stats_src, '$ans_letter = chr(65 + ($ma[\'logansw_order\'] - 1));') !== false
+    && strpos($stats_src, '<span class="option_badge">\' . $ans_letter . \'</span>') !== false,
+    'tce_functions_test_stats.php must display option letter badges (A, B, C, D) in test review.'
+);
+
+// 1.5 Letter labels in PDF test reports (tcpdfex.php)
+$pdf_src = file_get_contents(__DIR__ . '/../shared/code/tcpdfex.php');
+assert_true(
+    strpos($pdf_src, '$ans_label = ($m[\'question_type\'] == 1 || $m[\'question_type\'] == 2) ? chr(64 + $idx) : $idx;') !== false,
+    'tcpdfex.php must use letter labels (A, B, C, D) for choice questions in PDF reports.'
+);
+
 // ===========================================================================
 // Section 2: Question Palette & Navigation Grid
 // ===========================================================================
