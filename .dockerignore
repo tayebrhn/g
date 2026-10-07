@@ -1,0 +1,14 @@
+.git
+.gitignore
+*.docx
+.idea
+.vscode
+.vagrant
+deploy/
+test/
+*.bak
+*.tmp
+*.log
+cache/backup/*
+cache/tmp/*
+admin/backup/*

@@ -418,59 +418,39 @@ sudo certbot renew --dry-run
 
 ## 4. Docker & Containerized Deployment
 
-For teams deploying on Kubernetes, AWS ECS, or Docker Swarm:
+TCExam includes a production-ready, turnkey Docker containerization setup with **automated zero-touch bootstrapping**:
 
-### `docker-compose.yml`
+### Quickstart
 
-```yaml
-version: '3.8'
+```bash
+# 1. Copy environment template
+cp .env.example .env
 
-services:
-  db:
-    image: mariadb:10.11
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: RootDatabasePassword123!
-      MYSQL_DATABASE: tcexam
-      MYSQL_USER: tcexam_user
-      MYSQL_PASSWORD: AppDatabasePassword123!
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./install/mysql_db_structure.sql:/docker-entrypoint-initdb.d/01_structure.sql:ro
-      - ./install/db_data.sql:/docker-entrypoint-initdb.d/02_data.sql:ro
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+# 2. Boot the cluster
+docker compose up -d
 
-  app:
-    build: .
-    restart: always
-    depends_on:
-      - db
-    volumes:
-      - ./cache:/var/www/tcexam/cache
-      - ./shared/config:/var/www/tcexam/shared/config
-      - ./admin/backup:/var/www/tcexam/admin/backup
-    environment:
-      DB_HOST: db
-      DB_NAME: tcexam
-      DB_USER: tcexam_user
-      DB_PASS: AppDatabasePassword123!
-
-  web:
-    image: nginx:alpine
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - app
-    volumes:
-      - ./:/var/www/tcexam:ro
-      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./docker/certs:/etc/nginx/certs:ro
-
-volumes:
-  db_data:
+# 3. Access the portals:
+# Candidate Portal:     http://localhost:8080/public/code/index.php
+# Administrator Suite:  http://localhost:8080/admin/code/index.php
+# Initial Login:        Username: admin | Password: 1234
 ```
+
+### Architecture Features:
+1. **Lightweight Alpine Image (`Dockerfile`)**: Built on `php:8.2-fpm-alpine` (~120 MB total image size) with all 10 required PHP extensions compiled (`gd`, `mysqli`, `pdo_mysql`, `mbstring`, `xml`, `curl`, `zip`, `bcmath`, `intl`, `opcache`).
+2. **Automated Entrypoint (`docker/docker-entrypoint.sh`)**:
+   - Waits for MariaDB/MySQL database readiness before starting PHP-FPM.
+   - Automatically initializes active configuration files from `config.default/` if not present.
+   - Injects environment variables (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `APP_URL`, `RANDOM_SECURITY`) directly into TCExam constants.
+   - **Self-Seeding Database**: Detects whether the database is fresh and automatically loads `install/mysql_db_structure.sql` and `install/db_data.sql`.
+   - Manages runtime permissions on `cache/` and `admin/backup/`.
+3. **High-Performance Nginx (`docker/nginx/default.conf`)**:
+   - Built-in security rules: blocks public access to `/install/`, `/admin/backup/`, `.git/`, `.env`, and `test/`.
+   - FastCGI read timeout of 300 seconds for long CBT exam submissions.
+   - Dedicated `/health.txt` liveness check endpoint.
+4. **Persistent Volumes**:
+   - `db_data`: Preserves all MariaDB tables, users, questions, and test results across container restarts.
+   - `cache_data`: Preserves question images, candidate attachments, and temporary files.
+   - `backup_data`: Stores generated database backups.
 
 ---
 

@@ -22,6 +22,27 @@
 	* Copyright (C) 2004-2026 Nicola Asuni - Tecnick.com LTD
 	* See LICENSE.TXT file for more information.
 
+---
+
+## Quickstart with Docker (Turnkey)
+
+Launch a fully configured, self-contained TCExam cluster in seconds:
+
+```bash
+# 1. Prepare environment configuration
+cp .env.example .env
+
+# 2. Boot all services (Nginx, PHP 8.2-FPM, MariaDB 10.11)
+docker compose up -d
+
+# 3. Access the portals:
+# Candidate Portal:     http://localhost:8080/public/code/index.php
+# Administrator Suite:  http://localhost:8080/admin/code/index.php
+# Initial Login:        Username: admin | Password: 1234
+```
+
+*The container automatically provisions configuration files, waits for the database, and self-seeds the schema and default administrative accounts.*
+
 
 [![Donate via PayPal](https://img.shields.io/badge/donate-paypal-87ceeb.svg)](https://www.paypal.com/donate/?hosted_button_id=NZUEC5XS8MFBJ)
 *Please consider supporting this project by making a donation via [PayPal](https://www.paypal.com/donate/?hosted_button_id=NZUEC5XS8MFBJ)*
