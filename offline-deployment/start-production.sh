@@ -3,6 +3,7 @@
 # TCExam — Production Offline Server Launcher (Linux)
 # ============================================================
 set -eo pipefail
+cd "$(dirname "$0")"
 
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -22,6 +23,13 @@ if ! docker info >/dev/null 2>&1; then
 fi
 
 # 2. Load offline images from bundle if needed
+if [ ! -f "tcexam-offline-bundle.tar" ]; then
+    if [ -f "../tcexam-offline-bundle.tar" ]; then
+        cp -f "../tcexam-offline-bundle.tar" "tcexam-offline-bundle.tar"
+    elif [ -f "../docker/tcexam-offline-bundle.tar" ]; then
+        cp -f "../docker/tcexam-offline-bundle.tar" "tcexam-offline-bundle.tar"
+    fi
+fi
 if [ -f "tcexam-offline-bundle.tar" ]; then
     if ! docker image inspect tcexam-app:latest >/dev/null 2>&1; then
         echo -e "${BLUE}[INFO] Loading offline Docker images from tcexam-offline-bundle.tar...${NC}"

@@ -42,6 +42,14 @@ if /i "%1"=="scale" (
     docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale app=!REPL!
     exit /b 0
 )
+if /i "%1"=="patch" (
+    call "%~dp0offline-deployment\apply-patch.bat"
+    exit /b %ERRORLEVEL%
+)
+if /i "%1"=="bundle" (
+    powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0docker\build-offline-bundle.ps1"
+    exit /b %ERRORLEVEL%
+)
 
 REM 1. Verify Docker is installed and running
 docker info >nul 2>&1

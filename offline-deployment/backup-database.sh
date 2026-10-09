@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail
+cd "$(dirname "$0")"
 
 mkdir -p backups
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")

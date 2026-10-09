@@ -1,5 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
+cd /d "%~dp0"
 
 REM ============================================================
 REM TCExam — 1-Click Showcase Database Seeder (Windows)

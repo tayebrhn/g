@@ -1,5 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
+cd /d "%~dp0"
 
 REM ============================================================
 REM TCExam — Apply Offline Production Patch / Update (Windows)
@@ -20,7 +21,11 @@ if %ERRORLEVEL% NEQ 0 (
 
 REM 2. Verify bundle archive is present
 if not exist "tcexam-offline-bundle.tar" (
-    echo [ERROR] 'tcexam-offline-bundle.tar' not found in this directory.
+    if exist "..\tcexam-offline-bundle.tar" copy /y "..\tcexam-offline-bundle.tar" "tcexam-offline-bundle.tar" >nul
+    if exist "..\docker\tcexam-offline-bundle.tar" copy /y "..\docker\tcexam-offline-bundle.tar" "tcexam-offline-bundle.tar" >nul
+)
+if not exist "tcexam-offline-bundle.tar" (
+    echo [ERROR] 'tcexam-offline-bundle.tar' not found in offline-deployment directory.
     echo Please copy the updated bundle file into this folder and retry.
     pause
     exit /b 1
@@ -55,6 +60,8 @@ if %ERRORLEVEL% NEQ 0 (
 
 REM 5. Recreate application and web containers with updated image
 echo [3/3] Replacing running containers with updated image (zero data loss)...
+docker compose stop app web >nul 2>&1
+docker volume rm tcexam_app_code >nul 2>&1
 docker compose up -d --force-recreate app web
 if %ERRORLEVEL% NEQ 0 (
     echo [ERROR] Failed to recreate containers with updated image.

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+cd "$(dirname "$0")"
 
 # ============================================================
 # TCExam — Production Offline Cluster Status Dashboard (Linux)

@@ -1,5 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
+cd /d "%~dp0"
 
 REM Ensure backup directory exists
 if not exist "backups" mkdir backups

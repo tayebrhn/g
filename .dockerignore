@@ -15,3 +15,7 @@ admin/backup/*
 docs/
 offline-deployment/
 *.tar
+**/*.tar
+docker/*.tar
+backups/
+**/backups/

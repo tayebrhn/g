@@ -3,6 +3,7 @@
 # TCExam — Apply Offline Production Patch / Update (Linux)
 # ============================================================
 set -eo pipefail
+cd "$(dirname "$0")"
 
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -22,7 +23,14 @@ fi
 
 # 2. Verify bundle archive is present
 if [ ! -f "tcexam-offline-bundle.tar" ]; then
-    echo -e "${RED}[ERROR] 'tcexam-offline-bundle.tar' not found in this directory.${NC}"
+    if [ -f "../tcexam-offline-bundle.tar" ]; then
+        cp -f "../tcexam-offline-bundle.tar" "tcexam-offline-bundle.tar"
+    elif [ -f "../docker/tcexam-offline-bundle.tar" ]; then
+        cp -f "../docker/tcexam-offline-bundle.tar" "tcexam-offline-bundle.tar"
+    fi
+fi
+if [ ! -f "tcexam-offline-bundle.tar" ]; then
+    echo -e "${RED}[ERROR] 'tcexam-offline-bundle.tar' not found in $(pwd).${NC}"
     echo "Please copy the updated bundle file into this folder and retry."
     exit 1
 fi
@@ -45,6 +53,8 @@ docker load -i tcexam-offline-bundle.tar
 
 # 5. Recreate application and web containers with updated image
 echo -e "${BLUE}[3/3] Replacing running containers with updated image (zero data loss)...${NC}"
+docker compose stop app web >/dev/null 2>&1 || true
+docker volume rm tcexam_app_code >/dev/null 2>&1 || true
 docker compose up -d --force-recreate app web
 
 APP_PORT=80

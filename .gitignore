@@ -32,3 +32,5 @@ admin/backup/
 *.docx
 *.tar
 .env
+backups/
+**/backups/

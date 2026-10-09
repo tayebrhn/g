@@ -1,5 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
+cd /d "%~dp0"
 
 REM ============================================================
 REM TCExam — Production Offline Server Launcher (Windows)
@@ -20,6 +21,10 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 REM 2. Load offline images from bundle archive if present
+if not exist "tcexam-offline-bundle.tar" (
+    if exist "..\tcexam-offline-bundle.tar" copy /y "..\tcexam-offline-bundle.tar" "tcexam-offline-bundle.tar" >nul
+    if exist "..\docker\tcexam-offline-bundle.tar" copy /y "..\docker\tcexam-offline-bundle.tar" "tcexam-offline-bundle.tar" >nul
+)
 if exist "tcexam-offline-bundle.tar" (
     docker image inspect tcexam-app:latest >nul 2>&1
     if %ERRORLEVEL% NEQ 0 (

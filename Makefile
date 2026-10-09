@@ -4,7 +4,7 @@
 
 COMPOSE_DEV = docker compose -f docker-compose.yml -f docker-compose.dev.yml
 
-.PHONY: help dev up down stop restart status scale seed logs logs-app sh db test clean
+.PHONY: help dev up down stop restart status scale seed logs logs-app sh db test clean offline-bundle patch offline-patch
 
 help:
 	@echo "Available commands:"
@@ -20,10 +20,16 @@ help:
 	@echo "  make db       - Connect to MariaDB command-line client"
 	@echo "  make test     - Run configuration and test suite"
 	@echo "  make offline-bundle - Rebuild and package offline production bundle (.tar)"
+	@echo "  make patch    - Apply offline production update patch (zero data loss)"
 	@echo "  make clean    - Stop containers and remove persistent volumes"
 
 offline-bundle:
 	bash docker/build-offline-bundle.sh
+
+offline-patch: patch
+
+patch:
+	bash offline-deployment/apply-patch.sh
 
 dev: up
 

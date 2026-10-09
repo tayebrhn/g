@@ -42,6 +42,12 @@ case "$1" in
         docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale app="${REPL}"
         exit 0
         ;;
+    patch)
+        exec "$(dirname "$0")/offline-deployment/apply-patch.sh" "$@"
+        ;;
+    bundle)
+        exec bash "$(dirname "$0")/docker/build-offline-bundle.sh" "$@"
+        ;;
 esac
 
 # 1. Verify Docker is running

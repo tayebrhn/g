@@ -256,12 +256,26 @@ assertCondition(
     strpos($devBatContent, 'docker-compose.dev.yml') !== false,
     "dev.bat must launch containers with development compose profile."
 );
+assertCondition(
+    strpos($devBatContent, '"%1"=="patch"') !== false,
+    "dev.bat must support 'patch' subcommand."
+);
 
 $devShContent = file_get_contents($rootDir . '/dev.sh');
 assertCondition(
     strpos($devShContent, 'docker compose') !== false &&
     strpos($devShContent, 'docker-compose.dev.yml') !== false,
     "dev.sh must launch containers with development compose profile."
+);
+assertCondition(
+    strpos($devShContent, 'patch)') !== false,
+    "dev.sh must support 'patch' subcommand."
+);
+
+$makefileContent = file_get_contents($rootDir . '/Makefile');
+assertCondition(
+    strpos($makefileContent, 'patch:') !== false,
+    "Makefile must provide 'patch' target."
 );
 
 // -------------------------------------------------------------
@@ -344,6 +358,49 @@ assertCondition(
 assertCondition(
     strpos($bootstrapContent, 'SEED_SHOWCASE') !== false,
     "docker/bootstrap.php must support SEED_SHOWCASE environment variable."
+);
+
+// Section 9: Patching and Directory Normalization Integrity
+assertCondition(
+    file_exists($rootDir . '/apply-patch.bat') &&
+    strpos(file_get_contents($rootDir . '/apply-patch.bat'), 'offline-deployment\apply-patch.bat') !== false,
+    "Root apply-patch.bat must exist and forward to offline-deployment\apply-patch.bat."
+);
+
+assertCondition(
+    file_exists($rootDir . '/apply-patch.sh') &&
+    strpos(file_get_contents($rootDir . '/apply-patch.sh'), 'offline-deployment/apply-patch.sh') !== false,
+    "Root apply-patch.sh must exist and forward to offline-deployment/apply-patch.sh."
+);
+
+$offlinePatchBat = file_get_contents($rootDir . '/offline-deployment/apply-patch.bat');
+assertCondition(
+    strpos($offlinePatchBat, 'cd /d "%~dp0"') !== false,
+    "offline-deployment/apply-patch.bat must normalize working directory using cd /d \"%~dp0\"."
+);
+assertCondition(
+    strpos($offlinePatchBat, '..\tcexam-offline-bundle.tar') !== false,
+    "offline-deployment/apply-patch.bat must provide fallback detection for parent bundle archive."
+);
+
+$offlinePatchSh = file_get_contents($rootDir . '/offline-deployment/apply-patch.sh');
+assertCondition(
+    strpos($offlinePatchSh, 'cd "$(dirname "$0")"') !== false,
+    "offline-deployment/apply-patch.sh must normalize working directory using cd \"\$(dirname \"\$0\")\"."
+);
+assertCondition(
+    strpos($offlinePatchSh, '../tcexam-offline-bundle.tar') !== false,
+    "offline-deployment/apply-patch.sh must provide fallback detection for parent bundle archive."
+);
+
+assertCondition(
+    strpos($offlineStartBat, 'cd /d "%~dp0"') !== false,
+    "offline-deployment/start-production.bat must normalize working directory using cd /d \"%~dp0\"."
+);
+
+assertCondition(
+    strpos($offlineStartSh, 'cd "$(dirname "$0")"') !== false,
+    "offline-deployment/start-production.sh must normalize working directory using cd \"\$(dirname \"\$0\")\"."
 );
 
 // -------------------------------------------------------------
