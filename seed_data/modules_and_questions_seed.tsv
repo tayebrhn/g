@@ -1,0 +1,224 @@
+M=MODULE	module_enabled	module_name
+S=SUBJECT	subject_enabled	subject_name	subject_description
+Q=QUESTION	question_enabled	question_description	question_explanation	question_type	question_difficulty	question_position	question_timer	question_fullscreen	question_inline_answers	question_auto_next
+A=ANSWER	answer_enabled	answer_description	answer_explanation	answer_isright	answer_position	answer_keyboard_key
+M	1	Computer Science & Web Engineering
+S	1	Web Protocols & Client-Server Architecture	HTTP/HTTPS protocols, RESTful API architecture, browser security, cookies, and CORS.
+Q	1	Which HTTP status code indicates that a request has succeeded and led to the creation of a new resource on the server?	HTTP 201 Created indicates successful request completion resulting in the creation of one or more new resources.	S	1	1	0	0	0	0
+A	1	201 Created	Correct. 201 specifically signifies new resource creation.	1	1	A
+A	1	200 OK	200 indicates standard success, but not specifically resource creation.	0	2	B
+A	1	204 No Content	204 signifies success with no response body.	0	3	C
+A	1	301 Moved Permanently	301 is a redirection status code.	0	4	D
+Q	1	What is the primary function of the Same-Origin Policy (SOP) implemented in web browsers?	SOP prevents a script loaded from one origin from accessing document contents or DOM from another origin without authorization.	S	2	2	0	0	0	0
+A	1	To compress HTTP payloads and optimize network latency	Payload compression is handled by gzip/brotli encoding, not SOP.	0	1	A
+A	1	To enforce automatic renewal of TLS/SSL certificates	Certificate renewal is managed at the server/ACME level.	0	2	B
+A	1	To synchronize JavaScript variables between client tabs	Tab synchronization uses BroadcastChannel or localStorage events.	0	3	C
+A	1	To prevent scripts from one origin from reading private DOM data or responses from another origin	Correct. SOP is a core browser security boundary isolating web origins.	1	4	D
+Q	1	Which HTTP response header is sent by servers to instruct browsers to permit cross-origin access?	The Access-Control-Allow-Origin response header indicates whether the response can be shared with requesting code from the given origin.	S	2	3	0	0	0	0
+A	1	Strict-Transport-Security	HSTS enforces HTTPS connections.	0	1	A
+A	1	X-Frame-Options	X-Frame-Options controls framing to prevent clickjacking.	0	2	B
+A	1	Access-Control-Allow-Origin	Correct. This header declares permitted client origins.	1	3	C
+A	1	Content-Security-Policy	CSP governs resource loading restrictions to prevent XSS.	0	4	D
+Q	1	How do HTTP Cookies differ fundamentally from HTML5 localStorage regarding client-server communication?	Cookies are automatically attached to matching HTTP request headers sent to the server, while localStorage remains strictly on the client until JavaScript accesses it.	S	3	4	0	0	0	0
+A	1	Cookies are only accessible over WebSockets, while localStorage works over HTTP	Cookies are native to standard HTTP requests.	0	1	A
+A	1	Cookies are automatically transmitted to the server with every matching HTTP request; localStorage stays on the client	Correct. Cookies are sent with HTTP headers; localStorage is never automatically transmitted.	1	2	B
+A	1	Cookies store up to 50 MB of data, while localStorage stores only 4 KB	Inverse: Cookies hold ~4KB while localStorage holds ~5-10MB.	0	3	C
+A	1	localStorage expires as soon as the browser tab closes, while Cookies never expire	sessionStorage expires on tab close; localStorage persists indefinitely.	0	4	D
+Q	1	Which of the following HTTP methods are specified as idempotent by the HTTP/1.1 specification (RFC 7231)? (Select all that apply)	An idempotent HTTP method can be executed multiple times without changing the server outcome beyond the initial execution. GET, PUT, and DELETE are idempotent; POST is not.	M	2	5	0	0	0	0
+A	1	GET	GET is both safe and idempotent.	1	1	A
+A	1	PUT	PUT replaces state; multiple identical PUTs yield the same server state.	1	2	B
+A	1	DELETE	DELETE is idempotent; repeating deletion results in the resource being absent.	1	3	C
+A	1	POST	POST creates subordinate resources; repeating POST typically creates multiple distinct records.	0	4	D
+Q	1	Which of the following HTTP response headers provide defense-in-depth against client-side browser attacks? (Select all that apply)	Content-Security-Policy restricts executable script sources, Strict-Transport-Security enforces HTTPS, and X-Content-Type-Options blocks MIME sniffing.	M	3	6	0	0	0	0
+A	1	Content-Security-Policy	CSP mitigates XSS by restricting allowed script sources.	1	1	A
+A	1	Strict-Transport-Security	HSTS enforces encrypted transport and blocks SSL-stripping.	1	2	B
+A	1	X-Content-Type-Options	Blocks MIME sniffing attacks by requiring nosniff.	1	3	C
+A	1	User-Agent	User-Agent is a client request header identifying the browser software.	0	4	D
+S	1	Database Engineering & Relational SQL	Relational database schema design, indexing, transactions, ACID properties, and JOIN operations.
+Q	1	Which database constraint guarantees that a column contains unique values and cannot store NULL values?	A PRIMARY KEY constraint uniquely identifies each record and enforces uniqueness along with an implicit NOT NULL rule.	S	1	1	0	0	0	0
+A	1	PRIMARY KEY	Correct. Enforces uniqueness and rejects NULL values.	1	1	A
+A	1	FOREIGN KEY	FOREIGN KEY enforces referential integrity to another table.	0	2	B
+A	1	CHECK	CHECK validates values against a Boolean expression.	0	3	C
+A	1	DEFAULT	DEFAULT supplies a fallback value when none is provided.	0	4	D
+Q	1	Which SQL JOIN type returns all records from the left table and the matched records from the right table, filling non-matching right columns with NULL?	A LEFT OUTER JOIN preserves every row from the left table regardless of whether a matching record exists in the right table.	S	2	2	0	0	0	0
+A	1	INNER JOIN	INNER JOIN only returns rows where keys match in both tables.	0	1	A
+A	1	RIGHT JOIN (RIGHT OUTER JOIN)	RIGHT JOIN preserves all right table rows.	0	2	B
+A	1	CROSS JOIN	CROSS JOIN produces the Cartesian product of both tables.	0	3	C
+A	1	LEFT JOIN (LEFT OUTER JOIN)	Correct. Returns all left table rows plus matched right rows.	1	4	D
+Q	1	In relational database transactions, what does the "I" in ACID stand for?	ACID stands for Atomicity, Consistency, Isolation, and Durability. Isolation ensures concurrent transactions do not interfere with each other.	S	2	3	0	0	0	0
+A	1	Indexation	Indexing is a performance mechanism, not an ACID property.	0	1	A
+A	1	Idempotence	Idempotence is an API and distributed systems concept.	0	2	B
+A	1	Isolation	Correct. Isolation governs transaction concurrency and visibility levels.	1	3	C
+A	1	Integrity	Integrity is a general goal, but "I" stands for Isolation.	0	4	D
+Q	1	Which tree data structure is most commonly utilized by relational database storage engines for table indexing?	B-Tree and B+ Tree structures maintain sorted keys with balanced height, providing logarithmic search, range scan, and insertion performance.	S	3	4	0	0	0	0
+A	1	Splay Tree	Splay trees do not guarantee balanced disk block access.	0	1	A
+A	1	B-Tree (and B+ Tree)	Correct. B-Trees minimize disk I/O and support fast equality and range lookups.	1	2	B
+A	1	Binary Min-Heap	Heaps are optimized for priority queue extraction (min/max), not search.	0	3	C
+A	1	Trie (Prefix Tree)	Tries are used for string autocomplete and dictionary lookups.	0	4	D
+Q	1	Which of the following SQL statements are categorized under Data Definition Language (DDL)? (Select all that apply)	DDL statements define or alter the structure of database objects (CREATE, ALTER, DROP, TRUNCATE). INSERT and UPDATE are DML.	M	2	5	0	0	0	0
+A	1	CREATE TABLE	DDL command defining schema objects.	1	1	A
+A	1	ALTER TABLE	DDL command modifying table structures.	1	2	B
+A	1	DROP TABLE	DDL command removing schema objects.	1	3	C
+A	1	INSERT INTO	INSERT is a Data Manipulation Language (DML) command.	0	4	D
+Q	1	Which requirements are necessary for a database table to satisfy Third Normal Form (3NF)? (Select all that apply)	To achieve 3NF, the relation must already satisfy 2NF, and every non-prime attribute must depend directly and non-transitively on the candidate key.	M	3	6	0	0	0	0
+A	1	The table must be in Second Normal Form (2NF)	Normal forms are hierarchical; 3NF requires 2NF compliance.	1	1	A
+A	1	There must be no transitive dependencies of non-key attributes on candidate keys	Every non-key attribute must depend directly on the key.	1	2	B
+A	1	Every column must contain at least three foreign keys	Foreign keys are not required for normalization tiers.	0	3	C
+A	1	The table must never store numeric values	Normalization does not dictate data types.	0	4	D
+S	1	Data Structures & Algorithmic Complexity	Asymptotic complexity (Big-O), search and sort algorithms, stacks, queues, and tree structures.
+Q	1	What is the average time complexity for searching a key in a properly dimensioned Hash Map?	Hash maps compute bucket indices via hash functions, achieving constant O(1) time complexity on average.	S	1	1	0	0	0	0
+A	1	O(1)	Correct. Hash tables offer O(1) average lookup time.	1	1	A
+A	1	O(log n)	O(log n) is typical of balanced search trees and binary search.	0	2	B
+A	1	O(n)	O(n) represents linear scans and worst-case hash collisions.	0	3	C
+A	1	O(n log n)	O(n log n) is standard for comparison-based sorting.	0	4	D
+Q	1	Which fundamental data structure operates strictly according to the First-In, First-Out (FIFO) discipline?	A Queue enqueues elements at the back and dequeues them from the front, ensuring FIFO ordering.	S	1	2	0	0	0	0
+A	1	Stack	Stacks follow Last-In, First-Out (LIFO).	0	1	A
+A	1	Binary Search Tree	BSTs order elements hierarchically by key value.	0	2	B
+A	1	Max-Heap	Heaps organize elements based on priority ordering.	0	3	C
+A	1	Queue	Correct. Queues adhere to First-In, First-Out.	1	4	D
+Q	1	What is the worst-case time complexity of the Binary Search algorithm when executed on a sorted array of size n?	Binary search halves the remaining candidate space in each comparison, yielding O(log n) worst-case time complexity.	S	2	3	0	0	0	0
+A	1	O(n)	O(n) is the complexity of linear search.	0	1	A
+A	1	O(n^2)	O(n^2) is characteristic of quadratic algorithms like bubble sort.	0	2	B
+A	1	O(log n)	Correct. Logarithmic time complexity.	1	3	C
+A	1	O(1)	O(1) is the best-case (finding the element at the midpoint immediately).	0	4	D
+Q	1	Which comparison sorting algorithm guarantees O(n log n) time complexity in the worst case while maintaining sort stability?	Merge Sort achieves guaranteed O(n log n) worst-case performance by recursively dividing and merging, while preserving relative order for equal elements.	S	3	4	0	0	0	0
+A	1	Selection Sort	Selection sort runs in O(n^2) time.	0	1	A
+A	1	Merge Sort	Correct. Merge sort is stable and guarantees O(n log n) in all cases.	1	2	B
+A	1	Quick Sort	Quick sort degrades to O(n^2) in the worst case and is unstable in standard form.	0	3	C
+A	1	Heap Sort	Heap sort achieves O(n log n) but is not a stable sort.	0	4	D
+Q	1	Which of the following binary search tree variants automatically rebalance themselves during insertions and deletions? (Select all that apply)	AVL trees and Red-Black trees are self-balancing binary search trees that maintain logarithmic height through tree rotations.	M	2	5	0	0	0	0
+A	1	AVL Tree	AVL trees strictly enforce height balance differences <= 1.	1	1	A
+A	1	Red-Black Tree	Red-Black trees use color rules to guarantee balanced depth.	1	2	B
+A	1	Unbalanced Binary Search Tree	Standard BSTs can degenerate into linked lists with O(n) height.	0	3	C
+A	1	Prefix Trie	Tries are tree structures for string retrieval, not self-balancing BSTs.	0	4	D
+Q	1	Which algorithms can detect the presence of cycles in a directed graph? (Select all that apply)	Depth-First Search (detecting back-edges using recursion stack states) and Kahn's algorithm (topological sorting using in-degrees) can both detect cycles.	M	3	6	0	0	0	0
+A	1	Depth-First Search (DFS) with node visitation states (White/Gray/Black)	A back-edge encountered during DFS indicates a directed cycle.	1	1	A
+A	1	Kahn's Algorithm (Topological Sort with vertex in-degree tracking)	If topological sort cannot process all vertices, a cycle exists.	1	2	B
+A	1	Dijkstra's Shortest Path Algorithm	Dijkstra computes single-source shortest paths on weighted graphs.	0	3	C
+A	1	Huffman Encoding Tree Generation	Huffman coding creates prefix-free trees for lossless compression.	0	4	D
+M	1	Cybersecurity & Network Defense
+S	1	Network Security & Cryptographic Foundations	Symmetric vs asymmetric encryption, cryptographic hashing, digital certificates, and TLS handshakes.
+Q	1	What is the essential architectural distinction between symmetric and asymmetric cryptography?	Symmetric encryption employs one shared secret key for encryption and decryption. Asymmetric cryptography utilizes mathematically paired public and private keys.	S	1	1	0	0	0	0
+A	1	Symmetric uses one shared secret key; asymmetric uses a public/private key pair	Correct. Core definition of both cryptographic paradigms.	1	1	A
+A	1	Symmetric encryption operates only on hardware tokens; asymmetric is software-only	Both paradigms can run in software or dedicated hardware.	0	2	B
+A	1	Symmetric algorithms cannot encrypt binary data	Symmetric ciphers routinely encrypt arbitrary binary streams.	0	3	C
+A	1	Asymmetric keys are always 64 bits in length	Asymmetric keys range from 256 bits (ECC) to 4096 bits (RSA).	0	4	D
+Q	1	Which cryptographic hash function is widely standardized and considered secure against collision vulnerabilities?	SHA-256 (part of the SHA-2 family) remains cryptographically secure against collision attacks. MD5 and SHA-1 have proven collision weaknesses.	S	2	2	0	0	0	0
+A	1	MD5	MD5 has broken collision resistance and must not be used for security.	0	1	A
+A	1	SHA-1	SHA-1 has demonstrated practical collision vulnerabilities.	0	2	B
+A	1	CRC32	CRC32 is an error-detecting code, not a cryptographic hash.	0	3	C
+A	1	SHA-256	Correct. SHA-256 offers 256-bit collision resistance.	1	4	D
+Q	1	Why is it critical to combine a cryptographic salt with user passwords before hashing?	Salting introduces a unique pseudorandom value per password, preventing attacks using precomputed rainbow tables and ensuring identical passwords produce distinct hashes.	S	2	3	0	0	0	0
+A	1	To allow system administrators to decrypt cleartext passwords for recovery	Hashes are one-way functions; salting does not enable decryption.	0	1	A
+A	1	To compress password lengths to fit fixed database column sizes	Cryptographic hashes already produce fixed-length outputs.	0	2	B
+A	1	To defend against rainbow table lookups and ensure identical passwords produce unique hashes	Correct. Defeats precomputed dictionary and rainbow table lookups.	1	3	C
+A	1	To accelerate server password hashing computations	Salting does not accelerate hashing; key derivation functions are deliberately tuned to be slow.	0	4	D
+Q	1	During a TLS handshake, what verifies the authentic identity of the remote server to prevent Man-in-the-Middle (MitM) attacks?	The server presents an X.509 digital certificate digitally signed by a trusted Certificate Authority (CA) whose root certificate resides in the client trust store.	S	3	4	0	0	0	0
+A	1	The reverse DNS PTR record of the client router	DNS PTR records are unauthenticated and easily spoofed.	0	1	A
+A	1	An X.509 digital certificate issued and signed by a trusted Certificate Authority (CA)	Correct. CA digital signatures validate the server identity and public key.	1	2	B
+A	1	The client's local MAC address broadcasted over ARP	MAC addresses only exist on local physical link layers.	0	3	C
+A	1	The HTTP session cookie set by a previous request	Session cookies are application-layer artifacts and do not validate TLS endpoints.	0	4	D
+Q	1	Which of the following algorithms are asymmetric (public-key) cryptographic algorithms? (Select all that apply)	RSA, ECDSA, and Diffie-Hellman are asymmetric algorithms. AES is a symmetric block cipher.	M	2	5	0	0	0	0
+A	1	RSA	Asymmetric encryption and digital signature algorithm.	1	1	A
+A	1	ECDSA (Elliptic Curve Digital Signature Algorithm)	Asymmetric digital signature algorithm based on elliptic curves.	1	2	B
+A	1	Diffie-Hellman Key Exchange	Asymmetric protocol for securely establishing shared keys.	1	3	C
+A	1	AES (Advanced Encryption Standard)	AES is a symmetric key block cipher.	0	4	D
+Q	1	Which password hashing functions feature configurable work factors (computational cost) to thwart specialized GPU/ASIC cracking? (Select all that apply)	bcrypt, Argon2id, and PBKDF2 are deliberately designed password hashing algorithms with configurable memory and CPU cost parameters.	M	3	6	0	0	0	0
+A	1	bcrypt	Features an adaptive cost factor scaling iteration rounds.	1	1	A
+A	1	Argon2id	Winner of the Password Hashing Competition; configurable memory and time cost.	1	2	B
+A	1	PBKDF2	NIST-approved key derivation function with configurable iteration counts.	1	3	C
+A	1	MD5	MD5 is a fast general-purpose hash function unsuitable for passwords.	0	4	D
+S	1	Application Security & OWASP Top 10	SQL injection defenses, Cross-Site Scripting (XSS), CSRF mitigation, and least privilege access controls.
+Q	1	What is the single most effective primary defense against SQL Injection vulnerabilities in application code?	Parameterized queries (prepared statements) ensure user input is treated strictly as data rather than executable SQL syntax.	S	1	1	0	0	0	0
+A	1	Parameterized queries (Prepared Statements) with bound parameters	Correct. Pre-compiles SQL grammar and treats parameters purely as literals.	1	1	A
+A	1	Client-side HTML input maxlength attributes	Client-side constraints are trivially bypassed by intercepting proxies.	0	2	B
+A	1	Encoding database tables using Base64	Base64 is an encoding, not an encryption or security defense.	0	3	C
+A	1	Replacing single quotes with double quotes via regular expressions	Ad-hoc regex blacklists frequently miss evasion bypasses.	0	4	D
+Q	1	Which attack occurs when an unauthorized action is transmitted from a user that the web application trusts, exploiting ambient credentials like cookies?	Cross-Site Request Forgery (CSRF) tricks an authenticated browser into submitting unauthorized requests to a vulnerable application.	S	2	2	0	0	0	0
+A	1	Server-Side Request Forgery (SSRF)	SSRF induces the backend server to make unauthorized requests.	0	1	A
+A	1	Buffer Overflow	Buffer overflow is a memory safety vulnerability.	0	2	B
+A	1	Directory Traversal	Directory traversal exploits dot-dot-slash paths to access files.	0	3	C
+A	1	Cross-Site Request Forgery (CSRF)	Correct. CSRF exploits automatic transmission of session credentials.	1	4	D
+Q	1	What is the principal danger presented by Stored Cross-Site Scripting (XSS) vulnerabilities?	Stored XSS persists malicious script into database records, which then executes in the browser of any user who views the infected page.	S	2	3	0	0	0	0
+A	1	Hardware motherboards on client devices suffer permanent physical damage	XSS is a logical browser scripting vulnerability.	0	1	A
+A	1	Database indices are automatically wiped after every query	Database integrity is affected by SQL injection, not XSS.	0	2	B
+A	1	Malicious scripts execute in the context of victim user sessions, allowing cookie theft and account takeover	Correct. XSS executes attacker JavaScript within the victim's trusted browser session.	1	3	C
+A	1	Attacking code can recompile the server-side PHP binary on disk	XSS executes in the client browser, not on the server operating system.	0	4	D
+Q	1	What is the definition of the "Principle of Least Privilege" in information security architecture?	Every subject (user, process, or system) must be granted only the minimum permissions necessary to complete authorized functions.	S	3	4	0	0	0	0
+A	1	Requiring all servers to run on single-core CPU processors	Hardware specifications are unrelated to privilege management.	0	1	A
+A	1	Granting entities only the minimum privileges essential to perform their authorized functions	Correct. Minimizes the potential attack surface and blast radius.	1	2	B
+A	1	Granting full root administrator access to all employees to avoid productivity delays	Direct violation of security principles.	0	3	C
+A	1	Disabling password requirements on internal local area networks	Weakens access controls.	0	4	D
+Q	1	Which defensive techniques are effective in mitigating Cross-Site Scripting (XSS) vulnerabilities? (Select all that apply)	Context-sensitive output encoding, robust Content Security Policies (CSP), and the HttpOnly flag on sensitive cookies protect against XSS exploitation.	M	2	5	0	0	0	0
+A	1	Context-aware output escaping and HTML encoding before rendering data	Neutralizes executable characters like <, >, and quotes in user content.	1	1	A
+A	1	Enforcing a strict Content-Security-Policy (CSP) restricting inline script execution	Prevents unauthorized scripts from executing even if injected.	1	2	B
+A	1	Marking session cookies with the HttpOnly attribute	Blocks client-side JavaScript (document.cookie) from reading the session token.	1	3	C
+A	1	Disabling all database foreign key constraints	Foreign key constraints have no bearing on XSS mitigation.	0	4	D
+Q	1	Which security practices defend authentication systems against automated credential stuffing and brute-force attacks? (Select all that apply)	Multi-factor authentication (MFA), progressive rate limiting/delays, and screening against known breached passwords safeguard authentication endpoints.	M	3	6	0	0	0	0
+A	1	Multi-Factor Authentication (MFA / 2FA)	Requires a secondary factor beyond passwords, stopping credential stuffing.	1	1	A
+A	1	Rate limiting and progressive login attempt throttling	Limits automated high-volume guess attempts per IP and account.	1	2	B
+A	1	Screening passwords against known compromised password databases (HaveIBeenPwned)	Prevents users from choosing passwords already leaked in breaches.	1	3	C
+A	1	Logging plaintext passwords into unencrypted server log files	Severe security vulnerability exposing credentials.	0	4	D
+M	1	Cloud Infrastructure & DevOps Practices
+S	1	Containerization & Docker Fundamentals	Container vs VM architecture, Dockerfiles, volumes, networking, and multi-stage image builds.
+Q	1	What is the architectural distinction between a Docker container and a traditional Virtual Machine (VM)?	Containers share the host operating system kernel and isolate processes using cgroups and namespaces, whereas VMs run a complete guest OS on top of a hypervisor.	S	1	1	0	0	0	0
+A	1	Containers share the host OS kernel; VMs each run a full guest operating system via a hypervisor	Correct. Containers are lightweight process isolations sharing the host kernel.	1	1	A
+A	1	Containers require dedicated physical network cards for each running instance	Containers use virtual bridge networks created by Docker daemon.	0	2	B
+A	1	Virtual machines can only run on Linux, while containers run on any device	Hypervisors run on all major server operating systems.	0	3	C
+A	1	Containers execute exclusively in volatile RAM and cannot write to disk	Containers write to copy-on-write storage layers and persistent volumes.	0	4	D
+Q	1	In a Dockerfile, what distinguishes the RUN instruction from the CMD instruction?	RUN executes commands during image build time to commit new image layers. CMD defines the default command and arguments executed when a container starts.	S	2	2	0	0	0	0
+A	1	RUN is only executed on Linux hosts; CMD is only executed on Windows hosts	Both instructions are cross-platform Dockerfile standards.	0	1	A
+A	1	CMD commits changes to Git; RUN commits changes to Docker Hub	Neither instruction interacts directly with Git or Docker Hub.	0	2	B
+A	1	RUN deletes existing layers; CMD restores layers from cache	Neither instruction manages cache restoration in this manner.	0	3	C
+A	1	RUN executes at build time to create image layers; CMD defines default container runtime execution	Correct. RUN builds the image; CMD sets the container entry process.	1	4	D
+Q	1	Which mechanism is recommended for persisting database data across Docker container recreation and restarts?	Docker Volumes and Bind Mounts store data on host filesystems independently of the container lifecycle, ensuring persistence.	S	2	3	0	0	0	0
+A	1	Hardcoding data directly into Dockerfile ENV variables	Environment variables are for configuration, not persistent database storage.	0	1	A
+A	1	Rebuilding the image on every database write operation	Impractical and violates immutability principles.	0	2	B
+A	1	Docker Named Volumes or Bind Mounts	Correct. Volumes decouple persistent data from container lifetimes.	1	3	C
+A	1	The ephemeral container writable layer	The writable layer is destroyed when the container is removed.	0	4	D
+Q	1	What is the primary operational advantage of multi-stage Docker builds?	Multi-stage builds allow developers to use compilers, SDKs, and intermediate tools in early stages, copying only the final compiled artifacts into a lightweight, secure production image.	S	3	4	0	0	0	0
+A	1	Converting Docker images into virtual floppy disk files	Unrelated legacy storage technology.	0	1	A
+A	1	Drastically reducing final production image sizes and attack surface by leaving build tooling behind	Correct. Compilers and headers are omitted from the minimal runtime image.	1	2	B
+A	1	Allowing containers to run without an underlying operating system kernel	Containers always rely on the host operating system kernel.	0	3	C
+A	1	Enabling containers to bypass network port exposure rules	Network rules remain governed by the container runtime.	0	4	D
+Q	1	Which Linux kernel mechanisms are foundational to Docker container process isolation and resource limits? (Select all that apply)	Namespaces provide isolated process, network, user, and mount views. Control Groups (cgroups) meter and enforce limits on CPU, memory, and I/O resources.	M	2	5	0	0	0	0
+A	1	Linux Kernel Namespaces (PID, NET, MNT, IPC, UTS, USER)	Provides view isolation for processes, networks, and filesystems.	1	1	A
+A	1	Linux Control Groups (cgroups)	Enforces CPU, memory, disk I/O, and resource consumption boundaries.	1	2	B
+A	1	Hardware Hypervisor Type-1 firmware	Bare-metal hypervisors (ESXi, Xen) are used for full VMs, not containers.	0	3	C
+A	1	Direct BIOS ROM flashing	BIOS flashing is motherboard firmware maintenance.	0	4	D
+Q	1	Which Docker CLI commands directly manage container lifecycle states? (Select all that apply)	docker run creates and starts a container; docker stop halts execution gracefully; docker rm deletes stopped containers.	M	1	6	0	0	0	0
+A	1	docker run	Creates and starts a container process.	1	1	A
+A	1	docker stop	Sends SIGTERM and gracefully halts container processes.	1	2	B
+A	1	docker rm	Removes one or more stopped containers from disk.	1	3	C
+A	1	docker push-kernel	Not a valid Docker command.	0	4	D
+S	1	CI/CD Automation & Version Control (Git)	Git branching strategies, commit history hygiene, automated CI/CD pipelines, and semantic versioning.
+Q	1	Which Git command creates a new branch and immediately switches your active working tree to it?	git checkout -b <name> (or the modern git switch -c <name>) creates the branch and checks it out in a single step.	S	1	1	0	0	0	0
+A	1	git checkout -b <branch-name> (or git switch -c <branch-name>)	Correct. Combines branch creation and checkout.	1	1	A
+A	1	git merge --create <branch-name>	git merge joins branches, it does not create and switch to them.	0	2	B
+A	1	git push --new-branch <branch-name>	git push uploads commits to a remote repository.	0	3	C
+A	1	git commit --branch <branch-name>	git commit records changes, not branch creation.	0	4	D
+Q	1	What is the principal difference between `git merge` and `git rebase` when incorporating feature branch commits?	git merge ties branch histories together preserving true commit timestamps and producing a merge commit; git rebase moves the branch base, creating a linear history.	S	2	2	0	0	0	0
+A	1	git merge deletes uncommitted files, while git rebase stashes them permanently	Neither command automatically destroys uncommitted files.	0	1	A
+A	1	git rebase can only be used on GitHub servers, not locally	git rebase is a native local Git command.	0	2	B
+A	1	git merge converts all commits into binary patches	Git natively stores commits as tree and commit objects.	0	3	C
+A	1	git merge preserves exact history with a merge commit; git rebase rewrites commits linearly on the base branch	Correct. Merge keeps branch topology; rebase linearizes commit history.	1	4	D
+Q	1	What is the primary objective of Continuous Integration (CI) in software development teams?	CI aims to integrate developer working copies into a shared mainline several times a day, accompanied by automated building and testing to catch regressions early.	S	1	3	0	0	0	0
+A	1	Replacing version control repositories with periodic email attachments	CI requires automated source control.	0	1	A
+A	1	Automatically deploying untested code directly to customer servers	Deploying untested code violates CI/CD quality gates.	0	2	B
+A	1	Frequently merging code into a shared mainline with automated building and testing to surface defects early	Correct. Early automated defect detection is the hallmark of CI.	1	3	C
+A	1	Eliminating the requirement for developers to write unit tests	CI relies heavily on developer-written unit tests to validate builds.	0	4	D
+Q	1	According to Semantic Versioning (SemVer 2.0.0), which version segment MUST be incremented when introducing breaking, backwards-incompatible API changes?	SemVer format is MAJOR.MINOR.PATCH. A MAJOR version bump signifies backwards-incompatible breaking API changes.	S	2	4	0	0	0	0
+A	1	BUILD metadata (e.g., 1.4.2+2026)	Build metadata does not denote compatibility semantics.	0	1	A
+A	1	MAJOR (e.g., 1.4.2 -> 2.0.0)	Correct. MAJOR version changes denote incompatible public API modifications.	1	2	B
+A	1	MINOR (e.g., 1.4.2 -> 1.5.0)	MINOR denotes backwards-compatible new functionality.	0	3	C
+A	1	PATCH (e.g., 1.4.2 -> 1.4.3)	PATCH denotes backwards-compatible bug fixes.	0	4	D
+Q	1	Which automated verification steps are standard components of a continuous integration pipeline? (Select all that apply)	Automated unit/integration test suites, static analysis/linters, and security vulnerability scans are standard quality gates in CI.	M	2	5	0	0	0	0
+A	1	Automated unit and integration test suites	Verifies functionality and guards against regression.	1	1	A
+A	1	Static code analysis and linter checks	Enforces code style and spots syntax/semantic bugs.	1	2	B
+A	1	Dependency security vulnerability scanning (SAST/SCA)	Identifies vulnerable third-party dependencies before merging.	1	3	C
+A	1	Physical hardware burn-in testing of developer laptops	Developer laptop burn-in is not part of software CI pipelines.	0	4	D
+Q	1	Which Git commands rewrite commit history and must be exercised with extreme caution on shared public branches? (Select all that apply)	git rebase, git commit --amend, and git reset --hard alter commit SHAs and history, disrupting peers if performed on shared branches.	M	3	6	0	0	0	0
+A	1	git rebase	Rewrites commit parentage and produces new commit SHAs.	1	1	A
+A	1	git commit --amend	Replaces the most recent commit with a revised commit SHA.	1	2	B
+A	1	git reset --hard	Moves HEAD and discards commits and working tree modifications.	1	3	C
+A	1	git status	Read-only command displaying working tree status.	0	4	D

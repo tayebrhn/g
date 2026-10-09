@@ -275,10 +275,22 @@ $offlineAssets = [
     'offline-deployment/.env.example',
     'offline-deployment/start-production.bat',
     'offline-deployment/start-production.sh',
-    'offline-deployment/apply-patch.bat',
-    'offline-deployment/apply-patch.sh',
     'offline-deployment/stop-production.bat',
     'offline-deployment/stop-production.sh',
+    'offline-deployment/restart-production.bat',
+    'offline-deployment/restart-production.sh',
+    'offline-deployment/status-production.bat',
+    'offline-deployment/status-production.sh',
+    'offline-deployment/scale-production.bat',
+    'offline-deployment/scale-production.sh',
+    'offline-deployment/seed-database.bat',
+    'offline-deployment/seed-database.sh',
+    'offline-deployment/restore-database.bat',
+    'offline-deployment/restore-database.sh',
+    'offline-deployment/manage-production.bat',
+    'offline-deployment/manage-production.sh',
+    'offline-deployment/apply-patch.bat',
+    'offline-deployment/apply-patch.sh',
     'offline-deployment/backup-database.bat',
     'offline-deployment/backup-database.sh',
     'offline-deployment/README.md',
@@ -310,6 +322,28 @@ $offlineStartBat = file_get_contents($rootDir . '/offline-deployment/start-produ
 assertCondition(
     strpos($offlineStartBat, 'tcexam-offline-bundle.tar') !== false,
     "start-production.bat must reference offline tarball bundle."
+);
+assertCondition(
+    strpos($offlineStartBat, 'APP_REPLICAS') !== false && strpos($offlineStartBat, '--scale app=') !== false,
+    "start-production.bat must support APP_REPLICAS horizontal scaling."
+);
+
+$offlineStartSh = file_get_contents($rootDir . '/offline-deployment/start-production.sh');
+assertCondition(
+    strpos($offlineStartSh, 'APP_REPLICAS') !== false && strpos($offlineStartSh, '--scale app=') !== false,
+    "start-production.sh must support APP_REPLICAS horizontal scaling."
+);
+
+$nginxOfflineContent = file_get_contents($rootDir . '/offline-deployment/nginx/default.conf');
+assertCondition(
+    strpos($nginxOfflineContent, 'fastcgi_next_upstream') !== false &&
+    strpos($nginxOfflineContent, 'fastcgi_keep_conn') !== false,
+    "offline-deployment/nginx/default.conf must configure FastCGI failover and connection pooling."
+);
+
+assertCondition(
+    strpos($bootstrapContent, 'SEED_SHOWCASE') !== false,
+    "docker/bootstrap.php must support SEED_SHOWCASE environment variable."
 );
 
 // -------------------------------------------------------------

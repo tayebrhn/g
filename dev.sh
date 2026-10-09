@@ -14,6 +14,36 @@ echo -e "${BLUE}============================================================${NC
 echo -e "${BLUE}  Starting TCExam Development Server...${NC}"
 echo -e "${BLUE}============================================================${NC}"
 
+# Check for subcommands
+case "$1" in
+    stop|down)
+        docker compose -f docker-compose.yml -f docker-compose.dev.yml down
+        echo "TCExam development containers stopped."
+        exit 0
+        ;;
+    restart)
+        docker compose -f docker-compose.yml -f docker-compose.dev.yml restart
+        echo "TCExam development containers restarted."
+        exit 0
+        ;;
+    status)
+        docker compose -f docker-compose.yml -f docker-compose.dev.yml ps
+        exit 0
+        ;;
+    seed)
+        echo -e "${BLUE}[INFO] Seeding showcase curriculum, users, and exams...${NC}"
+        docker compose -f docker-compose.yml -f docker-compose.dev.yml exec -T db mariadb -u root -proot_secret_pass tcexam < seed_data/showcase_seed.sql
+        echo -e "${GREEN}[SUCCESS] Showcase seed complete!${NC}"
+        exit 0
+        ;;
+    scale)
+        REPL="${2:-2}"
+        echo -e "${BLUE}[INFO] Scaling app workers to ${REPL} replicas...${NC}"
+        docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale app="${REPL}"
+        exit 0
+        ;;
+esac
+
 # 1. Verify Docker is running
 if ! docker info >/dev/null 2>&1; then
     echo -e "${RED}[ERROR] Docker is not running or not installed.${NC}"

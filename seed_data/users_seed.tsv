@@ -1,0 +1,22 @@
+user_id	user_name	user_password	user_email	user_regdate	user_ip	user_firstname	user_lastname	user_birthdate	user_birthplace	user_regnumber	user_ssn	user_level	user_verifycode	user_otpkey	user_groups
+101	admin_alice	Password123!	alice.admin@example.com	2026-01-10 08:30:00	127.0.0.1	Alice	Vance	1988-04-12	San Francisco	ADM-001	SSN-ADM-001	10			System Administrators
+102	manager_linda	Password123!	linda.registrar@example.com	2026-01-12 09:15:00	127.0.0.1	Linda	Martinez	1985-07-22	Chicago	REG-001	SSN-REG-001	6			Academic Registry
+103	operator_david	Password123!	david.proctor@example.com	2026-01-15 10:00:00	127.0.0.1	David	Proctor	1990-11-05	Boston	OPR-001	SSN-OPR-001	5			Exam Proctors
+104	operator_sarah	Password123!	sarah.examiner@example.com	2026-01-15 10:30:00	127.0.0.1	Sarah	Jenkins	1992-03-18	Seattle	OPR-002	SSN-OPR-002	5			Exam Proctors
+105	prof_miller	Password123!	robert.miller@example.com	2026-01-18 11:00:00	127.0.0.1	Robert	Miller	1979-09-14	New York	FAC-CS-001	SSN-FAC-001	3			Instructors,Computer Science Faculty
+106	prof_chen	Password123!	emily.chen@example.com	2026-01-18 11:30:00	127.0.0.1	Emily	Chen	1984-12-03	Austin	FAC-CS-002	SSN-FAC-002	3			Instructors,Computer Science Faculty
+107	prof_garcia	Password123!	carlos.garcia@example.com	2026-01-18 12:00:00	127.0.0.1	Carlos	Garcia	1981-06-27	Miami	FAC-SEC-001	SSN-FAC-003	3			Instructors,Cybersecurity Faculty
+108	alex.taylor	Password123!	alex.taylor@example.com	2026-02-01 09:00:00	127.0.0.1	Alex	Taylor	2004-02-14	Denver	STU-2026-101	SSN-STU-101	1			CS101-Morning
+109	brenda.wright	Password123!	brenda.wright@example.com	2026-02-01 09:05:00	127.0.0.1	Brenda	Wright	2003-08-21	Atlanta	STU-2026-102	SSN-STU-102	1			CS101-Morning
+110	kevin.patel	Password123!	kevin.patel@example.com	2026-02-01 09:10:00	127.0.0.1	Kevin	Patel	2004-11-30	Houston	STU-2026-103	SSN-STU-103	1			CS101-Morning
+111	maria.santos	Password123!	maria.santos@example.com	2026-02-01 09:15:00	127.0.0.1	Maria	Santos	2003-05-19	San Diego	STU-2026-104	SSN-STU-104	1			CS101-Morning
+112	james.wilson	Password123!	james.wilson@example.com	2026-02-01 09:20:00	127.0.0.1	James	Wilson	2004-09-08	Dallas	STU-2026-105	SSN-STU-105	1			CS101-Morning
+113	sophia.kim	Password123!	sophia.kim@example.com	2026-02-02 17:00:00	127.0.0.1	Sophia	Kim	2002-10-11	Portland	STU-2026-201	SSN-STU-201	1			CS101-Evening
+114	daniel.novak	Password123!	daniel.novak@example.com	2026-02-02 17:05:00	127.0.0.1	Daniel	Novak	2001-04-25	Phoenix	STU-2026-202	SSN-STU-202	1			CS101-Evening
+115	fatima.zahra	Password123!	fatima.zahra@example.com	2026-02-02 17:10:00	127.0.0.1	Fatima	Zahra	2003-01-30	Detroit	STU-2026-203	SSN-STU-203	1			CS101-Evening
+116	lucas.silva	Password123!	lucas.silva@example.com	2026-02-02 17:15:00	127.0.0.1	Lucas	Silva	2002-07-16	Philadelphia	STU-2026-204	SSN-STU-204	1			CS101-Evening
+117	olivia.brown	Password123!	olivia.brown@example.com	2026-02-02 17:20:00	127.0.0.1	Olivia	Brown	2003-12-05	Charlotte	STU-2026-205	SSN-STU-205	1			CS101-Evening
+118	marcus.vance	Password123!	marcus.vance@example.com	2026-02-05 08:30:00	127.0.0.1	Marcus	Vance	2000-06-12	Minneapolis	SEC-2026-301	SSN-SEC-301	1			CyberSec-Cohort-A
+119	priya.sharma	Password123!	priya.sharma@example.com	2026-02-05 08:35:00	127.0.0.1	Priya	Sharma	2001-09-28	San Jose	SEC-2026-302	SSN-SEC-302	1			CyberSec-Cohort-A
+120	elena.rostova	Password123!	elena.rostova@example.com	2026-02-05 08:40:00	127.0.0.1	Elena	Rostova	1999-03-15	Orlando	SEC-2026-303	SSN-SEC-303	1			CyberSec-Cohort-A
+121	tariq.mansoor	Password123!	tariq.mansoor@example.com	2026-02-05 08:45:00	127.0.0.1	Tariq	Mansoor	2000-11-20	Columbus	SEC-2026-304	SSN-SEC-304	1			CyberSec-Cohort-A

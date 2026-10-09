@@ -192,3 +192,13 @@ Check that: every data line still starts with `M`, `S`, `Q`, or `A`; the file wa
 
 **What is the difference between the buttons TSV, TSV Module and TSV All?**
 They control **how much** is exported: the current topic, the entire module, or the whole question bank. The file format is identical.
+
+---
+
+## 6. Ready-to-use Showcase Seed Data
+
+A ready-to-import showcase dataset is provided in [`seed_data/`](../seed_data/README.md):
+- **Users**: [`users_seed.tsv`](../seed_data/users_seed.tsv) and [`users_seed.csv`](../seed_data/users_seed.csv) containing 21 users across all permission tiers (Admin, Registrar, Proctor, Author, Candidate) and student cohorts.
+- **Curriculum**: [`modules_and_questions_seed.tsv`](../seed_data/modules_and_questions_seed.tsv) and [`modules_and_questions_seed.csv`](../seed_data/modules_and_questions_seed.csv) containing 3 modules, 7 subjects, and 42 questions with explanations.
+- **Direct SQL Seed**: [`showcase_seed.sql`](../seed_data/showcase_seed.sql) to instantly seed the database with users, modules, and 3 pre-configured certification exams.
+

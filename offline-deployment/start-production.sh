@@ -37,15 +37,22 @@ if [ ! -f ".env" ]; then
     cp .env.example .env
 fi
 
-# Read ports dynamically from .env
+# Read ports and replicas dynamically from .env
 APP_PORT=$(grep -E '^[[:space:]]*APP_PORT=' .env 2>/dev/null | cut -d'=' -f2 | tr -d ' "\r' || echo "80")
 if [ -z "$APP_PORT" ]; then APP_PORT="80"; fi
 APP_ALT_PORT=$(grep -E '^[[:space:]]*APP_ALT_PORT=' .env 2>/dev/null | cut -d'=' -f2 | tr -d ' "\r' || echo "8080")
 if [ -z "$APP_ALT_PORT" ]; then APP_ALT_PORT="8080"; fi
+APP_REPLICAS=$(grep -E '^[[:space:]]*APP_REPLICAS=' .env 2>/dev/null | cut -d'=' -f2 | tr -d ' "\r' || echo "1")
+if [ -z "$APP_REPLICAS" ]; then APP_REPLICAS="1"; fi
 
 # 4. Launch containers
-echo -e "${BLUE}[INFO] Starting production cluster on ports ${APP_PORT} and ${APP_ALT_PORT}...${NC}"
-docker compose up -d
+if [ "$APP_REPLICAS" -gt 1 ] 2>/dev/null; then
+    echo -e "${BLUE}[INFO] Starting production cluster with ${APP_REPLICAS} load-balanced app workers...${NC}"
+    docker compose up -d --scale app="${APP_REPLICAS}"
+else
+    echo -e "${BLUE}[INFO] Starting production cluster on ports ${APP_PORT} and ${APP_ALT_PORT}...${NC}"
+    docker compose up -d
+fi
 
 # 5. Wait for readiness
 echo -e "${BLUE}[INFO] Waiting for web service readiness on port ${APP_PORT}...${NC}"

@@ -9,6 +9,40 @@ echo ============================================================
 echo   Starting TCExam Development Server...
 echo ============================================================
 
+REM Check for subcommands
+if /i "%1"=="stop" (
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml down
+    echo TCExam development containers stopped.
+    exit /b 0
+)
+if /i "%1"=="down" (
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml down
+    echo TCExam development containers stopped.
+    exit /b 0
+)
+if /i "%1"=="restart" (
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml restart
+    echo TCExam development containers restarted.
+    exit /b 0
+)
+if /i "%1"=="status" (
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml ps
+    exit /b 0
+)
+if /i "%1"=="seed" (
+    echo Seeding showcase curriculum, users, and exams...
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml exec -T db mariadb -u root -proot_secret_pass tcexam < seed_data\showcase_seed.sql
+    echo Showcase seed complete!
+    exit /b 0
+)
+if /i "%1"=="scale" (
+    set REPL=%2
+    if "!REPL!"=="" set REPL=2
+    echo Scaling app workers to !REPL! replicas...
+    docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --scale app=!REPL!
+    exit /b 0
+)
+
 REM 1. Verify Docker is installed and running
 docker info >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (

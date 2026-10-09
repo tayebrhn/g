@@ -44,6 +44,7 @@ if not exist ".env" (
 REM Read ports dynamically from .env
 set APP_PORT=80
 set APP_ALT_PORT=8080
+set APP_REPLICAS=1
 for /f "usebackq tokens=1,2 delims==" %%A in (".env") do (
     set key=%%A
     set val=%%B
@@ -51,11 +52,17 @@ for /f "usebackq tokens=1,2 delims==" %%A in (".env") do (
     for /f "tokens=*" %%v in ("!val!") do set val=%%v
     if "!key!"=="APP_PORT" set APP_PORT=!val!
     if "!key!"=="APP_ALT_PORT" set APP_ALT_PORT=!val!
+    if "!key!"=="APP_REPLICAS" set APP_REPLICAS=!val!
 )
 
 REM 4. Launch containers
-echo [INFO] Starting TCExam production cluster on ports %APP_PORT% and %APP_ALT_PORT%...
-docker compose up -d
+if !APP_REPLICAS! GTR 1 (
+    echo [INFO] Starting TCExam production cluster on ports %APP_PORT% and %APP_ALT_PORT% with !APP_REPLICAS! load-balanced app workers...
+    docker compose up -d --scale app=!APP_REPLICAS!
+) else (
+    echo [INFO] Starting TCExam production cluster on ports %APP_PORT% and %APP_ALT_PORT%...
+    docker compose up -d
+)
 if %ERRORLEVEL% NEQ 0 (
     echo [ERROR] Failed to start TCExam services.
     pause

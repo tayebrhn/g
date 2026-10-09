@@ -31,9 +31,15 @@ The **offline production container deployment** is located in [`offline-deployme
    * **Alternative Port (Port 8080)**: `http://localhost:8080/public/code/index.php`
    * **Administrator Suite**: `http://localhost/admin/code/index.php` (User: `admin` | Password: `1234`)
    * **Exam Room Network (LAN)**: `http://<SERVER_IP>/public/code/index.php`
-4. Post-exam maintenance:
+4. Post-exam maintenance & cluster operations:
+   * **Restart Cluster**: Double-click `restart-production.bat` (or `./restart-production.sh`)
+   * **Cluster Status Dashboard**: Double-click `status-production.bat` (or `./status-production.sh`)
+   * **Horizontal Scaling (Load Balancing)**: Run `scale-production.bat 3` (or `./scale-production.sh 3`)
+   * **Seed Showcase Data**: Double-click `seed-database.bat` (or `./seed-database.sh`)
    * **Backup Database**: Double-click `backup-database.bat` (or `./backup-database.sh`)
+   * **Restore Database**: Double-click `restore-database.bat` (or `./restore-database.sh`)
    * **Stop Cluster**: Double-click `stop-production.bat` (or `./stop-production.sh`)
+   * **Maintainer Console**: Double-click `manage-production.bat` (or `./manage-production.sh`)
 
 ### Customizing Network Ports
 By default, the offline cluster listens simultaneously on both **Port 80** and **Port 8080**. If either port is occupied by another service on the offline server (e.g., IIS or another web service):

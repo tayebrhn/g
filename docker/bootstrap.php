@@ -119,8 +119,62 @@ if (!$check || $check->num_rows == 0) {
     }
     
     echo "==> TCExam database initialized successfully!\n";
+
+    $seedShowcase = strtolower((string)(getenv('SEED_SHOWCASE') ?: 'false'));
+    $seedResults = strtolower((string)(getenv('SEED_RESULTS') ?: 'false'));
+    $loadCurriculum = in_array($seedShowcase, ['true', '1', 'all', 'force'], true);
+    $loadResults = in_array($seedShowcase, ['all', 'results'], true) || in_array($seedResults, ['true', '1'], true);
+
+    if ($loadCurriculum) {
+        $showcaseFile = "$baseDir/seed_data/showcase_seed.sql";
+        if (file_exists($showcaseFile)) {
+            echo "==> SEED_SHOWCASE enabled: Loading showcase curriculum, users, and exams...\n";
+            $showcaseSql = file_get_contents($showcaseFile);
+            $mysqli->multi_query($showcaseSql);
+            while ($mysqli->more_results() && $mysqli->next_result()) { /* flush results */ }
+            echo "==> TCExam showcase seed data loaded successfully!\n";
+        }
+    }
+
+    if ($loadResults) {
+        $resultsFile = "$baseDir/seed_data/showcase_results_seed.sql";
+        if (file_exists($resultsFile)) {
+            echo "==> Loading simulated exam attempts and analytics data...\n";
+            $resultsSql = file_get_contents($resultsFile);
+            $mysqli->multi_query($resultsSql);
+            while ($mysqli->more_results() && $mysqli->next_result()) { /* flush results */ }
+            echo "==> TCExam simulated exam results loaded successfully!\n";
+        }
+    }
 } else {
     echo "==> Existing TCExam schema detected. Skipping auto-seeding.\n";
+
+    $seedShowcase = strtolower((string)(getenv('SEED_SHOWCASE') ?: 'false'));
+    $seedResults = strtolower((string)(getenv('SEED_RESULTS') ?: 'false'));
+    $loadCurriculum = in_array($seedShowcase, ['force', 'all'], true);
+    $loadResults = in_array($seedShowcase, ['all', 'results'], true) || in_array($seedResults, ['true', '1'], true);
+
+    if ($loadCurriculum) {
+        $showcaseFile = "$baseDir/seed_data/showcase_seed.sql";
+        if (file_exists($showcaseFile)) {
+            echo "==> Merging showcase curriculum, users, and exams...\n";
+            $showcaseSql = file_get_contents($showcaseFile);
+            $mysqli->multi_query($showcaseSql);
+            while ($mysqli->more_results() && $mysqli->next_result()) { /* flush results */ }
+            echo "==> TCExam showcase seed data merged successfully!\n";
+        }
+    }
+
+    if ($loadResults) {
+        $resultsFile = "$baseDir/seed_data/showcase_results_seed.sql";
+        if (file_exists($resultsFile)) {
+            echo "==> Merging simulated exam attempts and analytics data...\n";
+            $resultsSql = file_get_contents($resultsFile);
+            $mysqli->multi_query($resultsSql);
+            while ($mysqli->more_results() && $mysqli->next_result()) { /* flush results */ }
+            echo "==> TCExam simulated exam results merged successfully!\n";
+        }
+    }
 }
 
 $mysqli->close();

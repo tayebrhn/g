@@ -10,13 +10,18 @@ This package provides a **100% self-contained, air-gapped production deployment*
 |---|---|
 | `tcexam-offline-bundle.tar` | Pre-packaged Docker images (`tcexam-app:latest`, `nginx:alpine`, `mariadb:10.11`). No internet downloads or building needed. |
 | `docker-compose.yml` | Production container orchestration configured for high reliability and zero external dependencies. |
-| `nginx/default.conf` | Production reverse proxy, security filters, caching, and FastCGI timeouts. |
-| `.env.example` | Production environment defaults (ports 80 and 8080, security secrets). |
-| `start-production.bat` | **Windows 1-Click Launcher** (loads images, creates `.env`, starts cluster, verifies health). |
-| `start-production.sh` | **Linux 1-Click Launcher** (loads images, creates `.env`, starts cluster, verifies health). |
+| `nginx/default.conf` | Production reverse proxy, load balancer, FastCGI keepalive pooling, and automatic failover. |
+| `.env.example` | Production environment defaults (ports 80 and 8080, security secrets, replicas, seed toggle). |
+| `manage-production.bat` / `.sh` | **Interactive Maintainer Console** (unified menu for start, stop, restart, status, scale, seed, backup, restore). |
+| `start-production.bat` / `.sh` | **1-Click Cluster Launcher** (loads images, creates `.env`, scales workers, boots cluster, verifies health). |
+| `stop-production.bat` / `.sh` | **1-Click Cluster Stopper** (gracefully stops all services while preserving data). |
+| `restart-production.bat` / `.sh` | **1-Click Cluster Restarter** (recycles containers and verifies health probes). |
+| `status-production.bat` / `.sh` | **Live Status Dashboard** (probes container states, CPU/Memory stats, web liveness, and DB connectivity). |
+| `scale-production.bat` / `.sh` | **Horizontal Load Balancer** (scales PHP-FPM application worker replicas up or down dynamically). |
+| `seed-database.bat` / `.sh` | **1-Click Showcase Seeder** (populates rich demo users, modules, and 3 certification exams). |
+| `backup-database.bat` / `.sh` | **1-Click Backup Snapshot** (saves dated `.sql` snapshot into `backups/`). |
+| `restore-database.bat` / `.sh` | **1-Click Restore Utility** (restores snapshot with automatic pre-restore safety backup). |
 | `apply-patch.bat` / `.sh` | **1-Click Patch & Update Utility** (takes pre-patch backup, loads new image, recreates containers with zero data loss). |
-| `stop-production.bat` / `.sh` | Gracefully shuts down all services. |
-| `backup-database.bat` / `.sh` | 1-click snapshot of the exam database into a dated `.sql` backup file. |
 
 ---
 
@@ -142,4 +147,60 @@ Whenever a new version, bug fix, or security update is released:
 - Loads the updated container image into the local Docker engine.
 - Recreates the `app` and `web` containers using the new image (`docker compose up -d --force-recreate app web`).
 - **Data Safety**: All database tables, questions, user accounts, and test results reside in persistent named volumes (`db_data`) and remain **100% untouched and preserved**.
+
+---
+
+## 8. Horizontal Scaling & Load Balancing
+
+TCExam stores all user session data inside the database (`tce_sessions` table), meaning application containers are completely stateless. Under heavy candidate load (e.g., hundreds of candidates concurrently taking exams), you can scale out multiple PHP-FPM application worker replicas with zero downtime:
+
+### 1-Click Scaling:
+- **Windows:** Double-click `scale-production.bat` and type the desired number of replicas (e.g., `2`, `3`, or `4`).
+- **Linux:** Run `./scale-production.sh 3` (or run without arguments to be prompted).
+
+### How It Works:
+- Nginx automatically balances incoming HTTP requests across all running PHP-FPM replicas using round-robin DNS resolution.
+- FastCGI connections are pooled with keepalive connections for low latency.
+- Transparent failover (`fastcgi_next_upstream`) automatically routes requests to a healthy replica if any worker is restarting or busy.
+
+---
+
+## 9. Live Cluster Status & Monitoring
+
+To check server health, resource utilization, and connectivity probes:
+- **Windows:** Double-click `status-production.bat`
+- **Linux:** Run `./status-production.sh`
+
+The status dashboard displays:
+- Container service states (running, healthy, exited).
+- Real-time CPU and Memory utilization per container.
+- Web proxy liveness check (`/health.txt`).
+- Database SQL ping status.
+- Configured ports and direct access URLs.
+
+---
+
+## 10. Showcase Demo Seeding & Database Restoration
+
+### Populating Showcase Curriculum & Exams
+To demonstrate TCExam with rich sample data (21 user accounts, 3 modules, 7 subjects, 42 questions, and 3 ready-to-take certification exams):
+- **Windows:** Double-click `seed-database.bat`
+- **Linux:** Run `./seed-database.sh`
+- All showcase users are initialized with the default password: **`Password123!`**
+
+### Restoring from Backup
+If an exam session needs to be restored from an earlier snapshot:
+- **Windows:** Double-click `restore-database.bat`
+- **Linux:** Run `./restore-database.sh`
+- The script displays a numbered list of all `.sql` files in `backups/`, prompts for confirmation, automatically takes a safety snapshot of current data, and restores the selected backup.
+
+---
+
+## 11. Interactive Maintainer Console
+
+For convenience, maintainers can run a single unified control center:
+- **Windows:** Double-click `manage-production.bat`
+- **Linux:** Run `./manage-production.sh`
+
+Provides a numbered menu for all cluster actions (Start, Stop, Restart, Status, Scale, Seed, Backup, Restore, Logs, and Patch).
 
