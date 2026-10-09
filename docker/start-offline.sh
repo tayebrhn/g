@@ -12,7 +12,7 @@ fi
 
 if [ ! -f ".env" ]; then
     echo "Initializing environment from .env.example..."
-    cp .env.example .env
+    cp ../.env.example .env
 fi
 
 echo "Starting TCExam offline services..."

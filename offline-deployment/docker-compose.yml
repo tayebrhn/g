@@ -1,0 +1,71 @@
+# ============================================================
+# TCExam — Production Offline Docker Compose
+# ============================================================
+# Designed for 100% offline, air-gapped production deployment.
+# Requires NO internet connection, NO docker build, and NO pulls.
+# ============================================================
+
+name: tcexam
+
+services:
+  app:
+    image: tcexam-app:latest
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-tcexam}
+      DB_USER: ${DB_USER:-tcexam}
+      DB_PASSWORD: ${DB_PASSWORD:-tcexam_secret_pass}
+      APP_URL: ${APP_URL:-http://localhost}
+      RANDOM_SECURITY: ${RANDOM_SECURITY:-f8a7c29e1d5b4a3c6e80f2149b7d8e3c1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d}
+    volumes:
+      - cache_data:/var/www/html/cache
+      - backup_data:/var/www/html/admin/backup
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - tcexam-net
+
+  web:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "${APP_PORT:-80}:80"
+      - "${APP_ALT_PORT:-8080}:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - cache_data:/var/www/html/cache:ro
+    depends_on:
+      - app
+    networks:
+      - tcexam-net
+
+  db:
+    image: mariadb:10.11
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_secret_pass}
+      MYSQL_DATABASE: ${DB_NAME:-tcexam}
+      MYSQL_USER: ${DB_USER:-tcexam}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-tcexam_secret_pass}
+    volumes:
+      - db_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --innodb-flush-log-at-trx-commit=2
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - tcexam-net
+
+volumes:
+  db_data:
+  cache_data:
+  backup_data:
+
+networks:
+  tcexam-net:
+    driver: bridge

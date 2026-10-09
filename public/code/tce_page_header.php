@@ -37,8 +37,8 @@ echo '<div class="header">' . K_NEWLINE;
 echo '<div class="left"></div>' . K_NEWLINE;
 echo '<div class="headertitle">' . htmlspecialchars(K_SITE_TITLE, ENT_NOQUOTES, $l['a_meta_charset']) . '</div>' . K_NEWLINE;
 echo '<div class="right">' . K_NEWLINE;
-echo '<a id="timersection"></a>' . K_NEWLINE;
-include('../../shared/code/tce_page_timer.php');
+// echo '<a id="timersection"></a>' . K_NEWLINE;
+// include('../../shared/code/tce_page_timer.php');
 echo '</div>' . K_NEWLINE;
 echo '</div>' . K_NEWLINE;
 

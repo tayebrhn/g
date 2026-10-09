@@ -26,7 +26,8 @@ services:
     image: nginx:alpine
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-8080}:80"
+      - "${APP_PORT:-80}:80"
+      - "${APP_ALT_PORT:-8080}:80"
     volumes:
       - ./:/var/www/html:ro
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro

@@ -10,12 +10,15 @@
 	* Check also the documentation on http://www.tcexam.org
 * Source Documentation:
 	http://www.tcexam.org
-* User Guide & Manual:
-	[USER_GUIDE.md](USER_GUIDE.md)
-* Production Hosting & Deployment:
-	[PRODUCTION_HOSTING.md](PRODUCTION_HOSTING.md)
-* User Levels and Permissions:
-	PERMISSIONS.md
+* Documentation & Guides:
+	* [Developer Guide & 1-Command Setup](docs/DEVELOPMENT.md)
+	* [Production Hosting & Operations Manual](docs/PRODUCTION_HOSTING.md)
+	* [Production Deployment Guide (Offline & Windows Clusters)](docs/DEPLOYMENT.md)
+	* [User & Administrator Guide](docs/USER_GUIDE.md)
+	* [User Roles, Capabilities & Authorization](docs/PERMISSIONS.md)
+	* [Features & Architecture Overview](docs/FEATURES.md)
+	* [Data Import and Export Guide (XML/TSV)](docs/IMPORT_EXPORT.md)
+	* [Upgrade Guide](docs/UPGRADE.TXT) | [Changelog](docs/CHANGELOG.TXT)
 * Support - Help:
 	Please use support Issues at https://github.com/tecnickcom/tcexam
 * Software License:
@@ -35,13 +38,16 @@ cp .env.example .env
 # 2. Boot all services (Nginx, PHP 8.2-FPM, MariaDB 10.11)
 docker compose up -d
 
-# 3. Access the portals:
-# Candidate Portal:     http://localhost:8080/public/code/index.php
-# Administrator Suite:  http://localhost:8080/admin/code/index.php
-# Initial Login:        Username: admin | Password: 1234
+# 3. Access the portals (listening on both Port 80 and Port 8080):
+# Candidate Portal (Port 80):    http://localhost/public/code/index.php
+# Alternative Port (Port 8080):  http://localhost:8080/public/code/index.php
+# Administrator Suite:           http://localhost/admin/code/index.php
+# Initial Login:                 Username: admin | Password: 1234
 ```
 
 *The container automatically provisions configuration files, waits for the database, and self-seeds the schema and default administrative accounts.*
+
+> **Air-Gapped / Offline Production**: For exam centers without internet connectivity, use the pre-packaged standalone bundle in [`offline-deployment/`](offline-deployment/) with 1-click `start-production.bat` (Windows) and `start-production.sh` (Linux). See [`offline-deployment/README.md`](offline-deployment/README.md).
 
 
 [![Donate via PayPal](https://img.shields.io/badge/donate-paypal-87ceeb.svg)](https://www.paypal.com/donate/?hosted_button_id=NZUEC5XS8MFBJ)

@@ -203,6 +203,116 @@ assertCondition(
 );
 
 // -------------------------------------------------------------
+// Section 7: Development Profile & 1-Command Startup Assets
+// -------------------------------------------------------------
+$devAssets = [
+    'docker-compose.dev.yml',
+    'docker/php/php-dev.ini',
+    'dev.bat',
+    'dev.sh',
+    'dev.ps1',
+    'Makefile',
+    'docs/DEVELOPMENT.md',
+];
+foreach ($devAssets as $devAsset) {
+    $fullDevPath = $rootDir . '/' . $devAsset;
+    assertCondition(
+        file_exists($fullDevPath) && filesize($fullDevPath) > 20,
+        "Development asset '$devAsset' must exist and not be empty."
+    );
+}
+
+$composeDevContent = file_get_contents($rootDir . '/docker-compose.dev.yml');
+assertCondition(
+    strpos($composeDevContent, './:/var/www/html') !== false,
+    "docker-compose.dev.yml must mount host root directory into /var/www/html for hot reloading."
+);
+assertCondition(
+    strpos($composeDevContent, 'php-dev.ini') !== false,
+    "docker-compose.dev.yml must mount php-dev.ini override."
+);
+assertCondition(
+    strpos($composeDevContent, '3306') !== false,
+    "docker-compose.dev.yml must expose MariaDB port 3306 for external GUI tools."
+);
+
+$phpDevContent = file_get_contents($rootDir . '/docker/php/php-dev.ini');
+assertCondition(
+    strpos($phpDevContent, 'display_errors = On') !== false,
+    "php-dev.ini must enable display_errors for development."
+);
+assertCondition(
+    strpos($phpDevContent, 'error_reporting = E_ALL') !== false,
+    "php-dev.ini must set error_reporting to E_ALL."
+);
+assertCondition(
+    strpos($phpDevContent, 'revalidate_freq = 0') !== false,
+    "php-dev.ini must set opcache revalidation frequency to 0 for instant hot reloading."
+);
+
+$devBatContent = file_get_contents($rootDir . '/dev.bat');
+assertCondition(
+    strpos($devBatContent, 'docker compose') !== false &&
+    strpos($devBatContent, 'docker-compose.dev.yml') !== false,
+    "dev.bat must launch containers with development compose profile."
+);
+
+$devShContent = file_get_contents($rootDir . '/dev.sh');
+assertCondition(
+    strpos($devShContent, 'docker compose') !== false &&
+    strpos($devShContent, 'docker-compose.dev.yml') !== false,
+    "dev.sh must launch containers with development compose profile."
+);
+
+// -------------------------------------------------------------
+// Section 8: Standalone Offline Production Deployment Assets
+// -------------------------------------------------------------
+$offlineAssets = [
+    'docker/build-offline-bundle.ps1',
+    'docker/build-offline-bundle.sh',
+    'offline-deployment/docker-compose.yml',
+    'offline-deployment/nginx/default.conf',
+    'offline-deployment/.env.example',
+    'offline-deployment/start-production.bat',
+    'offline-deployment/start-production.sh',
+    'offline-deployment/apply-patch.bat',
+    'offline-deployment/apply-patch.sh',
+    'offline-deployment/stop-production.bat',
+    'offline-deployment/stop-production.sh',
+    'offline-deployment/backup-database.bat',
+    'offline-deployment/backup-database.sh',
+    'offline-deployment/README.md',
+    'offline-deployment/tcexam-offline-bundle.tar',
+];
+foreach ($offlineAssets as $asset) {
+    $fullAssetPath = $rootDir . '/' . $asset;
+    assertCondition(
+        file_exists($fullAssetPath) && filesize($fullAssetPath) > 20,
+        "Offline deployment asset '$asset' must exist and not be empty."
+    );
+}
+
+$offlineComposeContent = file_get_contents($rootDir . '/offline-deployment/docker-compose.yml');
+assertCondition(
+    strpos($offlineComposeContent, 'build:') === false,
+    "offline-deployment/docker-compose.yml must NOT contain 'build:' directive to ensure 100% offline deployment."
+);
+assertCondition(
+    strpos($offlineComposeContent, '"${APP_PORT:-80}:80"') !== false,
+    "offline-deployment/docker-compose.yml must map port 80 as default for production."
+);
+assertCondition(
+    strpos($offlineComposeContent, '"${APP_ALT_PORT:-8080}:80"') !== false,
+    "offline-deployment/docker-compose.yml must map port 8080 as alternative port."
+);
+
+$offlineStartBat = file_get_contents($rootDir . '/offline-deployment/start-production.bat');
+assertCondition(
+    strpos($offlineStartBat, 'tcexam-offline-bundle.tar') !== false,
+    "start-production.bat must reference offline tarball bundle."
+);
+
+// -------------------------------------------------------------
 // Summary
 // -------------------------------------------------------------
 echo "------------------------------------------------------------\n";

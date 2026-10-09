@@ -67,13 +67,20 @@ set_define_value("$baseDir/shared/config/tce_general_constants.php", 'K_RANDOM_S
 echo "==> Waiting for database connection at $dbHost:$dbPort...\n";
 $maxTries = 40;
 $connected = false;
+mysqli_report(MYSQLI_REPORT_OFF);
 
 for ($i = 1; $i <= $maxTries; $i++) {
-    $mysqli = @new mysqli($dbHost, $dbUser, $dbPassword, '', (int)$dbPort);
-    if (!$mysqli->connect_error) {
-        $connected = true;
-        $mysqli->close();
-        break;
+    try {
+        $mysqli = @new mysqli($dbHost, $dbUser, $dbPassword, '', (int)$dbPort);
+        if ($mysqli && !$mysqli->connect_error) {
+            $connected = true;
+            $mysqli->close();
+            break;
+        }
+        $err = $mysqli ? $mysqli->connect_error : mysqli_connect_error();
+        echo "==> [Attempt $i/$maxTries] Connection failed: $err\n";
+    } catch (Throwable $e) {
+        echo "==> [Attempt $i/$maxTries] Exception: " . $e->getMessage() . "\n";
     }
     sleep(2);
 }
@@ -86,9 +93,12 @@ if (!$connected) {
 echo "==> Database service is online and accepting connections.\n";
 
 // 4. Verify and initialize schema if empty
-$mysqli = new mysqli($dbHost, $dbUser, $dbPassword, '', (int)$dbPort);
-$mysqli->query("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-$mysqli->select_db($dbName);
+$mysqli = @new mysqli($dbHost, $dbUser, $dbPassword, $dbName, (int)$dbPort);
+if (!$mysqli || $mysqli->connect_error) {
+    $mysqli = @new mysqli($dbHost, $dbUser, $dbPassword, '', (int)$dbPort);
+    @$mysqli->query("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+    @$mysqli->select_db($dbName);
+}
 
 $check = $mysqli->query("SHOW TABLES LIKE 'tce_users'");
 if (!$check || $check->num_rows == 0) {

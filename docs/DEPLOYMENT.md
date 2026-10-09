@@ -1,6 +1,66 @@
 # TCExam — Production Installation and Deployment Guide
 
-This guide installs TCExam on Windows production servers using Nginx,
+TCExam provides two enterprise-grade production deployment models:
+
+| Deployment Model | Best Suited For | Operating System | Setup Complexity |
+|---|---|---|---|
+| **Track 1: Offline Containerized Cluster (Recommended)** | Dedicated exam rooms, air-gapped test centers, standalone servers, or rapid container deployments. | Windows, Linux, macOS (Docker) | **1-Click** (Zero internet or manual build required) |
+| **Track 2: Bare-Metal Windows Service Cluster** | Institutional Windows Server infrastructure requiring native Windows services, SMB shares, and zero-downtime rolling releases. | Windows Server 2019 / 2022 | Multi-step PowerShell automation (`deploy\`) |
+
+---
+
+# Track 1: Offline Air-Gapped Containerized Cluster (Recommended)
+
+The **offline production container deployment** is located in [`offline-deployment/`](offline-deployment/). It is 100% self-contained and pre-packaged for servers with **no internet access**, **no Docker Hub access**, and **no build dependencies**.
+
+### Key Architecture Features
+* **Zero Internet & Zero Build**: All 3 production images (`tcexam-app:latest`, `nginx:alpine`, `mariadb:10.11`) are pre-baked into `tcexam-offline-bundle.tar` (~404 MB).
+* **Simultaneous Port 80 & 8080**: Both standard HTTP port 80 and port 8080 are exposed simultaneously, preventing `ERR_CONNECTION_REFUSED` errors regardless of which URL users navigate to.
+* **Auto-Bootstrapping Database**: On initial launch, MariaDB 10.11 automatically provisions the complete database schema (`install/mysql_db_structure.sql`) and initial data (`install/db_data.sql`).
+* **LAN Exam Delivery**: Client computers across the exam room network connect directly to `http://<SERVER_IP>/public/code/index.php`.
+* **Automated Post-Exam Backups**: 1-click script dumps candidate submissions, answer sheets, and grades into timestamped `.sql` files.
+
+### 1-Click Deployment Instructions
+
+1. Copy the entire [`offline-deployment/`](offline-deployment/) folder to the target server (via USB drive or network share).
+2. Launch the cluster:
+   * **Windows Server / Exam Laptop**: Double-click `start-production.bat`
+   * **Linux Server (Ubuntu / Debian / RHEL)**: Run `./start-production.sh`
+3. Access the portals:
+   * **Candidate Portal (Port 80)**: `http://localhost/public/code/index.php`
+   * **Alternative Port (Port 8080)**: `http://localhost:8080/public/code/index.php`
+   * **Administrator Suite**: `http://localhost/admin/code/index.php` (User: `admin` | Password: `1234`)
+   * **Exam Room Network (LAN)**: `http://<SERVER_IP>/public/code/index.php`
+4. Post-exam maintenance:
+   * **Backup Database**: Double-click `backup-database.bat` (or `./backup-database.sh`)
+   * **Stop Cluster**: Double-click `stop-production.bat` (or `./stop-production.sh`)
+
+### Customizing Network Ports
+By default, the offline cluster listens simultaneously on both **Port 80** and **Port 8080**. If either port is occupied by another service on the offline server (e.g., IIS or another web service):
+1. Open `offline-deployment/.env`.
+2. Change `APP_PORT` or `APP_ALT_PORT`:
+   ```dotenv
+   APP_PORT=8888
+   APP_ALT_PORT=9090
+   ```
+3. Restart via `start-production.bat` (or `./start-production.sh`). The launchers dynamically detect the change and display the new URLs.
+
+### Applying Code Updates & Security Patches Offline
+Whenever you update code or fix bugs on your development workstation:
+1. **Build & Package**: Run `.\docker\build-offline-bundle.ps1` (or `./docker/build-offline-bundle.sh` on Linux / `make offline-bundle`).
+2. **Transfer**: Copy the updated `offline-deployment/tcexam-offline-bundle.tar` to the target server.
+3. **Apply**: On the offline server, double-click `apply-patch.bat` (or `./apply-patch.sh`).
+   * Automatically creates a pre-patch database backup.
+   * Recreates the application container with the new image.
+   * **100% of candidate test sessions, questions, and grading data are preserved** in persistent volumes.
+
+For complete details on the offline containerized setup, see [`offline-deployment/README.md`](../offline-deployment/README.md).
+
+---
+
+# Track 2: Bare-Metal Windows Service Cluster (NSSM & PHP-CGI)
+
+This track installs TCExam on Windows production servers using Nginx,
 `php-cgi.exe` (the Windows FastCGI process model — PHP-FPM is Unix-only),
 NSSM-managed Windows services and, for high availability, an Nginx load
 balancer in front of two or more application nodes.
@@ -19,7 +79,7 @@ Everything is automated by the scripts in `deploy\`:
 | `deploy\php\php-production.ini` | PHP production overrides |
 | `health.txt` | static liveness file used by the load balancer health checks |
 
-## 1. Topology
+## 1. Topology (Track 2)
 
 ```
                        Internet

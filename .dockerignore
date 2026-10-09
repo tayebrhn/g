@@ -12,3 +12,6 @@ test/
 cache/backup/*
 cache/tmp/*
 admin/backup/*
+docs/
+offline-deployment/
+*.tar
