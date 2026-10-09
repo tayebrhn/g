@@ -482,7 +482,7 @@ On an offline server:
 * `docker pull` will fail because Docker Hub is unreachable.
 * `docker compose build` will fail because Alpine cannot reach package mirrors to run `apk add`.
 
-To solve this, TCExam provides a self-contained distribution folder: [`offline-deployment/`](offline-deployment/).
+To solve this, TCExam provides a self-contained distribution folder: [`offline-deployment/`](../offline-deployment/).
 
 ```
 offline-deployment/
@@ -501,7 +501,7 @@ offline-deployment/
 #### Step-by-Step Offline Server Setup:
 
 1. **Transfer the Package**:
-   Copy the [`offline-deployment/`](offline-deployment/) folder to the offline server via USB flash drive or local LAN share.
+   Copy the [`offline-deployment/`](../offline-deployment/) folder to the offline server via USB flash drive or local LAN share.
 
 2. **Launch the Production Cluster**:
    - **Windows Server / Exam Laptop**: Double-click `start-production.bat`
@@ -651,7 +651,7 @@ Nginx automatically discovers all active `app` container IPs and distributes inc
 
 ## 5. Windows Server Production Setup (Bare-Metal)
 
-If hosting on **Windows Server (2019/2022)**, TCExam provides automated deployment automation in the [`deploy/`](file:///C:/Apache24/htdocs/tcexam/deploy/) directory:
+If hosting on **Windows Server (2019/2022)**, TCExam provides automated deployment automation in the [`deploy/`](../deploy/) directory:
 
 1. **Install Prerequisites**:
    - PHP 8.x NTS x64 extracted to `C:\php`.
@@ -667,7 +667,7 @@ If hosting on **Windows Server (2019/2022)**, TCExam provides automated deployme
        -DbUser tcexam -DbPassword 'StrongPass123!' `
        -SslCert C:\tls\fullchain.pem -SslKey C:\tls\privkey.pem
    ```
-3. *For multi-node clustering and junction-based zero-downtime rolling releases, refer to the full Windows automation guide in [`DEPLOYMENT.md`](file:///C:/Apache24/htdocs/tcexam/DEPLOYMENT.md).*
+3. *For multi-node clustering and junction-based zero-downtime rolling releases, refer to the full Windows automation guide in [`DEPLOYMENT.md`](DEPLOYMENT.md).*
 
 ---
 

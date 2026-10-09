@@ -60,10 +60,10 @@ Tests (Exams configured for delivery)
 * **Candidate Portal (`/public/code/`)**: Clean, accessible portal where candidates log in, launch assigned tests, navigate questions with real-time saving, monitor timers, and review completed exam transcripts.
 * **Administrative Portal (`/admin/code/`)**: Back-office suite where content creators author questions, examiners build tests, instructors grade free-text answers, and administrators manage users and view organization-wide reports.
 
-![Candidate Portal Interface](images/screenshots/candidate_portal.png)
+![Candidate Portal Interface](../images/screenshots/candidate_portal.png)
 *Figure 1: Candidate Portal dashboard displaying active exams, test history, and status.*
 
-![Administrative Portal Dashboard](images/screenshots/admin_dashboard.png)
+![Administrative Portal Dashboard](../images/screenshots/admin_dashboard.png)
 *Figure 2: Administrative Back-Office dashboard with quick access to modules, tests, ratings, and user management.*
 
 ---
@@ -90,7 +90,7 @@ TCExam features a **two-tier authorization model**:
 ### Smart Auto-Sync in User Management
 When editing an account in **Users > User Editor** (`tce_edit_user.php`), selecting a **Level** automatically checks the recommended capability checkboxes for that role. You can also click **[apply level preset]** to restore default capability bits at any time.
 
-![User Management and Capabilities](images/screenshots/user_editor.png)
+![User Management and Capabilities](../images/screenshots/user_editor.png)
 *Figure 3: User Editor interface displaying vertical user levels, the auto-sync preset trigger, and inline capability tooltips/descriptions.*
 
 ---
@@ -157,7 +157,7 @@ Let's author a question in the topic *"Relational Databases"*:
    ```
 7. Click **Add**. Note the generated Question ID.
 
-![Question Editor Interface](images/screenshots/question_editor.png)
+![Question Editor Interface](../images/screenshots/question_editor.png)
 *Figure 4: Question Editor featuring the TCEcode rich-text formatting bar, difficulty rating, and question type selector.*
 
 #### 2. Add Answers
@@ -205,7 +205,7 @@ Navigate to **Tests > Tests** (`admin/code/tce_edit_test.php`) to configure an e
   - **IP Range Lock**: Restricts exam access to laboratory subnets (e.g. `192.168.1.0/24`).
   - **Password**: Requires an exam-hall proctor passcode to begin.
 
-![Test Configuration Screen](images/screenshots/test_editor.png)
+![Test Configuration Screen](../images/screenshots/test_editor.png)
 *Figure 5: Test configuration interface with timing parameters, scoring rules, and security options.*
 
 ---
@@ -214,7 +214,7 @@ Navigate to **Tests > Tests** (`admin/code/tce_edit_test.php`) to configure an e
 
 Under the test configuration form, the **Question Subsets** manager allows you to construct exam blueprints:
 
-![Test Subsets Manager](images/screenshots/test_editor_subsets.png)
+![Test Subsets Manager](../images/screenshots/test_editor_subsets.png)
 *Figure 6: Dynamic Subsets Manager with module filter, live availability indicator, [use all available] button, and the structured Subsets Summary Table.*
 
 #### Features of the Subsets Manager:
@@ -265,7 +265,7 @@ The test is now active, authorized for the assigned group, and ready for candida
 ### Candidate Portal Overview
 Candidates access their portal at `/public/code/index.php`.
 
-![Candidate Login Portal](images/screenshots/candidate_login.png)
+![Candidate Login Portal](../images/screenshots/candidate_login.png)
 *Figure 7: Secure Candidate Login portal.*
 
 After logging in, the home screen displays all active exams for which they are authorized.
@@ -276,7 +276,7 @@ Clicking **Execute** opens the exam launchpad (`tce_test_start.php`), which prov
 - Scoring rules (points for right, penalties for wrong).
 - Pass percentage threshold.
 
-![Candidate Exam Launchpad](images/screenshots/candidate_test_start.png)
+![Candidate Exam Launchpad](../images/screenshots/candidate_test_start.png)
 *Figure 8: Exam Launchpad detailing test duration, question counts, and scoring rubric before commencement.*
 
 Clicking **Start Test** begins the assessment.
@@ -308,7 +308,7 @@ The test-taking screen (`tce_test_execute.php`) is built for focus, speed, and r
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-![Candidate Interactive Exam Interface](images/screenshots/candidate_exam_screen.png)
+![Candidate Interactive Exam Interface](../images/screenshots/candidate_exam_screen.png)
 *Figure 9: Live assessment interface featuring sticky header with progress indicator, countdown timer, high-contrast letter badges (`[ A ]`, `[ B ]`), selection clearing link, and Question Palette.*
 
 #### Key Capabilities:
@@ -380,7 +380,7 @@ Instructors grade subjective responses in **Tests > Rating** (`admin/code/tce_ed
 5. Enter instructor feedback in the **Comment** field (optional).
 6. Click **Update**. The candidate's final exam total is automatically recalculated.
 
-![Rating and Essay Grading Editor](images/screenshots/rating_editor.png)
+![Rating and Essay Grading Editor](../images/screenshots/rating_editor.png)
 *Figure 10: Subjective evaluation interface for scoring free-text essays against rubric criteria.*
 
 ---
@@ -407,7 +407,7 @@ If `test_results_to_users` is enabled in test settings:
    - Per-question breakdown (with letter badges `[ A ]`, `[ B ]` matching the exam screen).
 3. Candidates can revisit past exams at any time via **All Results** (`public/code/tce_test_allresults.php`), featuring score progression charts and downloadable PDF transcripts.
 
-![Candidate Results History](images/screenshots/candidate_all_results.png)
+![Candidate Results History](../images/screenshots/candidate_all_results.png)
 *Figure 11: Candidate results history showing completed exam records, aggregate performance metrics, and official PDF transcript exports.*
 
 ---

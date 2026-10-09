@@ -75,7 +75,7 @@ The root codebase is mounted directly into both the Nginx web container (`web`) 
 - No container rebuilding (`docker compose build`) is required during development.
 
 ### 🐛 Verbose Error Reporting
-Development settings are loaded from [`docker/php/php-dev.ini`](file:///C:/Apache24/htdocs/tcexam/docker/php/php-dev.ini):
+Development settings are loaded from [`docker/php/php-dev.ini`](../docker/php/php-dev.ini):
 - `display_errors = On`
 - `display_startup_errors = On`
 - `error_reporting = E_ALL`
@@ -87,7 +87,7 @@ Development settings are loaded from [`docker/php/php-dev.ini`](file:///C:/Apach
 - PHP code caches are revalidated on every HTTP request so changes appear instantly without restarting PHP-FPM.
 
 ### 🧬 Automated Database Seeding
-On initial launch with an empty database volume, [`docker/bootstrap.php`](file:///C:/Apache24/htdocs/tcexam/docker/bootstrap.php) automatically imports:
+On initial launch with an empty database volume, [`docker/bootstrap.php`](../docker/bootstrap.php) automatically imports:
 1. `install/mysql_db_structure.sql` (Tables, views, foreign keys)
 2. `install/db_data.sql` (Default administrative account, test groups, levels)
 

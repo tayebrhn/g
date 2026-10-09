@@ -11,7 +11,7 @@ TCExam provides two enterprise-grade production deployment models:
 
 # Track 1: Offline Air-Gapped Containerized Cluster (Recommended)
 
-The **offline production container deployment** is located in [`offline-deployment/`](offline-deployment/). It is 100% self-contained and pre-packaged for servers with **no internet access**, **no Docker Hub access**, and **no build dependencies**.
+The **offline production container deployment** is located in [`offline-deployment/`](../offline-deployment/). It is 100% self-contained and pre-packaged for servers with **no internet access**, **no Docker Hub access**, and **no build dependencies**.
 
 ### Key Architecture Features
 * **Zero Internet & Zero Build**: All 3 production images (`tcexam-app:latest`, `nginx:alpine`, `mariadb:10.11`) are pre-baked into `tcexam-offline-bundle.tar` (~404 MB).
@@ -22,7 +22,7 @@ The **offline production container deployment** is located in [`offline-deployme
 
 ### 1-Click Deployment Instructions
 
-1. Copy the entire [`offline-deployment/`](offline-deployment/) folder to the target server (via USB drive or network share).
+1. Copy the entire [`offline-deployment/`](../offline-deployment/) folder to the target server (via USB drive or network share).
 2. Launch the cluster:
    * **Windows Server / Exam Laptop**: Double-click `start-production.bat`
    * **Linux Server (Ubuntu / Debian / RHEL)**: Run `./start-production.sh`
