@@ -36,7 +36,6 @@ $thispage_title = $l['t_subjects_editor'];
 require_once('../code/tce_page_header.php');
 require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
-require_once('../code/tce_functions_tcecode_editor.php');
 require_once('../../shared/code/tce_functions_auth_sql.php');
 
 // upload multimedia files
@@ -320,7 +319,6 @@ if ($subject_module_id <= 0) {
     exit;
 }
 
-echo '<script src="' . K_PATH_SHARED_JSCRIPTS . 'inserttag.js" type="text/javascript"></script>' . K_NEWLINE;
 if (K_ENABLE_VIRTUAL_KEYBOARD) {
     echo '<script src="' . K_PATH_SHARED_JSCRIPTS . 'vk/vk_easy.js?vk_skin=default" type="text/javascript"></script>' . K_NEWLINE;
 }
@@ -421,24 +419,7 @@ echo '<div class="row"><hr /></div>' . K_NEWLINE;
 
 echo getFormRowTextInput('subject_name', $l['w_name'], $l['h_subject_name'], '', $subject_name, '', 255, false, false, false, '');
 
-echo '<div class="row">' . K_NEWLINE;
-echo '<span class="label">' . K_NEWLINE;
-echo '<label for="subject_description">' . $l['w_description'] . '</label>' . K_NEWLINE;
-echo '<br />' . K_NEWLINE;
-echo '<a href="#" title="' . $l['h_preview'] . '" class="xmlbutton" onclick="previewWindow=window.open(\'tce_preview_tcecode.php?tcexamcode=\'+encodeURIComponent(document.getElementById(\'form_subjecteditor\').subject_description.value),\'previewWindow\',\'dependent,height=500,width=500,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\'); return false;">' . $l['w_preview'] . '</a>' . K_NEWLINE;
-
-echo '</span>' . K_NEWLINE;
-echo '<span class="formw" style="border:1px solid #808080;">' . K_NEWLINE;
-echo '<textarea cols="50" rows="5" name="subject_description" id="subject_description" onselect="FJ_update_selection(document.getElementById(\'form_subjecteditor\').subject_description)" title="' . $l['h_subject_description'] . '"';
-if (K_ENABLE_VIRTUAL_KEYBOARD) {
-    echo ' class="keyboardInput"';
-}
-
-echo '>' . htmlspecialchars($subject_description, ENT_NOQUOTES, $l['a_meta_charset']) . '</textarea>' . K_NEWLINE;
-echo '<br />' . K_NEWLINE;
-echo tcecodeEditorTagButtons('form_subjecteditor', 'subject_description');
-echo '</span>' . K_NEWLINE;
-echo '</div>' . K_NEWLINE;
+echo getFormRowTextBox('subject_description', $l['w_description'], $l['h_subject_description'], $subject_description, false, '', 5);
 
 echo getFormRowCheckBox('subject_enabled', $l['w_enabled'], $l['h_enabled'], '', 1, $subject_enabled, false, '');
 

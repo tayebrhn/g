@@ -39,7 +39,6 @@ $thispage_title = $l['t_questions_editor'];
 require_once('../code/tce_page_header.php');
 require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_tcecode.php');
-require_once('../code/tce_functions_tcecode_editor.php');
 require_once('../../shared/code/tce_functions_auth_sql.php');
 
 // upload multimedia files
@@ -607,7 +606,6 @@ if ($subject_module_id <= 0 || $question_subject_id <= 0) {
     exit;
 }
 
-echo '<script src="' . K_PATH_SHARED_JSCRIPTS . 'inserttag.js" type="text/javascript"></script>' . K_NEWLINE;
 if (K_ENABLE_VIRTUAL_KEYBOARD) {
     echo '<script src="' . K_PATH_SHARED_JSCRIPTS . 'vk/vk_easy.js?vk_skin=default" type="text/javascript"></script>' . K_NEWLINE;
 }
@@ -753,24 +751,7 @@ echo getFormNoscriptSelect('selectrecord');
 
 echo '<div class="row"><hr /></div>' . K_NEWLINE;
 
-echo '<div class="row">' . K_NEWLINE;
-echo '<span class="label">' . K_NEWLINE;
-echo '<label for="question_description">' . $l['w_question'] . '</label>' . K_NEWLINE;
-echo '<br />' . K_NEWLINE;
-echo '<a href="#" title="' . $l['h_preview'] . '" class="xmlbutton" onclick="previewWindow=window.open(\'tce_preview_tcecode.php?tcexamcode=\'+encodeURIComponent(document.getElementById(\'form_questioneditor\').question_description.value),\'previewWindow\',\'dependent,height=500,width=500,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\'); return false;">' . $l['w_preview'] . '</a>' . K_NEWLINE;
-
-echo '</span>' . K_NEWLINE;
-echo '<span class="formw" style="border:1px solid #808080;">' . K_NEWLINE;
-echo '<textarea cols="50" rows="10" name="question_description" id="question_description" onselect="FJ_update_selection(document.getElementById(\'form_questioneditor\').question_description)" title="' . $l['h_question_description'] . '"';
-if (K_ENABLE_VIRTUAL_KEYBOARD) {
-    echo ' class="keyboardInput"';
-}
-
-echo '>' . htmlspecialchars($question_description, ENT_NOQUOTES, $l['a_meta_charset']) . '</textarea>' . K_NEWLINE;
-echo '<br />' . K_NEWLINE;
-echo tcecodeEditorTagButtons('form_questioneditor', 'question_description');
-echo '</span>' . K_NEWLINE;
-echo '</div>' . K_NEWLINE;
+echo getFormRowTextBox('question_description', $l['w_question'], $l['h_question_description'], $question_description, false, '', 10);
 
 if (K_ENABLE_QUESTION_EXPLANATION) {
     echo '<div class="row">' . K_NEWLINE;
@@ -781,19 +762,16 @@ if (K_ENABLE_QUESTION_EXPLANATION) {
     echo '<span id="showexplanationarea"><a class="xmlbutton" href="#" onclick="' . $showexplanationarea . '" title="' . $l['w_show'] . '">' . $l['w_show'] . ' &rarr;</a></span>';
     $hideexplanationarea = "javascript:if(document.getElementById('explanationarea').style.display=='block'){document.getElementById('explanationarea').style.display='none';document.getElementById('showexplanationarea').style.display='block';document.getElementById('hideexplanationarea').style.display='none';}; return false;";
     echo '<span id="hideexplanationarea" style="display:none;">';
-    echo '<a href="#" title="' . $l['h_preview'] . '" class="xmlbutton" onclick="previewWindow=window.open(\'tce_preview_tcecode.php?tcexamcode=\'+encodeURIComponent(document.getElementById(\'form_questioneditor\').question_explanation.value),\'previewWindow\',\'dependent,height=500,width=500,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no\'); return false;">' . $l['w_preview'] . '</a>' . K_NEWLINE;
     echo '<a class="xmlbutton" href="#" onclick="' . $hideexplanationarea . '" title="' . $l['w_hide'] . '">' . $l['w_hide'] . '</a> ';
     echo '</span>';
     echo '</span>' . K_NEWLINE;
-    echo '<span id="explanationarea" class="formw" style="display:none;border:1px solid #808080;">' . K_NEWLINE;
-    echo '<textarea cols="50" rows="10" name="question_explanation" id="question_explanation" onselect="FJ_update_selection(document.getElementById(\'form_questioneditor\').question_explanation)" title="' . $l['h_explanation'] . '"';
+    echo '<span id="explanationarea" class="formw" style="display:none;">' . K_NEWLINE;
+    echo '<textarea cols="50" rows="10" name="question_explanation" id="question_explanation" title="' . $l['h_explanation'] . '"';
     if (K_ENABLE_VIRTUAL_KEYBOARD) {
         echo ' class="keyboardInput"';
     }
 
     echo '>' . htmlspecialchars($question_explanation, ENT_NOQUOTES, $l['a_meta_charset']) . '</textarea>' . K_NEWLINE;
-    echo '<br />' . K_NEWLINE;
-    echo tcecodeEditorTagButtons('form_questioneditor', 'question_explanation');
     echo '</span>' . K_NEWLINE;
     echo '</div>' . K_NEWLINE;
 }

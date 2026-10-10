@@ -340,13 +340,21 @@ function getFormRowTextInput($field_name, $name, $description = '', $tip = '', $
  * @param $prefix (string) code to be displayed after label.
  * @return string
  */
-function getFormRowTextBox($field_name, $name, $description = '', $value = '', $disabled = false, $prefix = '')
+function getFormRowTextBox($field_name, $name, $description = '', $value = '', $disabled = false, $prefix = '', $rows = 5, $cols = 50)
 {
-    require_once(__DIR__ . '/../config/tce_config.php');
+    if (!defined('K_NEWLINE')) {
+        @require_once(__DIR__ . '/../config/tce_config.php');
+        if (!defined('K_NEWLINE')) {
+            define('K_NEWLINE', PHP_EOL);
+        }
+    }
     global $l;
     if (strlen($description) == 0) {
         $description = $name;
     }
+
+    $rows = (int) ($rows > 0 ? $rows : 5);
+    $cols = (int) ($cols > 0 ? $cols : 50);
 
     $str = ''; // string to return
     $str .= '<div class="row">' . K_NEWLINE;
@@ -358,7 +366,7 @@ function getFormRowTextBox($field_name, $name, $description = '', $value = '', $
 
     $str .= '</span>' . K_NEWLINE;
     $str .= '<span class="formw">' . K_NEWLINE;
-    $str .= '<textarea cols="50" rows="5" name="' . $field_name . '" id="' . $field_name . '" title="' . $description . '"';
+    $str .= '<textarea cols="' . $cols . '" rows="' . $rows . '" name="' . $field_name . '" id="' . $field_name . '" title="' . $description . '"';
     if ($disabled) {
         $str .= ' readonly="readonly" class="disabled"';
     }

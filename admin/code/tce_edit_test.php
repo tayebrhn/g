@@ -38,7 +38,6 @@ $enable_calendar = true;
 require_once "tce_page_header.php";
 require_once "../../shared/code/tce_functions_form.php";
 require_once "../../shared/code/tce_functions_tcecode.php";
-require_once "tce_functions_tcecode_editor.php";
 require_once "../../shared/code/tce_functions_auth_sql.php";
 require_once "tce_functions_user_select.php";
 require_once "tce_functions_test_select.php";
