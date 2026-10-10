@@ -83,16 +83,19 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
             $reaction_time = (int) $_REQUEST['reaction_time'];
         }
 
-        if (! empty($_REQUEST['forceterminate']) && F_isRightTestlogUser($test_id, $testlog_id)) {
-            if ($_REQUEST['forceterminate'] == 'lasttimedquestion') {
-                // update last question
+        $is_timeout_finish = (isset($_REQUEST['finish']) && $_REQUEST['finish'] > 0);
+        $is_force_terminate = ! empty($_REQUEST['forceterminate']);
+
+        if ($is_force_terminate || $is_timeout_finish) {
+            if ($testlog_id > 0 && F_isRightTestlogUser($test_id, $testlog_id)) {
+                // update current question answers before locking
                 F_updateQuestionLog($test_id, $testlog_id, $answpos, $answer_text, $reaction_time);
             }
 
             // terminate the test (lock the test to status=4)
             F_terminateUserTest($test_id);
             $testdata = F_getTestData($test_id);
-            $target_url = F_getBoolean($testdata['test_results_to_users']) ? ('tce_test_results.php?testid=' . $test_id) : 'index.php';
+            $target_url = F_getBoolean($testdata['test_results_to_users']) ? ('tce_test_results.php?testid=' . $test_id) : ('tce_test_finished.php?testid=' . $test_id);
             // redirect the user
             header('Location: ' . $target_url);
             echo '<?xml version="1.0" encoding="' . $l['a_meta_charset'] . '"?' . '>' . K_NEWLINE;
@@ -487,7 +490,7 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
                 if (!tf) return;
                 var inp = document.createElement('input');
                 inp.type = 'hidden';
-                inp.name = 'terminatetest';
+                inp.name = 'forceterminate';
                 inp.value = '1';
                 tf.appendChild(inp);
                 tf.submit();
@@ -548,17 +551,32 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
             echo '</script>' . K_NEWLINE;
         }
     } else {
-        // redirect the user to the index page
-        header('Location: index.php');
+        // check if user has already completed this test
+        $user_id = (int) $_SESSION['session_user_id'];
+        $sqltu = 'SELECT testuser_id, testuser_status FROM ' . K_TABLE_TEST_USER . '
+            WHERE testuser_test_id=' . (int) $test_id . ' AND testuser_user_id=' . $user_id . '
+            ORDER BY testuser_id DESC LIMIT 1';
+        $redirect_target = 'index.php';
+        if ($rtu = F_db_query($sqltu, $db)) {
+            if ($mtu = F_db_fetch_array($rtu)) {
+                if ((int) $mtu['testuser_status'] >= 4) {
+                    $testdata = F_getTestData($test_id);
+                    $redirect_target = F_getBoolean($testdata['test_results_to_users'])
+                        ? ('tce_test_results.php?testid=' . (int) $test_id)
+                        : ('tce_test_finished.php?testid=' . (int) $test_id);
+                }
+            }
+        }
+        header('Location: ' . $redirect_target);
         echo '<?xml version="1.0" encoding="' . $l['a_meta_charset'] . '"?' . '>' . K_NEWLINE;
         echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . K_NEWLINE;
         echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="' . $l['a_meta_language'] . '" lang="' . $l['a_meta_language'] . '" dir="' . $l['a_meta_dir'] . '">' . K_NEWLINE;
         echo '<head>' . K_NEWLINE;
         echo '<title>REDIRECT</title>' . K_NEWLINE;
-        echo '<meta http-equiv="refresh" content="0;url=index.php" />' . K_NEWLINE; //reload page
+        echo '<meta http-equiv="refresh" content="0;url=' . htmlspecialchars($redirect_target, ENT_QUOTES, $l['a_meta_charset']) . '" />' . K_NEWLINE;
         echo '</head>' . K_NEWLINE;
         echo '<body>' . K_NEWLINE;
-        echo '<a href="index.php">INDEX...</a>' . K_NEWLINE;
+        echo '<a href="' . htmlspecialchars($redirect_target, ENT_QUOTES, $l['a_meta_charset']) . '">CONTINUE...</a>' . K_NEWLINE;
         echo '</body>' . K_NEWLINE;
         echo '</html>' . K_NEWLINE;
         exit;

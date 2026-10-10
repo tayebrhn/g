@@ -44,19 +44,26 @@ function FJ_timer() {
 		var tf = document.getElementById('testform');
 		if (tf && tf.finish && (diff_seconds >= -2) && (tf.finish.value == 0)) {
 			tf.finish.value = 1;
+			var inpForce = document.createElement('input');
+			inpForce.type = 'hidden';
+			inpForce.name = 'forceterminate';
+			inpForce.value = '1';
+			tf.appendChild(inpForce);
 			tf.submit();
 		}
 		if (diff_seconds >= 0) {
 			sign = '+';
 			if (displayendtime && (msg_endtime.length > 1)) {
 				displayendtime = false;
-				alert(msg_endtime);
-				if (timeout_logout) {
-					// logout
-					window.location.replace('tce_logout.php');
-				} else {
-					// redirect user to index page
-					window.location.replace('index.php');
+				if (!tf || !tf.finish || tf.finish.value == 0) {
+					alert(msg_endtime);
+					if (timeout_logout) {
+						// logout
+						window.location.replace('tce_logout.php');
+					} else {
+						// redirect user to index page
+						window.location.replace('index.php');
+					}
 				}
 			}
 		}
