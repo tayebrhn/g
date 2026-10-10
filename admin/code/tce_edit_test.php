@@ -104,10 +104,9 @@ if (
 }
 
 if (
-    !isset($_REQUEST["tsubset_answers"]) ||
-    empty($_REQUEST["tsubset_answers"])
+    !isset($_REQUEST["tsubset_answers"])
 ) {
-    $tsubset_answers = 2;
+    $tsubset_answers = 0;
 } else {
     $tsubset_answers = (int) $_REQUEST["tsubset_answers"];
 }
@@ -477,7 +476,7 @@ switch ($menu_mode) {
                 $tsubset_type = 0;
                 $tsubset_difficulty = 1;
                 $tsubset_quantity = 1;
-                $tsubset_answers = 2;
+                $tsubset_answers = 0;
                 break;
             }
             $_SESSION["last_subset_token"] = $_POST["subset_token"];
@@ -489,12 +488,9 @@ switch ($menu_mode) {
                 !empty($subject_id) &&
                 isset($tsubset_quantity))
         ) {
-            if ($tsubset_type == 3) {
-                // free-text questions do not have alternative answers to display
+            if ($tsubset_type == 3 || !isset($_REQUEST["tsubset_answers"]) || empty($_REQUEST["tsubset_answers"])) {
+                // free-text or default: 0 alternative answers limit (display all authored answers)
                 $tsubset_answers = 0;
-            } elseif ($tsubset_answers < 2 && $tsubset_difficulty > 0) {
-                // questions must have at least 2 alternative answers
-                $tsubset_answers = 2;
             }
 
             // create a comma separated list of subjects IDs
@@ -703,7 +699,7 @@ switch ($menu_mode) {
                     $tsubset_type = 0;
                     $tsubset_difficulty = 1;
                     $tsubset_quantity = 1;
-                    $tsubset_answers = 2;
+                    $tsubset_answers = 0;
                     unset($_POST['addquestion'], $_REQUEST['addquestion']);
                     unset($_POST['subject_id'], $_REQUEST['subject_id']);
                     unset($_POST['tsubset_quantity'], $_REQUEST['tsubset_quantity']);
@@ -1687,30 +1683,8 @@ echo getFormRowTextInput(
     false,
     false,
 );
-echo getFormRowTextInput(
-    "test_score_wrong",
-    $l["w_score_wrong"],
-    $l["h_score_wrong"],
-    "",
-    $test_score_wrong,
-    '^([0-9\+\-]*)([\.]?)([0-9]*)$',
-    20,
-    false,
-    false,
-    false,
-);
-echo getFormRowTextInput(
-    "test_score_unanswered",
-    $l["w_score_unanswered"],
-    $l["h_score_unanswered"],
-    "",
-    $test_score_unanswered,
-    '^([0-9\+\-]*)([\.]?)([0-9]*)$',
-    20,
-    false,
-    false,
-    false,
-);
+echo '<input type="hidden" name="test_score_wrong" id="test_score_wrong" value="' . htmlspecialchars((string) ($test_score_wrong ?? 0), ENT_COMPAT, $l["a_meta_charset"]) . '" />' . K_NEWLINE;
+echo '<input type="hidden" name="test_score_unanswered" id="test_score_unanswered" value="' . htmlspecialchars((string) ($test_score_unanswered ?? 0), ENT_COMPAT, $l["a_meta_charset"]) . '" />' . K_NEWLINE;
 echo getFormRowTextInput(
     "test_score_threshold",
     $l["w_test_score_threshold"],
@@ -2169,18 +2143,7 @@ if (isset($test_id) && $test_id > 0) {
     echo "</span>" . K_NEWLINE;
     echo "</div>" . K_NEWLINE;
 
-    echo getFormRowTextInput(
-        "tsubset_answers",
-        $l["w_num_answers"],
-        $l["h_num_answers"],
-        "",
-        $tsubset_answers,
-        '^([0-9]*)$',
-        20,
-        false,
-        false,
-        false,
-    );
+    echo '<input type="hidden" name="tsubset_answers" id="tsubset_answers" value="' . (int) ($tsubset_answers ?? 0) . '" />' . K_NEWLINE;
 
     echo '<div class="row">' . K_NEWLINE;
     echo '<span class="label">&nbsp;</span>' . K_NEWLINE;
@@ -2236,7 +2199,6 @@ if (isset($test_id) && $test_id > 0) {
             $rows_html .= '<td>' . htmlspecialchars($type_label, ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
             $rows_html .= '<td style="text-align:center;">' . $m['tsubset_difficulty'] . '</td>' . K_NEWLINE;
             $rows_html .= '<td style="text-align:center;"><strong>' . $m['tsubset_quantity'] . '</strong></td>' . K_NEWLINE;
-            $rows_html .= '<td style="text-align:center;">' . $m['tsubset_answers'] . '</td>' . K_NEWLINE;
             $rows_html .= '<td style="text-align:right;">' . sprintf('%.2f', $subset_score) . '</td>' . K_NEWLINE;
             $rows_html .= '<td style="text-align:center;"><button type="button" class="btn_delete_subset" onclick="FJ_delete_single_subset(' . $m['tsubset_id'] . ');" style="background:#dc3545; color:#fff; border:none; border-radius:3px; padding:2px 8px; cursor:pointer; font-size:85%;" title="' . $l['w_delete'] . '">[x] ' . $l['w_delete'] . '</button></td>' . K_NEWLINE;
             $rows_html .= '</tr>' . K_NEWLINE;
@@ -2262,7 +2224,6 @@ if (isset($test_id) && $test_id > 0) {
             echo '<th>' . $l['w_type'] . '</th>' . K_NEWLINE;
             echo '<th style="text-align:center;">' . $l['w_question_difficulty'] . '</th>' . K_NEWLINE;
             echo '<th style="text-align:center;">' . $l['w_questions'] . '</th>' . K_NEWLINE;
-            echo '<th style="text-align:center;">' . $l['w_num_answers'] . '</th>' . K_NEWLINE;
             echo '<th style="text-align:right;">' . $l['w_score'] . '</th>' . K_NEWLINE;
             echo '<th style="text-align:center; width:90px;">' . $l['w_action'] . '</th>' . K_NEWLINE;
             echo '</tr>' . K_NEWLINE;
@@ -2272,7 +2233,6 @@ if (isset($test_id) && $test_id > 0) {
             echo '<tr style="font-weight:bold; background:#eff7f1;">' . K_NEWLINE;
             echo '<td colspan="4" style="text-align:right;">Total:</td>' . K_NEWLINE;
             echo '<td style="text-align:center;">' . $total_subset_questions . '</td>' . K_NEWLINE;
-            echo '<td>&nbsp;</td>' . K_NEWLINE;
             echo '<td style="text-align:right;">' . sprintf('%.2f', $test_max_score_new) . '</td>' . K_NEWLINE;
             echo '<td>&nbsp;</td>' . K_NEWLINE;
             echo '</tr>' . K_NEWLINE;
