@@ -206,7 +206,7 @@ define("K_COOKIE_EXPIRE", K_SECONDS_IN_DAY);
  * 3 = html redirect.
  * 4 = full redirect.
  */
-define("K_REDIRECT_LOGIN_MODE", 4);
+define("K_REDIRECT_LOGIN_MODE", 1);
 
 /**
  * If true enable password reset feature.
@@ -313,7 +313,11 @@ $lang_resources = new TMXResourceBundle(
 $l = $lang_resources->getResource(); // language array
 
 ini_set("arg_separator.output", "&amp;");
-//date_default_timezone_set(K_TIMEZONE);
+if (getenv('TZ')) {
+    date_default_timezone_set(getenv('TZ'));
+} elseif (defined('K_TIMEZONE') && K_TIMEZONE) {
+    date_default_timezone_set(K_TIMEZONE);
+}
 
 if (!defined("PHP_VERSION_ID")) {
     $version = PHP_VERSION;

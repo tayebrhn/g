@@ -231,8 +231,8 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
                     $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
                     $_SESSION['session_user_level'] = $m['user_level'];
                     $_SESSION['session_user_perms'] = (int) ($m['user_perms'] ?? F_cumulative_perms_for_level($m['user_level']));
-                    $_SESSION['session_user_firstname'] = urlencode($m['user_firstname']);
-                    $_SESSION['session_user_lastname'] = urlencode($m['user_lastname']);
+                    $_SESSION['session_user_firstname'] = urlencode((string) ($m['user_firstname'] ?? ''));
+                    $_SESSION['session_user_lastname'] = urlencode((string) ($m['user_lastname'] ?? ''));
                     $_SESSION['session_test_login'] = '';
                     // read client cookie
                     $_SESSION['session_last_visit'] = isset($_COOKIE['LastVisit']) ? (int) $_COOKIE['LastVisit'] : 0;
@@ -263,8 +263,8 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
                                 $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
                                 $_SESSION['session_user_level'] = $md['user_level'];
                                 $_SESSION['session_user_perms'] = (int) ($md['user_perms'] ?? F_cumulative_perms_for_level($md['user_level']));
-                                $_SESSION['session_user_firstname'] = urlencode($md['user_firstname']);
-                                $_SESSION['session_user_lastname'] = urlencode($md['user_lastname']);
+                                $_SESSION['session_user_firstname'] = urlencode((string) ($md['user_firstname'] ?? ''));
+                                $_SESSION['session_user_lastname'] = urlencode((string) ($md['user_lastname'] ?? ''));
                                 $_SESSION['session_last_visit'] = 0;
                                 $_SESSION['session_test_login'] = '';
                                 $logged = true;
@@ -323,8 +323,8 @@ if (isset($_POST['logaction']) && $_POST['logaction'] == 'login' && isset($_POST
                         $_SESSION['session_user_ip'] = getNormalizedIP($_SERVER['REMOTE_ADDR']);
                         $_SESSION['session_user_level'] = (int) $altusr['user_level'];
                         $_SESSION['session_user_perms'] = $altusr_perms;
-                        $_SESSION['session_user_firstname'] = urlencode($altusr['user_firstname']);
-                        $_SESSION['session_user_lastname'] = urlencode($altusr['user_lastname']);
+                        $_SESSION['session_user_firstname'] = urlencode((string) ($altusr['user_firstname'] ?? ''));
+                        $_SESSION['session_user_lastname'] = urlencode((string) ($altusr['user_lastname'] ?? ''));
                         $_SESSION['session_last_visit'] = 0;
                         $_SESSION['session_test_login'] = '';
                         $logged = true;

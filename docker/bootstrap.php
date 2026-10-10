@@ -42,9 +42,9 @@ foreach ($configDirs as $dir) {
 function set_define_value($file, $constant, $value) {
     if (!file_exists($file)) return false;
     $content = file_get_contents($file);
-    $escaped = addcslashes($value, "'\\");
+    $escaped = addcslashes((string)$value, "'\\");
     $pattern = "/define\s*\(\s*['\"]" . preg_quote($constant, '/') . "['\"]\s*,\s*.*?(\);)/s";
-    $replacement = "define('" . $constant . "', '" . $escaped . "'$1";
+    $replacement = is_numeric($value) ? "define('" . $constant . "', " . $value . "$1" : "define('" . $constant . "', '" . $escaped . "'$1";
     $updated = preg_replace($pattern, $replacement, $content);
     return file_put_contents($file, $updated) !== false;
 }
@@ -57,9 +57,14 @@ set_define_value("$baseDir/shared/config/tce_db_config.php", 'K_DATABASE_NAME', 
 set_define_value("$baseDir/shared/config/tce_db_config.php", 'K_DATABASE_USER_NAME', $dbUser);
 set_define_value("$baseDir/shared/config/tce_db_config.php", 'K_DATABASE_USER_PASSWORD', $dbPassword);
 
-set_define_value("$baseDir/shared/config/tce_paths.php", 'K_PATH_HOST', $appUrl);
+$isCustomAppUrl = !empty(getenv('APP_URL')) && getenv('APP_URL') !== 'http://localhost' && getenv('APP_URL') !== 'http://localhost:8080';
+if ($isCustomAppUrl) {
+    set_define_value("$baseDir/shared/config/tce_paths.php", 'K_PATH_HOST', $appUrl);
+}
 set_define_value("$baseDir/shared/config/tce_paths.php", 'K_PATH_TCEXAM', '/');
 set_define_value("$baseDir/shared/config/tce_paths.php", 'K_PATH_MAIN', "$baseDir/");
+
+set_define_value("$baseDir/shared/config/tce_config.php", 'K_REDIRECT_LOGIN_MODE', 1);
 
 set_define_value("$baseDir/shared/config/tce_general_constants.php", 'K_RANDOM_SECURITY', $randomSecurity);
 

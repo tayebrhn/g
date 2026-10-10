@@ -31,7 +31,14 @@
 /**
  * Host URL (e.g.: "http://www.yoursite.com").
  */
-define('K_PATH_HOST', 'http://localhost:8080');
+if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) {
+    $proto = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) ? 'https://' : 'http://';
+    define('K_PATH_HOST', $proto . $_SERVER['HTTP_HOST']);
+} elseif (getenv('APP_URL') && getenv('APP_URL') !== '') {
+    define('K_PATH_HOST', getenv('APP_URL'));
+} else {
+    define('K_PATH_HOST', 'http://localhost');
+}
 
 /**
  * Relative URL where this program is installed (e.g.: "/").

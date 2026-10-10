@@ -64,6 +64,7 @@ $resultsOnly = isset($options['results-only']);
 echo "Connecting to MySQL database '$dbName' on $dbHost:$dbPort with user '$dbUser'...\n";
 
 // Attempt connection via mysqli
+mysqli_report(MYSQLI_REPORT_OFF);
 $mysqli = @new mysqli($dbHost, $dbUser, $dbPass, $dbName, $dbPort);
 
 if ($mysqli->connect_errno) {
@@ -115,15 +116,16 @@ foreach ($sqlFilesToImport as $file) {
             if ($res = $mysqli->store_result()) {
                 $res->free();
             }
+            if ($mysqli->errno && $mysqli->errno !== 1062) {
+                echo "[ERROR] SQL Execution Error in $baseName: " . $mysqli->error . "\n";
+                exit(1);
+            }
         } while ($mysqli->more_results() && $mysqli->next_result());
-        
-        if ($mysqli->errno) {
-            echo "[ERROR] SQL Execution Error in $baseName: " . $mysqli->error . "\n";
+    } else {
+        if ($mysqli->errno && $mysqli->errno !== 1062) {
+            echo "[ERROR] Initial Query Failed in $baseName: " . $mysqli->error . "\n";
             exit(1);
         }
-    } else {
-        echo "[ERROR] Initial Query Failed in $baseName: " . $mysqli->error . "\n";
-        exit(1);
     }
     echo "  [OK] Successfully executed $baseName\n";
 }
