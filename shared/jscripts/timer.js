@@ -143,11 +143,14 @@ function FJ_timer() {
 function FJ_start_timer(countdown, remaining, msg, logout, servertime) {
 	var startdate = new Date();
 	start_time = startdate.getTime();
+	servertime = (typeof servertime !== 'undefined' && servertime) ? servertime : start_time;
 	time_diff = servertime - start_time + 60;
-	enable_countdown = countdown;
+	enable_countdown = (countdown === true || countdown === 'true');
 	remaining_time = remaining;
 	msg_endtime = msg;
-	timeout_logout = logout;
+	timeout_logout = (logout === true || logout === 'true');
+	// update clock immediately to eliminate default placeholder latency
+	FJ_timer();
 	// update clock
 	setInterval(FJ_timer, 500);
 }

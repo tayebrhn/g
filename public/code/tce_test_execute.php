@@ -177,6 +177,18 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
             $curr_q_index = $first_q['index'];
         }
 
+        // Determine test end time for interactive timer (both normal questions and review confirmation)
+        $test_data = F_getTestData($test_id);
+        if (! isset($examtime) && isset($test_data['test_duration_time']) && $test_data['test_duration_time'] > 0) {
+            $tu_sql = 'SELECT testuser_id, testuser_creation_time FROM ' . K_TABLE_TEST_USER . ' WHERE testuser_test_id=' . (int) $test_id . ' AND testuser_user_id=' . (int) $_SESSION['session_user_id'] . ' AND testuser_status<5 ORDER BY testuser_id DESC LIMIT 1';
+            if ($tu_res = F_db_query($tu_sql, $db)) {
+                if ($tu_row = F_db_fetch_array($tu_res)) {
+                    $examtime = strtotime($tu_row['testuser_creation_time']) + ($test_data['test_duration_time'] * K_SECONDS_IN_MINUTE);
+                    $timeout_logout = F_getBoolean($test_data['test_logout_on_timeout']) ? 'true' : 'false';
+                }
+            }
+        }
+
         // Render Sticky Exam Status Header
         echo '<div class="exam_sticky_bar" id="exam_sticky_bar">' . K_NEWLINE;
         echo '<div class="sticky_left">' . K_NEWLINE;
@@ -511,14 +523,24 @@ if (isset($_REQUEST['testid']) && $_REQUEST['testid'] > 0) {
             <?php
         }
 
-        // start the countdown if disabled
-        if (isset($examtime)) {
+        // start the countdown or clock if disabled
+        if (isset($examtime) && $examtime > 0) {
             $timeout_logout = isset($timeout_logout) && $timeout_logout ? 'true' : 'false';
 
             echo '<script type="text/javascript">' . K_NEWLINE;
             echo '//<![CDATA[' . K_NEWLINE;
-            echo 'if(!enable_countdown) {' . K_NEWLINE;
-            echo '	FJ_start_timer(\'true\', ' . (time() - $examtime) . ", '" . addslashes($l['m_exam_end_time']) . "', " . $timeout_logout . ');' . K_NEWLINE;
+            echo 'if(typeof enable_countdown === "undefined" || !enable_countdown) {' . K_NEWLINE;
+            echo '	FJ_start_timer(true, ' . (time() - $examtime) . ", '" . addslashes($l['m_exam_end_time']) . "', " . $timeout_logout . ', ' . (round(microtime(true) * 1000)) . ');' . K_NEWLINE;
+            echo '}' . K_NEWLINE;
+            echo 'var loadtime=new Date();' . K_NEWLINE;
+            echo "document.getElementById('display_time').value=loadtime.getTime();" . K_NEWLINE;
+            echo '//]]>' . K_NEWLINE;
+            echo '</script>' . K_NEWLINE;
+        } elseif (isset($test_data) && $test_data['test_duration_time'] == 0) {
+            echo '<script type="text/javascript">' . K_NEWLINE;
+            echo '//<![CDATA[' . K_NEWLINE;
+            echo 'if(typeof enable_countdown === "undefined" || !enable_countdown) {' . K_NEWLINE;
+            echo '	FJ_start_timer(false, 0, "", false, ' . (round(microtime(true) * 1000)) . ');' . K_NEWLINE;
             echo '}' . K_NEWLINE;
             echo 'var loadtime=new Date();' . K_NEWLINE;
             echo "document.getElementById('display_time').value=loadtime.getTime();" . K_NEWLINE;

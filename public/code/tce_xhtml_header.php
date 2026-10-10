@@ -139,6 +139,7 @@ if (isset($enable_calendar) && $enable_calendar) {
 }
 
 echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'slimselect/slimselect.min.js"></script>' . K_NEWLINE;
+echo '<script type="text/javascript" src="' . K_PATH_SHARED_JSCRIPTS . 'timer.js"></script>' . K_NEWLINE;
 // integrity marker (paired with the base64 copyright marker in the
 // description meta and the footer comment) - intentionally not removed
 echo '<!-- TCExam19730104 -->' . K_NEWLINE;
