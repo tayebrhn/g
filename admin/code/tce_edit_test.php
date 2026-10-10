@@ -1622,43 +1622,45 @@ echo getFormRowTextInput(
     false,
 );
 
-//---SSL Certificate---
-echo '<div class="row">' . K_NEWLINE;
-echo '<span class="label">' . K_NEWLINE;
-echo '<label for="sslcerts">' . $l["w_sslcerts"] . "</label>" . K_NEWLINE;
-echo "</span>" . K_NEWLINE;
-echo '<span class="formw">' . K_NEWLINE;
-echo '<select name="sslcerts[]" id="sslcerts" size="5" multiple="multiple">' .
-    K_NEWLINE;
-$sql = "SELECT * FROM " . K_TABLE_SSLCERTS . " ORDER BY ssl_name";
-if ($r = F_db_query($sql, $db)) {
-    while ($m = F_db_fetch_array($r)) {
-        echo '<option value="' . $m["ssl_id"] . '"';
-        if (
-            isset($test_id) &&
-            $test_id > 0 &&
-            F_isTestOnSSLCerts($test_id, $m["ssl_id"])
-        ) {
-            echo ' selected="selected"';
+//---SSL Certificate--- (Deprecated for organizational deployments)
+if (defined('K_ENABLE_SSLCERTS') && K_ENABLE_SSLCERTS) {
+    echo '<div class="row">' . K_NEWLINE;
+    echo '<span class="label">' . K_NEWLINE;
+    echo '<label for="sslcerts">' . $l["w_sslcerts"] . "</label>" . K_NEWLINE;
+    echo "</span>" . K_NEWLINE;
+    echo '<span class="formw">' . K_NEWLINE;
+    echo '<select name="sslcerts[]" id="sslcerts" size="5" multiple="multiple">' .
+        K_NEWLINE;
+    $sql = "SELECT * FROM " . K_TABLE_SSLCERTS . " ORDER BY ssl_name";
+    if ($r = F_db_query($sql, $db)) {
+        while ($m = F_db_fetch_array($r)) {
+            echo '<option value="' . $m["ssl_id"] . '"';
+            if (
+                isset($test_id) &&
+                $test_id > 0 &&
+                F_isTestOnSSLCerts($test_id, $m["ssl_id"])
+            ) {
+                echo ' selected="selected"';
+            }
+
+            echo ">" .
+                htmlspecialchars(
+                    $m["ssl_name"] . " (" . substr($m["ssl_end_date"], 0, 10) . ")",
+                    ENT_NOQUOTES,
+                    $l["a_meta_charset"],
+                ) .
+                "</option>" .
+                K_NEWLINE;
         }
-
-        echo ">" .
-            htmlspecialchars(
-                $m["ssl_name"] . " (" . substr($m["ssl_end_date"], 0, 10) . ")",
-                ENT_NOQUOTES,
-                $l["a_meta_charset"],
-            ) .
-            "</option>" .
-            K_NEWLINE;
+    } else {
+        echo "</select></span></div>" . K_NEWLINE;
+        F_display_db_error();
     }
-} else {
-    echo "</select></span></div>" . K_NEWLINE;
-    F_display_db_error();
-}
 
-echo "</select>" . K_NEWLINE;
-echo "</span>" . K_NEWLINE;
-echo "</div>" . K_NEWLINE;
+    echo "</select>" . K_NEWLINE;
+    echo "</span>" . K_NEWLINE;
+    echo "</div>" . K_NEWLINE;
+}
 
 echo getFormRowCheckBox(
     "test_noanswer_enabled",

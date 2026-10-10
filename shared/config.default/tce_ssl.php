@@ -34,9 +34,22 @@
 define('K_SSL_ENABLED', false);
 
 /**
+ * If true enable SSL client workstation certificates editor and test bindings.
+ * Disabled for enterprise/organization deployments.
+ */
+define('K_ENABLE_SSLCERTS', false);
+
+/**
  * Default user level
  */
 define('K_SSL_USER_LEVEL', 1);
+
+/**
+ * Capability mask granted to the accounts provisioned by this
+ * authentication method (see shared/code/tce_auth_caps.php).
+ * 0 = no capability.
+ */
+define('K_SSL_USER_PERMS', 0);
 
 /**
  * Default user group ID

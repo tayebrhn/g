@@ -151,7 +151,7 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
             echo F_select_table_header_element('user_name', $nextorderdir, $l['h_login_name'], $l['w_user'], $order_field, $filter);
             echo F_select_table_header_element('user_lastname', $nextorderdir, $l['h_lastname'], $l['w_lastname'], $order_field, $filter);
             echo F_select_table_header_element('user_firstname', $nextorderdir, $l['h_firstname'], $l['w_firstname'], $order_field, $filter);
-            // echo F_select_table_header_element('user_regnumber', $nextorderdir, $l['h_regcode'], $l['w_regcode'], $order_field, $filter);
+            echo F_select_table_header_element('user_regnumber', $nextorderdir, $l['h_regcode'], $l['w_regcode'], $order_field, $filter);
             echo F_select_table_header_element('user_level', $nextorderdir, $l['h_level'], $l['w_level'], $order_field, $filter);
             echo F_select_table_header_element('user_regdate', $nextorderdir, $l['h_regdate'], $l['w_regdate'], $order_field, $filter);
             echo '<th title="' . $l['h_group_name'] . '">' . $l['w_groups'] . '</th>' . K_NEWLINE;
@@ -172,7 +172,7 @@ function F_show_select_user($order_field, $orderdir, $firstrow, $rowsperpage, $g
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;<a href="tce_edit_user.php?user_id=' . $m['user_id'] . '" title="' . $l['w_edit'] . '">' . htmlspecialchars($m['user_name'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</a></td>' . K_NEWLINE;
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_lastname'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_firstname'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
-                // echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_regnumber'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
+                echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_regnumber'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td>&nbsp;' . htmlspecialchars(F_getUserLevelLabel($m['user_level'], true), ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td>&nbsp;' . htmlspecialchars($m['user_regdate'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 // comma separated list of user's groups
@@ -398,7 +398,7 @@ function F_show_select_user_popup($order_field, $orderdir, $firstrow, $rowsperpa
             echo F_select_table_header_element('user_lastname', $nextorderdir, $l['h_lastname'], $l['w_lastname'], $order_field, $filter);
             echo F_select_table_header_element('user_firstname', $nextorderdir, $l['h_firstname'], $l['w_firstname'], $order_field, $filter);
             echo F_select_table_header_element('user_email', $nextorderdir, $l['h_email'], $l['w_email'], $order_field, $filter);
-            // echo F_select_table_header_element('user_regnumber', $nextorderdir, $l['h_regcode'], $l['w_regcode'], $order_field, $filter);
+            echo F_select_table_header_element('user_regnumber', $nextorderdir, $l['h_regcode'], $l['w_regcode'], $order_field, $filter);
             echo F_select_table_header_element('user_level', $nextorderdir, $l['h_level'], $l['w_level'], $order_field, $filter);
             echo F_select_table_header_element('user_regdate', $nextorderdir, $l['h_regdate'], $l['w_regdate'], $order_field, $filter);
             //echo '<th title="'.$l['h_group_name'].'">'.$l['w_groups'].'</th>'.K_NEWLINE;
@@ -415,7 +415,7 @@ function F_show_select_user_popup($order_field, $orderdir, $firstrow, $rowsperpa
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_lastname'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_firstname'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_email'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
-                // echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_regnumber'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
+                echo '<td style="text-align:' . $txtalign . ';">&nbsp;' . htmlspecialchars($m['user_regnumber'] ?? '', ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td>&nbsp;' . htmlspecialchars(F_getUserLevelLabel($m['user_level'], true), ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 echo '<td>&nbsp;' . htmlspecialchars($m['user_regdate'], ENT_NOQUOTES, $l['a_meta_charset']) . '</td>' . K_NEWLINE;
                 /*

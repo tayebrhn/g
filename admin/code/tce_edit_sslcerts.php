@@ -37,6 +37,12 @@ require_once('../../shared/code/tce_authorization.php');
 
 $thispage_title = $l['t_sslcerts'];
 require_once('../code/tce_page_header.php');
+require_once('../../shared/config/tce_ssl.php');
+if (! (defined('K_ENABLE_SSLCERTS') && K_ENABLE_SSLCERTS)) {
+    F_print_error('WARNING', 'SSL workstation certificates are disabled for organizational deployments.');
+    require_once('../code/tce_page_footer.php');
+    exit;
+}
 require_once('../../shared/code/tce_functions_form.php');
 require_once('../../shared/code/tce_functions_authorization.php');
 // set default values

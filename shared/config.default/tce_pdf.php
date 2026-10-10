@@ -32,12 +32,12 @@
 /**
  * Header title.
  */
-define('PDF_HEADER_TITLE', "School name");
+define('PDF_HEADER_TITLE', (getenv('TCEXAM_ORG_NAME') ? getenv('TCEXAM_ORG_NAME') : 'TCExam Assessment Platform'));
 
 /**
  * Header description string.
  */
-define('PDF_HEADER_STRING', "first row\nsecond row\nthird row");
+define('PDF_HEADER_STRING', (getenv('TCEXAM_ORG_SUBTITLE') ? getenv('TCEXAM_ORG_SUBTITLE') : "Official Assessment & Evaluation Report\nConfidential & Proprietary"));
 
 /**
  * Image logo.

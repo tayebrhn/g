@@ -31,13 +31,14 @@
 
 /**
  * If true enable USER REGISTRATION.
+ * Disabled for enterprise/organization deployments. Users are provisioned by administrators or HR/SSO.
  */
-define('K_USRREG_ENABLED', true);
+define('K_USRREG_ENABLED', false);
 
 /**
  * If true requires email confirmation.
  */
-define('K_USRREG_EMAIL_CONFIRM', true);
+define('K_USRREG_EMAIL_CONFIRM', false);
 
 /**
  * Default user group ID for registered user.
@@ -71,11 +72,11 @@ $regfields = array(
     'user_regnumber' => 1,
     'user_firstname' => 2,
     'user_lastname' => 2,
-    'user_birthdate' => 1,
-    'user_birthplace' => 1,
-    'user_ssn' => 1,
-    'user_groups' => 1,
-    'user_agreement' => 2
+    'user_birthdate' => 0,
+    'user_birthplace' => 0,
+    'user_ssn' => 0,
+    'user_groups' => 0,
+    'user_agreement' => 0
 );
 
 //============================================================+

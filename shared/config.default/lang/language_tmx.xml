@@ -423,7 +423,7 @@
       </tu>
       <tu tuid="h_regcode" datatype="plaintext">
          <tuv xml:lang="EN">
-            <seg>registration number, user's registration number</seg>
+            <seg>Employee ID, Staff ID, or Candidate Reference Number</seg>
          </tuv>
       </tu>
       <tu tuid="h_regdate" datatype="plaintext">
@@ -623,7 +623,7 @@
       </tu>
       <tu tuid="hp_edit_user" datatype="plaintext">
          <tuv xml:lang="EN">
-            <seg>In this form you can manage the different users allowed to access the system. For each user you can choose a name, a password and an access level. Level 0 indicates an anonymous user (not registered), level 1 a basic user (e.g.: a student), level 10 an administrator with full access rights</seg>
+            <seg>In this form you can manage the different users allowed to access the system. For each user you can choose a name, a password and an access level. Level 0 indicates an anonymous user (not registered), level 1 a basic user (e.g.: a candidate or employee), level 10 an administrator with full access rights</seg>
          </tuv>
       </tu>
       <tu tuid="hp_email_result" datatype="plaintext">
@@ -758,7 +758,7 @@
       </tu>
       <tu tuid="m_duplicate_regnumber" datatype="plaintext">
          <tuv xml:lang="EN">
-            <seg>This registration number is already in use. Choose another one.</seg>
+            <seg>This Employee / Candidate ID is already in use. Choose another one.</seg>
          </tuv>
       </tu>
       <tu tuid="m_duplicate_ssn" datatype="plaintext">
@@ -1471,6 +1471,91 @@
             <seg>levels</seg>
          </tuv>
       </tu>
+      <tu tuid="w_level_anonymous" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>anonymous</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level_registered" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>registered user</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level_viewer" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>viewer (read-only)</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level_author" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>content author</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level_unused" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>unused</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level_examiner" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>examiner</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level_identity" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>identity administrator</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level_siteadmin" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>site administrator</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_level_admin" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>administrator</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_cap_view_content" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>view content</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_cap_edit_content" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>edit content</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_cap_operator" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>operator</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_cap_manage_identity" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>manage users and groups</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_cap_global_view" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>global view</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_cap_backup" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>backup</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_cap_admin" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>system administration</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_capabilities" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>capabilities</seg>
+         </tuv>
+      </tu>
       <tu tuid="w_license" datatype="plaintext">
          <tuv xml:lang="EN">
             <seg>license</seg>
@@ -1703,7 +1788,7 @@
       </tu>
       <tu tuid="w_regcode" datatype="plaintext">
          <tuv xml:lang="EN">
-            <seg>registration number</seg>
+            <seg>Employee / Candidate ID</seg>
          </tuv>
       </tu>
       <tu tuid="w_regdate" datatype="plaintext">
@@ -1818,7 +1903,7 @@
       </tu>
       <tu tuid="w_teacher" datatype="plaintext">
          <tuv xml:lang="EN">
-            <seg>teacher</seg>
+            <seg>Evaluator / Examiner</seg>
          </tuv>
       </tu>
       <tu tuid="w_test" datatype="plaintext">
@@ -2644,6 +2729,11 @@ Backup files are stored on the "cache/backup" folder using the following syntax:
       <tu tuid="w_admin" datatype="plaintext">
          <tuv xml:lang="EN">
             <seg>admin</seg>
+         </tuv>
+      </tu>
+      <tu tuid="w_admin_index" datatype="plaintext">
+         <tuv xml:lang="EN">
+            <seg>Choose an area to work in.</seg>
          </tuv>
       </tu>
       <tu tuid="h_admin_link" datatype="plaintext">

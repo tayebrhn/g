@@ -633,9 +633,9 @@ foreach (F_getCapabilityNames() as $cap_mask => [$cap_key, $cap_label]) {
 
 echo getFormRowTextInput('user_firstname', $l['w_firstname'], $l['h_firstname'], '', $user_firstname, '', 255, false, false, false);
 echo getFormRowTextInput('user_lastname', $l['w_lastname'], $l['h_lastname'], '', $user_lastname, '', 255, false, false, false);
+echo getFormRowTextInput('user_regnumber', $l['w_regcode'], $l['h_regcode'], '', $user_regnumber, '', 255, false, false, false);
 echo '<div style="display:none;">';
 echo getFormRowFixedValue('user_ip', $l['w_ip'], $l['h_ip'], '', $user_ip);
-echo getFormRowTextInput('user_regnumber', $l['w_regcode'], $l['h_regcode'], '', $user_regnumber, '', 255, false, false, false);
 echo getFormRowTextInput('user_birthdate', $l['w_birth_date'], $l['h_birth_date'] . ' ' . $l['w_date_format'], '', $user_birthdate, '', 10, true, false, false);
 echo getFormRowTextInput('user_birthplace', $l['w_birth_place'], $l['h_birth_place'], '', $user_birthplace, '', 255, false, false, false);
 echo getFormRowTextInput('user_ssn', $l['w_fiscal_code'], $l['h_fiscal_code'], '', $user_ssn, '', 255, false, false, false);
